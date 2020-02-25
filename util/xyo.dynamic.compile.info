@@ -1,0 +1,5 @@
+--dll xyo
+--source-is-separate
+--dependency-set=rc.inc=xyo
+--no-version
+--dependency-license=mit

@@ -1,0 +1,4 @@
+--lib xyo
+--source-is-separate
+--dependency-set=rc.inc=xyo
+--dependency-license=mit

@@ -93,6 +93,7 @@ namespace XYO {
 			};
 
 			delete reinterpret_cast<IPAddress4 *>(ipAddress);
+			ipAddress = nullptr;
 			ipAddressIs6 = false;
 
 			return false;
@@ -129,6 +130,7 @@ namespace XYO {
 			};
 
 			delete reinterpret_cast<IPAddress6 *>(ipAddress);
+			ipAddress = nullptr;
 			ipAddressIs6 = false;
 
 			return false;
@@ -163,6 +165,7 @@ namespace XYO {
 
 
 			delete reinterpret_cast<IPAddress4 *>(ipAddress);
+			ipAddress = nullptr;
 			ipAddressIs6 = false;
 
 			return false;
@@ -200,6 +203,7 @@ namespace XYO {
 
 
 			delete reinterpret_cast<IPAddress6 *>(ipAddress);
+			ipAddress = nullptr;
 			ipAddressIs6 = false;
 
 			return false;

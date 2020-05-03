@@ -77,6 +77,7 @@ namespace Main {
 		String installProjectName;
 		String installVersionFile;
 		String installInc;
+		String libName;
 
 		int numThreads = 8;
 		String binPath = workspacePath + "/bin";
@@ -544,6 +545,14 @@ namespace Main {
 					licenseInfo=true;
 					continue;
 				};
+				if (opt == "lib-name") {
+					libName = optValue;
+					if(libName.length() == 0) {
+						printf("Error: lib-name is empty\n");
+						return 1;
+					};
+					continue;
+				};				
 				continue;
 			};
 			projectName = cmdLine[i];
@@ -910,7 +919,7 @@ namespace Main {
 			};
 			if(cSource.length() > 0) {
 				if(!Compiler::makeCToLib(
-						projectName + ".static",
+						libName.length()?libName:projectName + ".static",
 						binPath,
 						libPath,
 						buildPath,
@@ -943,7 +952,7 @@ namespace Main {
 			};
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToLib(
-						projectName + ".static",
+						libName.length()?libName:projectName + ".static",
 						binPath,
 						libPath,
 						buildPath,

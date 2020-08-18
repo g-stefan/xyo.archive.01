@@ -10,7 +10,8 @@ memory pool.
 Tested on:
 - Windows 10 - Visual Studio Community 2019
 - Windows 10 - mingw64
-- Ubuntu 18.04.3 LTS
+- Ubuntu 18.04 LTS
+- Ubuntu 20.04 LTS
 
 ## License
 

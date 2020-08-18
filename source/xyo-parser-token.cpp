@@ -127,7 +127,7 @@ namespace XYO {
 				token << input->inputChar;
 				while (input->read()) {
 					if (
-						input->is('-')
+						input->is('_')
 						|| input->between('A', 'Z')
 						|| input->between('a', 'z')
 					) {

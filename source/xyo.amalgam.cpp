@@ -56,7 +56,6 @@
 #include "xyo-multithreading-worker.cpp"
 #include "xyo-multithreading-workerqueue.cpp"
 #include "xyo-algorithm-buffer8core.cpp"
-#include "xyo-algorithm-checksum.cpp"
 #include "xyo-algorithm-randommt.cpp"
 #include "xyo-cryptography-md5.cpp"
 #include "xyo-cryptography-sha256.cpp"

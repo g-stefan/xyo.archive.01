@@ -128,7 +128,6 @@
 #include "xyo-multithreading-worker.hpp"
 #include "xyo-multithreading-workerqueue.hpp"
 #include "xyo-algorithm-buffer8core.hpp"
-#include "xyo-algorithm-checksum.hpp"
 #include "xyo-algorithm-randommt.hpp"
 #include "xyo-cryptography-md5.hpp"
 #include "xyo-cryptography-sha256.hpp"

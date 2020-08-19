@@ -56,30 +56,45 @@ namespace Main {
 			};
 			output += "\n";
 		};
-		printf("%s\n", output.value());
+		printf("%s\n", output.value());		
 	};
 
 	int Application::main(int cmdN, char *cmdS[]) {
 		uint64_t beginTimestampInMilliseconds;
 		uint64_t endTimestampInMilliseconds;
 		uint64_t intervalTimestampInMilliseconds;
-
+		int retV;
+		
+		retV=0;
 		printf("-> xyo.test.01\n");
 
-		beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+		try {
 
-		// ---
+			beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
 
-		test();
+			// ---
 
-		// ---
+			test();
 
-		endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
-		intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
+			// ---
 
-		printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+			endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+			intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
 
-		return 0;
+			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+
+		} catch(const Error &e) {
+			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			retV=1;
+		} catch (const std::exception &e) {
+			printf("Error: %s\n",e.what());
+			retV=1;
+		} catch (...) {
+			printf("Error: Unknown\n");
+			retV=1;
+		};
+
+		return retV;
 	};
 
 };

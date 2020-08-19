@@ -30,11 +30,11 @@ namespace Main {
 		toCheck = "[\"1\",\"2\",\"3\"]";
 		jsonObject = JSON::decode(toCheck);
 		if(!jsonObject) {
-			printf("#Error #1\r\n");
+			throw(Error("#1"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #1 - encoding\r\n");
+			throw(Error("#2"));
 		};
 		printf("%s\n", jsonString.value());
 
@@ -42,11 +42,11 @@ namespace Main {
 		toCheck = "{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}";
 		jsonObject = JSON::decode(toCheck);
 		if(!jsonObject) {
-			printf("#Error #2\r\n");
+			throw(Error("#3"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #2 - encoding\r\n");
+			throw(Error("#4"));
 		};
 		printf("%s\n", jsonString.value());
 
@@ -54,11 +54,11 @@ namespace Main {
 		toCheck = "[{\"1\":\"a\",\"2\":[\"a\",\"b\",\"c\"],\"3\":\"c\"},null,123,123.45,-1.23,\"hello\"]";
 		jsonObject = JSON::decode(toCheck);
 		if(!jsonObject) {
-			printf("#Error #3\r\n");
+			throw(Error("#5"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #3 - encoding\r\n");
+			throw(Error("#6"));
 		};
 		printf("%s\n", jsonString.value());
 		//---
@@ -66,11 +66,11 @@ namespace Main {
 		printf("%s\n", jsonString.value());
 		jsonObject = JSON::decode(jsonString);
 		if(!jsonObject) {
-			printf("#Error #4\r\n");
+			throw(Error("#7"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #4 - encoding\r\n");
+			throw(Error("#8"));
 		};
 		//---
 
@@ -79,11 +79,11 @@ namespace Main {
 		toCheck = "[{\"1\":\"x\",\"2\":[\"y\",\"z\",\"k\"],\"3\":\"c\"},null,123,123.45,-1.23,\"hello\"]";
 		jsonObject = JSON::decode(toCheck);
 		if(!jsonObject) {
-			printf("#Error #5\r\n");
+			throw(Error("#9"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #5 - encoding\r\n");
+			throw(Error("#10"));
 		};
 		printf("%s\n", jsonString.value());
 		//---
@@ -91,11 +91,11 @@ namespace Main {
 		printf("%s\n", jsonString.value());
 		jsonObject = JSON::decode(jsonString);
 		if(!jsonObject) {
-			printf("#Error #6\r\n");
+			throw(Error("#11"));
 		};
 		jsonString = JSON::encode(jsonObject);
 		if(jsonString != toCheck) {
-			printf("#Error #6 - encoding\r\n");
+			throw(Error("#12"));
 		};
 		//---
 	};
@@ -104,23 +104,36 @@ namespace Main {
 		uint64_t beginTimestampInMilliseconds;
 		uint64_t endTimestampInMilliseconds;
 		uint64_t intervalTimestampInMilliseconds;
+		int retV;
 
+		retV=0;
 		printf("-> xyo.test.04\n");
 
-		beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+		try {
+			beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
 
-		// ---
+			// ---
 
-		test();
+			test();
 
-		// ---
+			// ---
 
-		endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
-		intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
+			endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+			intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
 
-		printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);			
+		} catch(const Error &e) {
+			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			retV=1;
+		} catch (const std::exception &e) {
+			printf("Error: %s\n",e.what());
+			retV=1;
+		} catch (...) {
+			printf("Error: Unknown\n");
+			retV=1;
+		};
 
-		return 0;
+		return retV;
 	};
 
 };

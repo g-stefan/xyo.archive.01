@@ -6,8 +6,9 @@
 echo "-> test xyo"
 
 cmdX(){
+	echo "-> $@"
 	if ! "$@" ; then
-		echo "Error: test"
+		echo "Error: $@"
 		exit 1
 	fi
 }

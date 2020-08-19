@@ -25,73 +25,110 @@ namespace Main {
 		Utf8Write utf8Write;
 		Utf8Read utf8Read;
 		String utfData;
+		bool isOk;
 
+		isOk=false;
 		if(utfFile.openWrite("utf.test.02.01.bin")) {
 			if(utf8Write.open(&utfFile, UtfStreamMode::Utf8)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
+				isOk=true;
 			};
 			utf8Write.close();
 			utfFile.close();
 		};
 
+		if(!isOk){
+			throw(Error("Unable to write utf.test.02.01.bin"));			
+		};
+
+		isOk=false;
 		if(utfFile.openWrite("utf.test.02.02.bin")) {
 			if(utf8Write.open(&utfFile, UtfStreamMode::Utf16)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
+				isOk=true;
 			};
 			utf8Write.close();
-			utfFile.close();
+			utfFile.close();			
 		};
 
+		if(!isOk){
+			throw(Error("Unable to write utf.test.02.02.bin"));			
+		};
+
+		isOk=false;
 		if(utfFile.openWrite("utf.test.02.03.bin")) {
 			if(utf8Write.open(&utfFile, UtfStreamMode::Utf32)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
+				isOk=true;
 			};
 			utf8Write.close();
 			utfFile.close();
 		};
 
+		if(!isOk){
+			throw(Error("Unable to write utf.test.02.03.bin"));
+		};
+
 		//---
 
+		isOk=false;
 		if(utfFile.openRead("utf.test.02.01.bin")) {
 			if(utf8Read.open(&utfFile, UtfStreamMode::Utf8)) {
+				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
-					printf("#Error #1\r\n");
+					throw(Error("#1"));
 				};
 				if(utfData != "\xEF\xBB\xBFHello World\x0D\x0A") {
-					printf("#Error #1 - check");
+					throw(Error("#2"));
 				};
 			};
 			utf8Read.close();
 			utfFile.close();
 		};
 
+		if(!isOk){
+			throw(Error("Unable to read utf.test.02.01.bin"));
+		};
+
+		isOk=false;
 		if(utfFile.openRead("utf.test.02.02.bin")) {
 			if(utf8Read.open(&utfFile, UtfStreamMode::Utf16)) {
+				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
-					printf("#Error #2\r\n");
+					throw(Error("#3"));
 				};
 				if(utfData != "\xEF\xBB\xBFHello World\x0D\x0A") {
-					printf("#Error #2 - check");
+					throw(Error("#4"));
 				};
 			};
 			utf8Read.close();
 			utfFile.close();
 		};
 
+		if(!isOk){
+			throw(Error("Unable to read utf.test.02.02.bin"));
+		};
+
+		isOk=false;
 		if(utfFile.openRead("utf.test.02.03.bin")) {
 			if(utf8Read.open(&utfFile, UtfStreamMode::Utf32)) {
+				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
-					printf("#Error #3\r\n");
+					throw(Error("#5"));
 				};
 				if(utfData != "\xEF\xBB\xBFHello World\x0D\x0A") {
-					printf("#Error #3 - check");
+					throw(Error("#6"));
 				};
 			};
 			utf8Read.close();
 			utfFile.close();
+		};
+
+		if(!isOk){
+			throw(Error("Unable to read utf.test.02.03.bin"));
 		};
 	};
 
@@ -99,23 +136,37 @@ namespace Main {
 		uint64_t beginTimestampInMilliseconds;
 		uint64_t endTimestampInMilliseconds;
 		uint64_t intervalTimestampInMilliseconds;
+		int retV;
 
+		retV=0;
 		printf("-> xyo.test.03\n");
 
-		beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+		try {
+			beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
 
-		// ---
+			// ---
 
-		test();
+			test();
 
-		// ---
+			// ---
 
-		endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
-		intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
+			endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+			intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
 
-		printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
 
-		return 0;
+		} catch(const Error &e) {
+			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			retV=1;
+		} catch (const std::exception &e) {
+			printf("Error: %s\n",e.what());
+			retV=1;
+		} catch (...) {
+			printf("Error: Unknown\n");
+			retV=1;
+		};
+
+		return retV;
 	};
 
 };

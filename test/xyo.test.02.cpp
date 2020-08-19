@@ -12,9 +12,9 @@ namespace Main {
 	class Application :
 		public virtual IMain {
 			XYO_DISALLOW_COPY_ASSIGN_MOVE(Application);
-		public:
+		public:			
 
-			inline Application() {
+			inline Application() {				
 			};
 
 			void test();
@@ -31,40 +31,40 @@ namespace Main {
 
 		variable = static_cast<Value *>(&vNull);
 		if(!TIsType<VNull>(variable)) {
-			printf("# Fail 1\n");
+			throw(Error("#1"));
 		};
 
 		variable = static_cast<Value *>(&vNumber);
 		if(!TIsType<VNumber>(variable)) {
-			printf("# Fail 2\n");
+			throw(Error("#2"));
 		};
 
 		variable = static_cast<Value *>(&vString);
 		if(!TIsType<VString>(variable)) {
-			printf("# Fail 3\n");
+			throw(Error("#3"));
 		};
 
 		variable = static_cast<Value *>(&vArray);
 		if(!TIsType<VArray>(variable)) {
-			printf("# Fail 4\n");
+			throw(Error("#4"));
 		};
 
 		variable = static_cast<Value *>(&vAssociativeArray);
 		if(!TIsType<VAssociativeArray>(variable)) {
-			printf("# Fail 5\n");
+			throw(Error("#5"));
 		};
 		if(TIsType<VNull>(variable)) {
-			printf("# Fail 6\n");
+			throw(Error("#6"));
 		};
 		if(TIsType<VArray>(variable)) {
-			printf("# Fail 6\n");
+			throw(Error("#7"));
 		};
 		if(!TIsType<Value>(variable)) {
-			printf("# Fail 7\n");
+			throw(Error("#8"));
 		};
 		VAssociativeArray *vObject = TDynamicCast<VAssociativeArray *>(variable);
 		if(vObject == nullptr) {
-			printf("# Fail 8\n");
+			throw(Error("#9"));
 		};
 
 		printf("Value: %s\n", TGetTypeKey<Value>());
@@ -80,23 +80,38 @@ namespace Main {
 		uint64_t beginTimestampInMilliseconds;
 		uint64_t endTimestampInMilliseconds;
 		uint64_t intervalTimestampInMilliseconds;
+		int retV;
 
+		retV=0;
 		printf("-> xyo.test.02\n");
 
-		beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+		try {
 
-		// ---
+			beginTimestampInMilliseconds = DateTime::timestampInMilliseconds();
 
-		test();
+			// ---
 
-		// ---
+			test();
 
-		endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
-		intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
+			// ---
 
-		printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+			endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
+			intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
 
-		return 0;
+			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
+
+		} catch(const Error &e) {
+			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			retV=1;
+		} catch (const std::exception &e) {
+			printf("Error: %s\n",e.what());
+			retV=1;
+		} catch (...) {
+			printf("Error: Unknown\n");
+			retV=1;
+		};
+
+		return retV;
 	};
 
 };

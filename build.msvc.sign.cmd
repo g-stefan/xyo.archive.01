@@ -5,5 +5,7 @@ rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
 echo -^> sign xyo
 
-call grigore-stefan.sign "XYO" "bin\xyo-cc.exe"
-call grigore-stefan.sign "XYO" "bin\xyo.dll"
+pushd bin
+for /r %%i in (*.dll) do call grigore-stefan.sign "XYO" "%%i"
+for /r %%i in (*.exe) do call grigore-stefan.sign "XYO" "%%i"
+popd

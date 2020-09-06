@@ -515,7 +515,7 @@ namespace XYO {
 			String getPathRepository() {
 				String pathRepository = Shell::getEnv("XYO_PATH_REPOSITORY");
 				if(pathRepository.length() == 0) {
-					pathRepository = "../repository";
+					pathRepository = "./repository";
 				};
 				return pathRepository;
 			};
@@ -526,7 +526,7 @@ namespace XYO {
 				bool isRelease) {
 				String pathRelease = Shell::getEnv("XYO_PATH_RELEASE");
 				if(pathRelease.length() == 0) {
-					pathRelease = "../release";
+					pathRelease = "./release";
 				};
 				String releaseVersion = getVersion(versionFile, projectName);
 				pathRelease += "/";
@@ -549,7 +549,7 @@ namespace XYO {
 				bool isRelease) {
 				String pathRelease = Shell::getEnv("XYO_PATH_RELEASE");
 				if(pathRelease.length() == 0) {
-					pathRelease = "../release";
+					pathRelease = "./release";
 				};
 				pathRelease += "/";
 				pathRelease += projectName;

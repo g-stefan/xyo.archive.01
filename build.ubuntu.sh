@@ -23,7 +23,7 @@ if [ "$XYO_PATH_REPOSITORY" = "" ]; then
 fi
 
 if [ "$XYO_PATH_RELEASE" = "" ]; then
-	PATH_RELEASE=../release
+	PATH_RELEASE=./release
 	if [ -f ../../sdk.build.ubuntu.sh ]; then
 		PATH_RELEASE=../../release
 	fi

@@ -46,8 +46,8 @@ goto Build
 
 :Build
 set RESTORE_PATH=%PATH%
-set PATH_REPOSITORY=..\repository
-set PATH_RELEASE=..\release
+set PATH_REPOSITORY=.\repository
+set PATH_RELEASE=.\release
 if not "%XYO_PATH_REPOSITORY%" == "" goto BuildStep1
 if exist ..\..\sdk.build.msvc.cmd goto BuildWithSDK
 if exist ..\build.msvc.config.cmd call ..\build.msvc.config.cmd

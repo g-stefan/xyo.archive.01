@@ -161,7 +161,7 @@ namespace Main {
 
 		String pathRepository = Shell::getEnv("XYO_PATH_REPOSITORY");
 		if(pathRepository.length() == 0) {
-			pathRepository = "../repository";
+			pathRepository = "./repository";
 		};
 
 		// first is the main repository

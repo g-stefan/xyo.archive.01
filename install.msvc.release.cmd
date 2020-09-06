@@ -10,6 +10,7 @@ set XYO_PATH_RELEASE=release
 call build.msvc.cmd clean
 call build.msvc.cmd version
 call build.msvc.cmd make
+call build.msvc.cmd sign
 call build.msvc.cmd install
 call build.msvc.cmd install-release
 
@@ -20,6 +21,8 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 FOR /F "tokens=* USEBACKQ" %%F IN (`xyo-version --no-bump --get "--version-file=source/%PROJECT%.version.ini" %PROJECT%`) DO (
 	SET VERSION=%%F
 )
+
+rem --- bin
 
 set PROJECT_RELEASE=%PROJECT%-%VERSION%-%XYO_PLATFORM%
 if not exist release\%PROJECT_RELEASE% goto :eof

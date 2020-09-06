@@ -8,7 +8,6 @@ echo -^> install.release xyo
 set XYO_PATH_RELEASE=release
 
 call build.msvc.cmd clean
-call build.msvc.cmd version
 call build.msvc.cmd make
 call build.msvc.cmd sign
 call build.msvc.cmd install

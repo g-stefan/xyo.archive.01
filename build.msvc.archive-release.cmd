@@ -23,9 +23,9 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`xyo-version --no-bump --get "--version-file=
 rem --- bin
 
 set PROJECT_RELEASE=%PROJECT%-%VERSION%-%XYO_PLATFORM%
-if not exist %XYO_PATH_RELEASE%\%PROJECT_RELEASE% goto :eof
+if not exist release\%PROJECT_RELEASE% goto :eof
 
-pushd %XYO_PATH_RELEASE%
+pushd release
 if exist %PROJECT_RELEASE%.7z del /Q /F %PROJECT_RELEASE%.7z
 7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z %PROJECT_RELEASE%.7z %PROJECT_RELEASE%
 rmdir /Q /S %PROJECT_RELEASE%
@@ -34,9 +34,9 @@ popd
 rem --- dev
 
 set PROJECT_RELEASE=%PROJECT%-%VERSION%-%XYO_PLATFORM%-dev
-if not exist %XYO_PATH_RELEASE%\%PROJECT_RELEASE% goto :eof
+if not exist release\%PROJECT_RELEASE% goto :eof
 
-pushd %XYO_PATH_RELEASE%
+pushd release
 if exist %PROJECT_RELEASE%.7z del /Q /F %PROJECT_RELEASE%.7z
 7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z %PROJECT_RELEASE%.7z %PROJECT_RELEASE%
 rmdir /Q /S %PROJECT_RELEASE%

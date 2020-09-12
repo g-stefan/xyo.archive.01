@@ -30,7 +30,7 @@ namespace XYO {
 				if(file.openRead(fileName)) {
 					while(StreamX::readLn(file, line, 16384)) {
 						lineX = String::trimWithElement(line, trimElements);
-						if(!decode(lineX, csvFile[csvFile.length()])) {
+						if(!decode(lineX, csvFile.push())) {
 							return false;
 						};
 					};

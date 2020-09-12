@@ -5,15 +5,16 @@ rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
 echo -^> test xyo
 
-goto StepX
+goto cmdXDefined
 :cmdX
+echo %*
 %*
 if errorlevel 1 goto cmdXError
 goto :eof
 :cmdXError
 echo "Error: test"
 exit 1
-:StepX
+:cmdXDefined
 
 pushd bin
 

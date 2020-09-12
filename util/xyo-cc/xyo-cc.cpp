@@ -69,6 +69,8 @@ namespace Main {
 			"        install-release            - install to release repository\n"
 			"        test                       - do nothing (return)\n"
 			"        license-info               - show license dependency\n"
+			"        archive                    - archive source, works only if --source-archive present, ignored otherwise\n"
+			"        extract                    - extract source from archive, works only if --source-extract present, ignored otherwise\n"
 			"\n"
 			"    --no-install                   do not perform any install\n"
 			"    --workspace-path=path          workspace path to use, default is current folder\n"
@@ -101,6 +103,26 @@ namespace Main {
 			"    --dependency-license=value     add value to dependency license info\n"
 			"    --license-info                 show license info\n"
 			"    --lib-name=name                use name for static library\n"
+			"    --src-h=file                   add file as h source\n"
+			"    --src-c=file                   add file as c source\n"
+			"    --src-hpp=file                 add file as hpp source\n"
+			"    --src-cpp=file                 add file as cpp source\n"
+			"    --src-rc=file                  add file as rc source\n"
+			"    --no-default-source            don't search for source files\n"
+			"    --platform=match option        if match platform activate next option\n"
+			"    --not-platform=match option    if not match platform activate next option\n"
+			"\n"
+			"Options that require 7zr in your path\n"
+			"\n"
+			"    --source-archive               allow archive of source folder\n"
+			"    --source-extract               allow extraction of source folder from archive\n"
+			"    --source-is-archived           if source folder not found extract from archive\n"
+			"    --source-has-archive           source-archive, source-extract and source-is-archived\n"
+			"    --archive-release              archive install-release folder\n"
+			"    --archive-release-sha512       archive install-release folder and append sha512 hash to csv\n"
+			"\n"
+			"    --install-file=src=dst         install custom file to repository\n"
+			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
 		);
 		printf("\n");
 	};
@@ -128,6 +150,14 @@ namespace Main {
 		bool noInc = false;
 		bool dllVersion = false;
 		bool licenseInfo = false;
+		bool noDefaultSource = false;
+		bool sourceArchive = false;
+		bool sourceExtract = false;
+		bool sourceIsArchived = false;
+		bool doSourceArchive = false;
+		bool doSourceExtract = false;
+		bool archiveRelease = false;
+		bool archiveReleaseSHA512 = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -137,6 +167,14 @@ namespace Main {
 		String installVersionFile;
 		String installInc;
 		String libName;
+
+		String p7zipCompress="7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z ";
+		if(Compiler::matchPlatform("ubuntu*")) {
+			p7zipCompress="7zr a -mx9 -mmt4 -r- -w. -y -t7z ";
+		};
+		if(Compiler::matchPlatform("mingw*")) {
+			p7zipCompress="sh.exe -- 7zr a -mx9 -mmt4 -r- -w. -y -t7z ";
+		};
 
 		int numThreads = 8;
 		String binPath = workspacePath + "/bin";
@@ -151,8 +189,17 @@ namespace Main {
 		TDynamicArray<String> rcDefine;
 		TDynamicArray<String> incPathRC;
 
+		TDynamicArray<String> srcH;
+		TDynamicArray<String> srcC;
+		TDynamicArray<String> srcHpp;
+		TDynamicArray<String> srcCpp;
+		TDynamicArray<String> srcRc;
+
 		TDynamicArray<String> repositoryPathDependency;
 		TDynamicArray<String> repositoryPathDependencyLib;
+
+		TDynamicArray<String> installFile;
+		TDynamicArray<String> sha512File;
 
 		int crtOption = CompilerOptions::CRTDynamic;
 		int dllOption = CompilerOptions::None;
@@ -160,12 +207,12 @@ namespace Main {
 		String projectBase;
 
 		String pathRepository = Shell::getEnv("XYO_PATH_REPOSITORY");
-		if(pathRepository.length() == 0) {
+		if(pathRepository.isEmpty()) {
 			pathRepository = "./repository";
 		};
 
 		// first is the main repository
-		repositoryPathDependency[repositoryPathDependency.length()] = pathRepository;
+		repositoryPathDependency.push(pathRepository);
 
 		String pathRepositoryLibrary = Shell::getEnv("XYO_PATH_REPOSITORY_LIBRARY");
 		if(pathRepositoryLibrary.length() > 0) {
@@ -174,7 +221,7 @@ namespace Main {
 
 		size_t w;
 		for(w = 0; w < repositoryPathDependency.length(); ++w) {
-			repositoryPathDependencyLib[repositoryPathDependencyLib.length()] = repositoryPathDependency[w] + "/lib";
+			repositoryPathDependencyLib.push(repositoryPathDependency[w] + "/lib");
 		};
 
 		bool doMake = false;
@@ -304,7 +351,7 @@ namespace Main {
 					continue;
 				};
 				if (opt == "mode") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						isRelease = true;
 						if(Shell::hasEnv("XYO_COMPILE_DEBUG")) {
 							isRelease = false;
@@ -355,6 +402,14 @@ namespace Main {
 						licenseInfo=true;
 						continue;
 					};
+					if (optValue == "archive") {
+						doSourceArchive=true;
+						continue;
+					};
+					if (optValue == "extract") {
+						doSourceExtract=true;
+						continue;
+					};
 					printf("Error: unknown mode %s\n", optValue.value());
 					return 1;
 				};
@@ -365,7 +420,7 @@ namespace Main {
 				};
 				if (opt == "workspace-path") {
 					workspacePath = optValue;
-					if(workspacePath.length() == 0) {
+					if(workspacePath.isEmpty()) {
 						printf("Error: workspace-path is empty\n");
 						return 1;
 					};
@@ -373,7 +428,7 @@ namespace Main {
 				};
 				if (opt == "bin-path") {
 					binPath = optValue;
-					if(binPath.length() == 0) {
+					if(binPath.isEmpty()) {
 						printf("Error: bin-path is empty\n");
 						return 1;
 					};
@@ -381,7 +436,7 @@ namespace Main {
 				};
 				if (opt == "build-path") {
 					buildPath = optValue;
-					if(buildPath.length() == 0) {
+					if(buildPath.isEmpty()) {
 						printf("Error: build-path is empty\n");
 						return 1;
 					};
@@ -389,7 +444,7 @@ namespace Main {
 				};
 				if (opt == "lib-path") {
 					libPath = optValue;
-					if(libPath.length() == 0) {
+					if(libPath.isEmpty()) {
 						printf("Error: lib-path is empty\n");
 						return 1;
 					};
@@ -399,60 +454,60 @@ namespace Main {
 					sscanf(optValue.value(), "%d", &numThreads);
 					continue;
 				};
-				if (opt == "inc") {
-					incPath[incPath.length()] = optValue;
-					if(incPath[incPath.length() - 1].length() == 0) {
+				if (opt == "inc") {					
+					if(optValue.isEmpty()) {
 						printf("Error: inc path is empty\n");
 						return 1;
 					};
+					incPath.push(optValue);
 					continue;
 				};
-				if (opt == "inc-repository") {
-					incPath[incPath.length()] = pathRepository + "/include/" + optValue;
-					if(incPath[incPath.length() - 1].length() == 0) {
+				if (opt == "inc-repository") {					
+					if(optValue.isEmpty()) {
 						printf("Error: inc path is empty\n");
 						return 1;
 					};
+					incPath.push(pathRepository + "/include/" + optValue);
 					continue;
 				};
-				if (opt == "def") {
-					cppDefine[cppDefine.length()] = optValue;
-					if(cppDefine[cppDefine.length() - 1].length() == 0) {
+				if (opt == "def") {					
+					if(optValue.isEmpty()) {
 						printf("Error: def parameter is empty\n");
 						return 1;
 					};
+					cppDefine.push(optValue);
 					continue;
 				};
-				if (opt == "rc-inc") {
-					incPathRC[incPathRC.length()] = optValue;
-					if(incPathRC[incPathRC.length() - 1].length() == 0) {
+				if (opt == "rc-inc") {					
+					if(optValue.isEmpty()) {
 						printf("Error: rc-inc path is empty\n");
 						return 1;
 					};
+					incPathRC.push(optValue);
 					continue;
 				};
-				if (opt == "rc-def") {
-					rcDefine[rcDefine.length()] = optValue;
-					if(rcDefine[rcDefine.length() - 1].length() == 0) {
+				if (opt == "rc-def") {				
+					if(optValue.isEmpty()) {
 						printf("Error: rc-def parameter is empty\n");
 						return 1;
 					};
+					rcDefine.push(optValue);
 					continue;
 				};
-				if (opt == "use-lib-path") {
-					libDependencyPath[libDependencyPath.length()] = optValue;
-					if(libDependencyPath[libDependencyPath.length() - 1].length() == 0) {
+				if (opt == "use-lib-path") {					
+					if(optValue.isEmpty()) {
 						printf("Error: use-lib-path is empty\n");
 						return 1;
 					};
+					libDependencyPath.push(optValue);
 					continue;
 				};
-				if (opt == "use-lib") {
-					libDependency[libDependency.length()] = optValue;
-					if(libDependency[libDependency.length() - 1].length() == 0) {
+				if (opt == "use-lib") {					
+					if(optValue.isEmpty()) {
 						printf("Error: use-lib is empty\n");
 						return 1;
 					};
+					libDependency.push(optValue);
 					if(String::endsWith(libDependency[libDependency.length() - 1], ".static")) {
 						crtOption = CompilerOptions::CRTStatic;
 					};
@@ -460,22 +515,22 @@ namespace Main {
 					continue;
 				};
 				if (opt == "use-lib-source") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: use-lib-source is empty\n");
 						return 1;
 					};
-					libDependency[libDependency.length()] = Shell::getFileName(optValue);
+					libDependency.push(Shell::getFileName(optValue));
 					INIFileX::insert(projectDependency, "project", "lib", Shell::getFileName(optValue));
 					if(String::endsWith(optValue, ".static")) {
 						crtOption = CompilerOptions::CRTStatic;
 						optValue = String::substring(optValue, 0, optValue.length() - strlen(".static"));
 					};
-					incPath[incPath.length()] = optValue + "/include";
-					libDependencyPath[libDependencyPath.length()] = optValue + "/lib";
+					incPath.push(optValue + "/include");
+					libDependencyPath.push(optValue + "/lib");
 					continue;
 				};
 				if (opt == "use-lib-include") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: use-lib-include is empty\n");
 						return 1;
 					};
@@ -483,12 +538,12 @@ namespace Main {
 						crtOption = CompilerOptions::CRTStatic;
 						optValue = String::substring(optValue, 0, optValue.length() - strlen(".static"));
 					};
-					incPath[incPath.length()] = optValue + "/include";
-					libDependencyPath[libDependencyPath.length()] = optValue + "/lib";
+					incPath.push(optValue + "/include");
+					libDependencyPath.push(optValue + "/lib");
 					continue;
 				};
 				if (opt == "use-project") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: use-project is empty\n");
 						return 1;
 					};
@@ -497,7 +552,7 @@ namespace Main {
 				};
 				if (opt == "version-file") {
 					versionFile = optValue;
-					if(versionFile.length() == 0) {
+					if(versionFile.isEmpty()) {
 						printf("Error: version-file is empty\n");
 						return 1;
 					};
@@ -505,7 +560,7 @@ namespace Main {
 				};
 				if (opt == "project-base") {
 					projectBase = optValue;
-					if(projectBase.length() == 0) {
+					if(projectBase.isEmpty()) {
 						printf("Error: project-base is empty\n");
 						return 1;
 					};
@@ -513,7 +568,7 @@ namespace Main {
 				};
 				if (opt == "def-file") {
 					defFile = optValue;
-					if(defFile.length() == 0) {
+					if(defFile.isEmpty()) {
 						printf("Error: def-file is empty\n");
 						return 1;
 					};
@@ -521,7 +576,7 @@ namespace Main {
 				};
 				if (opt == "install-project") {
 					installProjectName = optValue;
-					if(installProjectName.length() == 0) {
+					if(installProjectName.isEmpty()) {
 						printf("Error: install-project is empty\n");
 						return 1;
 					};
@@ -529,7 +584,7 @@ namespace Main {
 				};
 				if (opt == "install-version-file") {
 					installVersionFile = optValue;
-					if(installVersionFile.length() == 0) {
+					if(installVersionFile.isEmpty()) {
 						printf("Error: install-version-file is empty\n");
 						return 1;
 					};
@@ -541,7 +596,7 @@ namespace Main {
 				};
 				if (opt == "install-inc") {
 					installInc = optValue;
-					if(installInc.length() == 0) {
+					if(installInc.isEmpty()) {
 						printf("Error: install-inc is empty\n");
 						return 1;
 					};
@@ -550,9 +605,9 @@ namespace Main {
 				if (opt == "make") {
 					doMake = true;
 					cmdMake = optValue;
-					libDependency[libDependency.length()] = ":xyo.static";
+					libDependency.push(":xyo.static");
 					crtOption = CompilerOptions::CRTStatic;
-					incPath[incPath.length()] = pathRepository + "/include/xyo";
+					incPath.push(pathRepository + "/include/xyo");
 					continue;
 				};
 				if (opt == "no-lib") {
@@ -568,7 +623,7 @@ namespace Main {
 					continue;
 				};
 				if (opt == "dependency-set") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: dependency-set is empty\n");
 						return 1;
 					};
@@ -577,11 +632,11 @@ namespace Main {
 						optKey = String::substring(optValue, 0, optIndex);
 						optValue = String::substring(optValue, optIndex + 1);
 					};
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: dependency-set - key is empty\n");
 						return 1;
 					};
-					if(optKey.length() == 0) {
+					if(optKey.isEmpty()) {
 						printf("Error: dependency-set - value is empty\n");
 						return 1;
 					};
@@ -589,11 +644,11 @@ namespace Main {
 					continue;
 				};
 				if (opt == "dependency-license") {
-					if(optValue.length() == 0) {
+					if(optValue.isEmpty()) {
 						printf("Error: dependency-license is empty\n");
 						return 1;
 					};
-					if(projectName.length() == 0) {
+					if(projectName.isEmpty()) {
 						printf("Error: project name not specified\n");
 						return 1;
 					};
@@ -606,27 +661,158 @@ namespace Main {
 				};
 				if (opt == "lib-name") {
 					libName = optValue;
-					if(libName.length() == 0) {
+					if(libName.isEmpty()) {
 						printf("Error: lib-name is empty\n");
 						return 1;
 					};
 					continue;
 				};				
+				if (opt == "src-h") {
+					if(optValue.isEmpty()) {
+						printf("Error: src-h file not provided\n");
+						return 1;
+					};
+					srcH.push(optValue);
+					continue;
+				};
+				if (opt == "src-c") {
+					if(optValue.isEmpty()) {
+						printf("Error: src-c file not provided\n");
+						return 1;
+					};
+					srcC.push(optValue);
+					continue;
+				};
+				if (opt == "src-hpp") {
+					if(optValue.isEmpty()) {
+						printf("Error: src-hpp file not provided\n");
+						return 1;
+					};
+					srcHpp.push(optValue);
+					continue;
+				};
+				if (opt == "src-cpp") {
+					if(optValue.isEmpty()) {
+						printf("Error: src-cpp file not provided\n");
+						return 1;
+					};
+					srcCpp.push(optValue);
+					continue;
+				};
+				if (opt == "src-rc") {
+					if(optValue.isEmpty()) {
+						printf("Error: src-rc file not provided\n");
+						return 1;
+					};
+					srcRc.push(optValue);
+					continue;
+				};
+				if (opt == "no-default-source") {
+					noDefaultSource = true;
+					continue;
+				};
+				if (opt == "platform"){
+					if(optValue.isEmpty()) {
+						printf("Error: platform to match in not provided\n");
+						return 1;
+					};
+					if(!Compiler::matchPlatform(optValue)){
+						++i;
+						continue;
+					};
+					continue;
+				};
+				if (opt == "not-platform"){
+					if(optValue.isEmpty()) {
+						printf("Error: platform to match in not provided\n");
+						return 1;
+					};
+					if(Compiler::matchPlatform(optValue)){
+						++i;
+						continue;
+					};
+					continue;
+				};
+				if (opt == "source-archive") {
+					sourceArchive = true;
+					continue;
+				};
+				if (opt == "source-extract") {
+					sourceExtract = true;
+					continue;
+				};
+				if (opt == "source-is-archived") {
+					sourceIsArchived = true;
+					continue;
+				};
+				if (opt == "source-has-archive") {
+					sourceArchive = true;
+					sourceExtract = true;
+					sourceIsArchived = true;
+					continue;
+				};
+				if (opt == "archive-release") {
+					archiveRelease = true;
+					continue;
+				};
+				if (opt == "archive-release-sha512") {
+					archiveRelease = true;
+					archiveReleaseSHA512 = true;
+					continue;
+				};
+				if (opt == "install-file") {
+					if(optValue.isEmpty()) {
+						printf("Error: install-file not provided\n");
+						return 1;
+					};
+					installFile.push(optValue);
+				};
+				if (opt == "sha512-file") {
+					if(optValue.isEmpty()) {
+						printf("Error: sha512-file not provided\n");
+						return 1;
+					};
+					sha512File.push(optValue);
+				};
 				continue;
 			};
 			projectName = cmdLine[i];
 		};
 
-		if(projectName.length() == 0) {
+		// <hash>
+
+		if(sha512File.length()) {
+			CSVRow csvRow;
+			String csvLine;
+			int k;
+			for(k=0; k<sha512File.length(); ++k) {
+				csvRow.empty();
+				if(!Util::fileHashSHA512(sha512File[k],csvRow[0])) {
+					printf("Error: sha512-file on %s failed\n",sha512File[k].value());
+					return 1;
+				};				
+				csvRow[1]=sha512File[k];
+				if(!CSVFileX::encode(csvLine,csvRow)) {
+					printf("Error: csv encoding\n");
+					return 1;
+				};
+				printf("%s",csvLine.value());
+			};
+			return 0;
+		};
+
+		// </hash>
+
+		if(projectName.isEmpty()) {
 			printf("Error: No project specified.\n");
 			return 1;
 		};
 
-		if(projectBase.length() == 0) {
+		if(projectBase.isEmpty()) {
 			projectBase = projectName;
 		};
 
-		if(versionFile.length() == 0) {
+		if(versionFile.isEmpty()) {
 			if(sourcePathX.length() > 0) {
 				versionFile = workspacePath + "/" + sourcePathX + "/" + projectBase + ".version.ini";
 			} else {
@@ -641,6 +827,179 @@ namespace Main {
 		if(dllVersion) {
 			libVersion = Compiler::getVersion(versionFile, projectBase);
 		};
+
+		String pathInstall = pathRepository;
+		String pathRelease;
+
+		if(installVersionFile.length()==0) {
+			installVersionFile=versionFile;
+		};
+
+		if(installProjectName.length()==0) {
+			pathRelease = Compiler::getPathRelease(projectBase, installVersionFile, isRelease);
+		} else {
+			pathRelease = Compiler::getPathRelease(installProjectName, installVersionFile, isRelease);
+		};
+		
+		// <archive>
+
+		String projectNameWithVersion = projectName + "-" + Compiler::getVersion(versionFile, projectBase);
+
+		if(doSourceArchive) {
+			if(sourceArchive) {
+				String originalPath = Shell::getCwd();
+				Shell::chdir(workspacePath);
+
+				if(!Shell::directoryExists("source")) {
+					printf("Error: source not found\r\n");
+					Shell::chdir(originalPath);
+					return 1;
+				};
+
+				if(!Shell::rename("source",projectNameWithVersion)) {
+					printf("Error: source directory in use\r\n");
+					Shell::chdir(originalPath);
+					return 1;
+				};
+
+				String archive = "archive/";
+				archive << projectNameWithVersion << ".7z";
+				if(Shell::fileExists(archive)) {
+					if(!Shell::remove(archive)) {
+						printf("Error: Unable to remove source archive\r\n");
+						Shell::chdir(originalPath);
+						return 1;
+					};
+				};
+				if(Shell::system(p7zipCompress + archive + " " + projectNameWithVersion)) {
+					printf("Error: Unable to compress source\r\n");
+					Shell::chdir(originalPath);
+					return 1;
+				};
+				if(!Shell::rename(projectNameWithVersion,"source")) {
+					printf("Error: %s or source directory in use\r\n",projectNameWithVersion.value());
+					Shell::chdir(originalPath);
+					return 1;
+				};
+				Shell::chdir(originalPath);
+				return 0;				
+			};
+		};
+
+		if(doSourceExtract) {
+			if(sourceExtract) {
+				String originalPath = Shell::getCwd();
+				Shell::chdir(workspacePath);
+				if(!Shell::removeDirRecursively("source")){
+					printf("Error: unable to remove source, directory in use\r\n");
+					Shell::chdir(originalPath);
+					return 1;
+				};
+				Shell::chdir(originalPath);
+			};
+		};
+
+		if(sourceIsArchived) {
+			String originalPath = Shell::getCwd();
+			Shell::chdir(workspacePath);
+
+			if(!Shell::directoryExists("source")) {
+				if(Shell::system(String("7zr x -aoa ") + workspacePath + "/archive/" + projectNameWithVersion + ".7z")) {
+					printf("Error: Unable to extract source archive: %s\r\n", projectNameWithVersion.value());
+					Shell::chdir(originalPath);
+					return 1;
+				};
+				if(!Shell::rename(projectNameWithVersion,"source")) {
+					printf("Error: %s or source directory in use\r\n",projectNameWithVersion.value());
+					Shell::chdir(originalPath);
+					return 1;
+				};
+			};
+
+			Shell::chdir(originalPath);
+		};
+
+		if(doSourceExtract) {
+			if(sourceExtract) {
+				return 0;
+			};
+		};
+
+		if(sourceIsArchived) {
+			return 0;
+		};
+
+		if(archiveRelease){
+			String originalPath = Shell::getCwd();			
+			String releaseName=Shell::getFileName(pathRelease);
+			Shell::chdir(pathRelease+"/..");
+
+			// bin
+
+			if(Shell::directoryExists(releaseName)){
+				if(Shell::fileExists(releaseName+".7z")){
+					Shell::removeFile(releaseName+".7z");
+				};
+				Shell::system(p7zipCompress+releaseName+".7z "+releaseName);
+				Shell::removeDirRecursively(releaseName);
+				if(archiveReleaseSHA512) {
+					CSVRow csvRow;
+					String csvLine;
+					String fileName=releaseName+".7z";
+					csvRow.empty();
+					if(!Util::fileHashSHA512(fileName,csvRow[0])) {
+						printf("Error: sha512-file on %s failed\n",fileName.value());
+						return 1;
+					};
+					csvRow[1]=fileName;
+					if(!CSVFileX::encode(csvLine,csvRow)) {
+						printf("Error: csv encoding\n");
+						return 1;
+					};
+					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
+						printf("Error: unable to write sha512 hash\n");
+						return 1;					
+					};
+				};
+			};
+
+			// dev
+
+			releaseName+="-dev";
+			if(Shell::directoryExists(releaseName)){				
+				if(Shell::fileExists(releaseName+".7z")){
+					Shell::removeFile(releaseName+".7z");
+				};
+				Shell::system(p7zipCompress+releaseName+".7z "+releaseName);
+				Shell::removeDirRecursively(releaseName);
+				if(archiveReleaseSHA512) {
+					CSVRow csvRow;
+					String csvLine;
+					String fileName=releaseName+".7z";
+					csvRow.empty();
+					if(!Util::fileHashSHA512(fileName,csvRow[0])) {
+						printf("Error: sha512-file on %s failed\n",fileName.value());
+						return 1;
+					};
+					csvRow[1]=fileName;
+					if(!CSVFileX::encode(csvLine,csvRow)) {
+						printf("Error: csv encoding\n");
+						return 1;
+					};
+					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
+						printf("Error: unable to write sha512 hash\n");
+						return 1;					
+					};
+				};
+			};
+
+			//			
+
+			Shell::chdir(originalPath);
+			return 0;
+		};
+
+		// </archive>
 
 		// <dependency>
 
@@ -722,14 +1081,14 @@ namespace Main {
 		INIFileX::getValues(dependency, projectName, "project", dependecyList);
 		for(k = 0; k < dependecyList.length(); ++k) {
 			optValue = dependecyList[k];
-			libDependency[libDependency.length()] = String(":") + optValue;
+			libDependency.push(String(":") + optValue);
 			if(String::endsWith(optValue, ".static")) {
 				crtOption = CompilerOptions::CRTStatic;
 				optValue = String::substring(optValue, 0, optValue.length() - strlen(".static"));
 			};
 			for(w = 0; w < repositoryPathDependency.length(); ++w) {
 				if(Shell::directoryExists(repositoryPathDependency[w] + "/include/" + optValue)) {
-					incPath[incPath.length()] = repositoryPathDependency[w] + "/include/" + optValue;
+					incPath.push(repositoryPathDependency[w] + "/include/" + optValue);
 					break;
 				};
 			};
@@ -739,7 +1098,7 @@ namespace Main {
 		INIFileX::getValues(dependency, projectName, "lib", dependecyList);
 		for(k = 0; k < dependecyList.length(); ++k) {
 			optValue = dependecyList[k];
-			libDependency[libDependency.length()] = optValue;
+			libDependency.push(optValue);
 			if(String::endsWith(optValue, ".static")) {
 				crtOption = CompilerOptions::CRTStatic;
 			};
@@ -751,7 +1110,7 @@ namespace Main {
 			optValue = dependecyList[k];
 			for(w = 0; w < repositoryPathDependency.length(); ++w) {
 				if(Shell::directoryExists(repositoryPathDependency[w] + "/include/" + optValue)) {
-					incPath[incPath.length()] = repositoryPathDependency[w] + "/include/" + optValue;
+					incPath.push(repositoryPathDependency[w] + "/include/" + optValue);
 					break;
 				};
 			};
@@ -763,7 +1122,7 @@ namespace Main {
 			optValue = dependecyList[k];
 			for(w = 0; w < repositoryPathDependency.length(); ++w) {
 				if(Shell::directoryExists(repositoryPathDependency[w] + "/include/" + optValue)) {
-					incPathRC[incPathRC.length()] = repositoryPathDependency[w] + "/include/" + optValue;
+					incPathRC.push(repositoryPathDependency[w] + "/include/" + optValue);
 					break;
 				};
 			};
@@ -774,7 +1133,7 @@ namespace Main {
 		for(k = 0; k < dependecyList.length(); ++k) {
 			optValue = dependecyList[k];
 			if(optValue.length() > 0) {
-				cppDefine[cppDefine.length()] = optValue;
+				cppDefine.push(optValue);
 			};
 		};
 
@@ -783,7 +1142,7 @@ namespace Main {
 		for(k = 0; k < dependecyList.length(); ++k) {
 			optValue = dependecyList[k];
 			if(optValue.length() > 0) {
-				rcDefine[rcDefine.length()] = optValue;
+				rcDefine.push(optValue);
 			};
 		};
 
@@ -829,140 +1188,171 @@ namespace Main {
 		TDynamicArray<String> hppFiles;
 		TDynamicArray<String> rcFiles;
 
-		Shell::getFileList(includePath + "/" + projectBase + "*.h", hFilesIn);
-		Shell::getFileList(sourcePath + "/" + projectBase + "*.c", cSourceIn);
-		Shell::getFileList(includePath + "/" + projectBase + "*.hpp", hppFilesIn);
-		Shell::getFileList(sourcePath + "/" + projectBase + "*.cpp", cppSourceIn);
-		Shell::getFileList(sourcePath + "/" + projectBase + "*.rc", rcFiles);
+		if(!noDefaultSource) {
 
-		TDynamicArray<String> cSourceExtra;
-		TDynamicArray<String> hFilesExtra;
-		TDynamicArray<String> cppSourceExtra;
-		TDynamicArray<String> hppFilesExtra;
+			Shell::getFileList(includePath + "/" + projectBase + "*.h", hFilesIn);
+			Shell::getFileList(sourcePath + "/" + projectBase + "*.c", cSourceIn);
+			Shell::getFileList(includePath + "/" + projectBase + "*.hpp", hppFilesIn);
+			Shell::getFileList(sourcePath + "/" + projectBase + "*.cpp", cppSourceIn);
+			Shell::getFileList(sourcePath + "/" + projectBase + "*.rc", rcFiles);
 
-		if(String::beginWith(projectName, "lib")) {
-			String projectBaseX = String::substring(projectBase, 3);
-			Shell::getFileList(includePath + "/" + projectBaseX + "*.h", hFilesExtra);
-			Shell::getFileList(sourcePath + "/" + projectBaseX + "*.c", cSourceExtra);
-			Shell::getFileList(includePath + "/" + projectBaseX + "*.hpp", hppFilesExtra);
-			Shell::getFileList(sourcePath + "/" + projectBaseX + "*.cpp", cppSourceExtra);
+			TDynamicArray<String> cSourceExtra;
+			TDynamicArray<String> hFilesExtra;
+			TDynamicArray<String> cppSourceExtra;
+			TDynamicArray<String> hppFilesExtra;
+
+			if(String::beginWith(projectName, "lib")) {
+				String projectBaseX = String::substring(projectBase, 3);
+				Shell::getFileList(includePath + "/" + projectBaseX + "*.h", hFilesExtra);
+				Shell::getFileList(sourcePath + "/" + projectBaseX + "*.c", cSourceExtra);
+				Shell::getFileList(includePath + "/" + projectBaseX + "*.hpp", hppFilesExtra);
+				Shell::getFileList(sourcePath + "/" + projectBaseX + "*.cpp", cppSourceExtra);
+			};
+
+			// add extra
+
+			for(k = 0; k < hFilesExtra.length(); ++k) {
+				hFilesIn.push(hFilesExtra[k]);
+			};
+			for(k = 0; k < cSourceExtra.length(); ++k) {
+				cSourceIn.push(cSourceExtra[k]);
+			};
+			for(k = 0; k < hppFilesExtra.length(); ++k) {
+				hppFilesIn.push(hppFilesExtra[k]);
+			};
+			for(k = 0; k < cppSourceExtra.length(); ++k) {
+				cppSourceIn.push(cppSourceExtra[k]);
+			};
+
+			// remove template/amalgam/source
+
+			for(k = 0; k < hFilesIn.length(); ++k) {
+				if(String::endsWith(hFilesIn[k], ".amalgam.h")) {
+					continue;
+				};
+				if(String::endsWith(hFilesIn[k], ".template.h")) {
+					continue;
+				};
+				// .source.h - internal header source
+				if(String::endsWith(hFilesIn[k], ".source.h")) {
+					hFiles.push(hFilesIn[k]);
+					continue;
+				};
+				hFiles.push(hFilesIn[k]);
+			};
+
+			for(k = 0; k < cSourceIn.length(); ++k) {
+				if(String::endsWith(cSourceIn[k], ".amalgam.c")) {
+					continue;
+				};
+				if(String::endsWith(cSourceIn[k], ".template.c")) {
+					continue;
+				};
+				// .source.c - internal source code, force build on change
+				if(String::endsWith(cSourceIn[k], ".source.c")) {
+					hFiles.push(cSourceIn[k]);
+					continue;
+				};
+				cSource.push(cSourceIn[k]);
+			};
+
+			for(k = 0; k < hppFilesIn.length(); ++k) {
+				if(String::endsWith(hppFilesIn[k], ".amalgam.hpp")) {
+					continue;
+				};
+				if(String::endsWith(hppFilesIn[k], ".template.hpp")) {
+					continue;
+				};
+				// .source.hpp - internal header source
+				if(String::endsWith(hppFilesIn[k], ".source.hpp")) {
+					hppFiles.push(hppFilesIn[k]);
+						continue;
+				};
+				hppFiles.push(hppFilesIn[k]);
+			};
+
+			for(k = 0; k < cppSourceIn.length(); ++k) {
+				if(String::endsWith(cppSourceIn[k], ".amalgam.cpp")) {
+					continue;
+				};
+				if(String::endsWith(cppSourceIn[k], ".template.cpp")) {
+					continue;
+				};
+				// .source.cpp - internal source code, force build on change
+				if(String::endsWith(cppSourceIn[k], ".source.cpp")) {
+					hppFiles.push(cppSourceIn[k]);
+					continue;
+				};
+				cppSource.push(cppSourceIn[k]);
+			};
+
 		};
 
-		// add extra
+		TDynamicArray<String> srcScan;
+		size_t l;
 
-		for(k = 0; k < hFilesExtra.length(); ++k) {
-			hFilesIn[hFilesIn.length()] = hFilesExtra[k];
-		};
-		for(k = 0; k < cSourceExtra.length(); ++k) {
-			cSourceIn[cSourceIn.length()] = cSourceExtra[k];
-		};
-		for(k = 0; k < hppFilesExtra.length(); ++k) {
-			hppFilesIn[hppFilesIn.length()] = hppFilesExtra[k];
-		};
-		for(k = 0; k < cppSourceExtra.length(); ++k) {
-			cppSourceIn[cppSourceIn.length()] = cppSourceExtra[k];
+		for(k = 0; k < srcH.length(); ++k) {
+			Shell::getFileList(srcH[k], srcScan);
+			for(l = 0; l < srcScan.length(); ++l) {
+				hFiles.push(srcScan[l]);
+			};
 		};
 
-		// remove template/amalgam/source
-
-		for(k = 0; k < hFilesIn.length(); ++k) {
-			if(String::endsWith(hFilesIn[k], ".amalgam.h")) {
-				continue;
+		for(k = 0; k < srcC.length(); ++k) {
+			Shell::getFileList(srcC[k], srcScan);
+			for(l = 0; l < srcScan.length(); ++l) {
+				cSource.push(srcScan[l]);
 			};
-			if(String::endsWith(hFilesIn[k], ".template.h")) {
-				continue;
-			};
-			// .source.h - internal header source
-			if(String::endsWith(hFilesIn[k], ".source.h")) {
-				hFiles[hFiles.length()] = hFilesIn[k];
-				continue;
-			};
-			hFiles[hFiles.length()] = hFilesIn[k];
 		};
 
-		for(k = 0; k < cSourceIn.length(); ++k) {
-			if(String::endsWith(cSourceIn[k], ".amalgam.c")) {
-				continue;
+		for(k = 0; k < srcHpp.length(); ++k) {
+			Shell::getFileList(srcHpp[k], srcScan);
+			for(l = 0; l < srcScan.length(); ++l) {
+				hppFiles.push(srcScan[l]);
 			};
-			if(String::endsWith(cSourceIn[k], ".template.c")) {
-				continue;
-			};
-			// .source.c - internal source code, force build on change
-			if(String::endsWith(cSourceIn[k], ".source.c")) {
-				hFiles[hFiles.length()] = cSourceIn[k];
-				continue;
-			};
-			cSource[cSource.length()] = cSourceIn[k];
 		};
 
-		for(k = 0; k < hppFilesIn.length(); ++k) {
-			if(String::endsWith(hppFilesIn[k], ".amalgam.hpp")) {
-				continue;
+		for(k = 0; k < srcCpp.length(); ++k) {
+			Shell::getFileList(srcCpp[k], srcScan);
+			for(l = 0; l < srcScan.length(); ++l) {
+				cppSource.push(srcScan[l]);
 			};
-			if(String::endsWith(hppFilesIn[k], ".template.hpp")) {
-				continue;
-			};
-			// .source.hpp - internal header source
-			if(String::endsWith(hppFilesIn[k], ".source.hpp")) {
-				hppFiles[hppFiles.length()] = hppFilesIn[k];
-				continue;
-			};
-			hppFiles[hppFiles.length()] = hppFilesIn[k];
 		};
 
-		for(k = 0; k < cppSourceIn.length(); ++k) {
-			if(String::endsWith(cppSourceIn[k], ".amalgam.cpp")) {
-				continue;
+		for(k = 0; k < srcRc.length(); ++k) {
+			Shell::getFileList(srcRc[k], srcScan);
+			for(l = 0; l < srcScan.length(); ++l) {
+				rcFiles.push(srcScan[l]);
 			};
-			if(String::endsWith(cppSourceIn[k], ".template.cpp")) {
-				continue;
-			};
-			// .source.cpp - internal source code, force build on change
-			if(String::endsWith(cppSourceIn[k], ".source.cpp")) {
-				hppFiles[hppFiles.length()] = cppSourceIn[k];
-				continue;
-			};
-			cppSource[cppSource.length()] = cppSourceIn[k];
 		};
 
-		incPath[incPath.length()] = includePath;
+		//
+
+		incPath.push(includePath);
 		if(includePath != sourcePath) {
-			incPath[incPath.length()] = sourcePath;
+			incPath.push(sourcePath);
 		};
 
-		incPathRC[incPathRC.length()] = includePath;
+		incPathRC.push(includePath);
 		if(includePath != sourcePath) {
-			incPathRC[incPathRC.length()] = sourcePath;
+			incPathRC.push(sourcePath);
 		};
 
 		String defInternal = String::toUpperCaseAscii(projectBase) + "_INTERNAL";
 		defInternal = String::replace(defInternal, "-", "_");
 		defInternal = String::replace(defInternal, ".", "_");
-		cppDefine[cppDefine.length()] = defInternal;
+		cppDefine.push(defInternal);
 		if(String::beginWith(projectBase, "lib")) {
 			cppDefine[cppDefine.length() - 1] = String::substring(cppDefine[cppDefine.length() - 1], 3);
 		};
 
-		libDependencyPath[libDependencyPath.length()] = libPath;
+		libDependencyPath.push(libPath);
 
 		// last is repository
 		for(w = 0; w < repositoryPathDependency.length(); ++w) {
-			incPath[incPath.length()] = repositoryPathDependency[w] + "/include";
-			libDependencyPath[libDependencyPath.length()] = repositoryPathDependency[w] + "/lib";
-			incPathRC[incPathRC.length()] = repositoryPathDependency[w] + "/include";
-		};
-
-		String pathInstall = pathRepository;
-		String pathRelease;
-
-		if(installVersionFile.length()==0) {
-			installVersionFile=versionFile;
-		};
-
-		if(installProjectName.length()==0) {
-			pathRelease = Compiler::getPathRelease(projectBase, installVersionFile, isRelease);
-		} else {
-			pathRelease = Compiler::getPathRelease(installProjectName, installVersionFile, isRelease);
+			incPath.push(repositoryPathDependency[w] + "/include");
+			libDependencyPath.push(repositoryPathDependency[w] + "/lib");
+			incPathRC.push(repositoryPathDependency[w] + "/include");
 		};
 
 		if(doInstallRelease) {
@@ -972,7 +1362,7 @@ namespace Main {
 		};
 
 		if(makeLibrary) {
-			if((cSource.length() == 0) && (cppSource.length() == 0)) {
+			if((cSource.isEmpty()) && (cppSource.isEmpty())) {
 				printf("Error: no c/cpp source for library %s\n", projectName.value());
 				return 1;
 			};
@@ -1054,15 +1444,17 @@ namespace Main {
 					return 1;
 				};
 				if(!noInc) {
-					if(installInc.length()>0) {
-						if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
-							printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
-							return 1;
-						};
-					} else {
-						if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
-							printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
-							return 1;
+					if(includePath != workspacePath) {
+						if(installInc.length()>0) {
+							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+								return 1;
+							};
+						} else {
+							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
+								return 1;
+							};
 						};
 					};
 				};
@@ -1070,7 +1462,7 @@ namespace Main {
 		};
 
 		if(makeDynamicLibrary) {
-			if((cSource.length() == 0) && (cppSource.length() == 0)) {
+			if((cSource.isEmpty()) && (cppSource.isEmpty())) {
 				printf("Error: no c/cpp source for dynamic library %s\n", projectName.value());
 				return 1;
 			};
@@ -1169,15 +1561,17 @@ namespace Main {
 					return 1;
 				};
 				if(!noLib) {
-					if(installInc.length()>0) {
-						if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
-							printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
-							return 1;
-						};
-					} else {
-						if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
-							printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
-							return 1;
+					if(includePath != workspacePath) {
+						if(installInc.length()>0) {
+							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+								return 1;
+							};
+						} else {
+							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
+								return 1;
+							};
 						};
 					};
 				};
@@ -1185,7 +1579,7 @@ namespace Main {
 		};
 
 		if(makeExecutable) {
-			if((cSource.length() == 0) && (cppSource.length() == 0)) {
+			if((cSource.isEmpty()) && (cppSource.isEmpty())) {
 				printf("Error: no c/cpp source for executable %s\n", projectName.value());
 				return 1;
 			};
@@ -1244,6 +1638,38 @@ namespace Main {
 				if(!Compiler::copyExeToFolder(binPath + "/" + projectName, pathInstall + "/bin")) {
 					printf("Error: copy exe %s to folder %s\n", (binPath + "/" + projectName).value(), (pathInstall + "/bin").value());
 					return 1;
+				};
+			};
+		};
+
+		if(doInstall) {
+			if(installFile.length()) {
+				String srcFile;
+				String dstFile;
+				size_t scanIndex;
+
+				for(k=0; k<installFile.length(); ++k) {
+					if(String::indexOf(installFile[k], "=", 0, scanIndex)) {
+						srcFile = String::substring(installFile[k], 0, scanIndex);
+						if(srcFile.length()==0) {
+							printf("Error: install-file src is empty\n");
+							return 1;
+						};
+						dstFile = String::substring(installFile[k] , scanIndex + 1);
+						if(dstFile.length()==0) {
+							printf("Error: install-file dst is empty\n");
+							return 1;
+						};
+						srcFile = workspacePath + "/" + srcFile;
+						dstFile = pathInstall  + "/" + dstFile;
+						if(!Shell::copyFile(srcFile, dstFile)) {
+							printf("Error: copy %s to %s\n",srcFile.value(),dstFile.value());
+							return 1;
+						};
+					} else {
+						printf("Error: install-file empty\n");
+						return 1;
+					};
 				};
 			};
 		};

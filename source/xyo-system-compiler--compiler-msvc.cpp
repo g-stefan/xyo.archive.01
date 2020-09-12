@@ -167,7 +167,7 @@ namespace XYO {
 				bool toMakeObjToLib;
 				String libNameOut;
 
-				if(objFiles.length() == 0) {
+				if(objFiles.isEmpty()) {
 					return false;
 				};
 
@@ -213,7 +213,7 @@ namespace XYO {
 
 				if(options & CompilerOptions::DynamicLibrary) {
 					libNameOut = binPath << "\\" << libName;
-					if(version.length()) {
+					if(!version.isEmpty()) {
 						libNameOut << "-" << version;
 					};
 					libNameOut << ".dll";
@@ -250,7 +250,7 @@ namespace XYO {
 							content += " /nodefaultlib:msvcrtd /defaultlib:libcmtd";
 						};
 					};
-					if(defFile.length() > 0) {
+					if(!defFile.isEmpty()) {
 						content << " /DEF:\"" << defFile << "\"";
 					};
 					content << " /implib:\"" << libPath << "\\" << libName << ".lib\"";
@@ -307,7 +307,7 @@ namespace XYO {
 				String content;
 				String exeNameOut;
 
-				if(objFiles.length() == 0) {
+				if(objFiles.isEmpty()) {
 					return false;
 				};
 
@@ -632,7 +632,7 @@ namespace XYO {
 						     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 				};
 
-				if(compileCppToObj.length() > 0) {
+				if(!compileCppToObj.isEmpty()) {
 					if(!compileCppToObj.process()) {
 						return false;
 					};
@@ -668,7 +668,7 @@ namespace XYO {
 							return false;
 						};
 
-						objFiles[objFiles.length()] = resObj;
+						objFiles.push(resObj);
 					};
 				};
 
@@ -762,7 +762,7 @@ namespace XYO {
 						     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 				};
 
-				if(compileCppToObj.length() > 0) {
+				if(!compileCppToObj.isEmpty()) {
 					if(!compileCppToObj.process()) {
 						return false;
 					};
@@ -797,7 +797,7 @@ namespace XYO {
 						return false;
 					};
 
-					objFiles[objFiles.length()] = resObj;
+					objFiles.push(resObj);
 				};
 
 				return makeObjToExe(
@@ -988,7 +988,7 @@ namespace XYO {
 						     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 				};
 
-				if(compileCToObj.length() > 0) {
+				if(!compileCToObj.isEmpty()) {
 					if(!compileCToObj.process()) {
 						return false;
 					};
@@ -1024,7 +1024,7 @@ namespace XYO {
 							return false;
 						};
 
-						objFiles[objFiles.length()] = resObj;
+						objFiles.push(resObj);
 					};
 				};
 
@@ -1119,7 +1119,7 @@ namespace XYO {
 						     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 				};
 
-				if(compileCToObj.length() > 0) {
+				if(!compileCToObj.isEmpty()) {
 					if(!compileCToObj.process()) {
 						return false;
 					};
@@ -1154,7 +1154,7 @@ namespace XYO {
 						return false;
 					};
 
-					objFiles[objFiles.length()] = resObj;
+					objFiles.push(resObj);
 				};
 
 				return makeObjToExe(
@@ -1187,7 +1187,7 @@ namespace XYO {
 					return true;
 				};
 				out = fileName;
-				if(version.length()) {
+				if(!version.isEmpty()) {
 					out += "-";
 					out += version;
 				};

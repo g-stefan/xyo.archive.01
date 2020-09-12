@@ -237,6 +237,10 @@ namespace XYO {
 					TNodeMemory<TNode>::initMemory();
 				};
 
+				inline bool isEmpty() const {
+					return (length_==0);
+				};
+
 				inline bool shift(T &out) {
 					size_t indexHigh;
 					size_t indexLow;

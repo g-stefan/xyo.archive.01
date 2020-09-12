@@ -33,7 +33,7 @@ namespace XYO {
 					while(StreamX::readLn(file, line, 16384)) {
 						INILine &iniLine = iniFile[index];
 						lineX = String::trimWithElement(line, trimElements);
-						if(lineX.length() == 0) {
+						if(lineX.isEmpty()) {
 							iniLine.type = INILineType::None;
 							++index;
 							continue;

@@ -144,7 +144,7 @@ namespace XYO {
 				bool toMakeObjToLib;
 				String libNameOut;
 
-				if(objFiles.length() == 0) {
+				if(objFiles.isEmpty()) {
 					return false;
 				};
 
@@ -188,13 +188,13 @@ namespace XYO {
 				if(options & CompilerOptions::DynamicLibrary) {
 #ifdef XYO_OS_UNIX
 					libNameOut = binPath << "/" << libName << ".so";
-					if(version.length()) {
+					if(!version.isEmpty()) {
 						libNameOut << "." << version;
 					};
 #endif
 #ifdef XYO_OS_WINDOWS
 					libNameOut = binPath << "/" << libName;
-					if(version.length()) {
+					if(!version.isEmpty()) {
 						libNameOut << "-" << version;
 					};
 					libNameOut << ".dll";
@@ -206,7 +206,7 @@ namespace XYO {
 					};
 
 					content << "-shared -o \"" << libNameOut << "\" -Wl,-rpath='$ORIGIN'";
-					if(version.length()) {
+					if(!version.isEmpty()) {
 #ifdef XYO_OS_UNIX
 						content << ",-soname," << libName << ".so." << version;
 #endif
@@ -298,7 +298,7 @@ namespace XYO {
 				String content;
 				String exeNameOut;
 
-				if(objFiles.length() == 0) {
+				if(objFiles.isEmpty()) {
 					return false;
 				};
 
@@ -356,16 +356,24 @@ namespace XYO {
 					};
 					content << " -l" << String::replace(libDependency[k], "lib", "");
 				};
+				
+#ifdef XYO_OS_WINDOWS
+				if(options & CompilerOptions::CRTStatic) {
+					content << " -static-libstdc++ -static-libgcc";
+					content << " -Wl,-Bstatic -lstdc++ -lpthread -lm -Wl,-Bdynamic";
+				} else {
+					content << " -lstdc++";
+					content << " -lpthread";
+					content << " -lm";
+				};
+				content << " -luser32 -lws2_32";
+#endif
+#ifdef XYO_OS_UNIX
 				content << " -lstdc++";
 				content << " -lpthread";
 				content << " -lm";
-#ifdef XYO_OS_UNIX
 				content << " -ldl";
 #endif
-#ifdef XYO_OS_WINDOWS
-				content << " -luser32 -lws2_32";
-#endif
-
 				Shell::filePutContents(buildPath + "/" + exeName + ".o2elf", content);
 				cmd = "gcc @";
 				cmd << buildPath + "/" + exeName + ".o2elf";
@@ -633,7 +641,7 @@ namespace XYO {
 						     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 				};
 
-				if(compileCppToObj.length() > 0) {
+				if(!compileCppToObj.isEmpty()) {
 					if(!compileCppToObj.process()) {
 						return false;
 					};
@@ -670,7 +678,7 @@ namespace XYO {
 							return false;
 						};
 
-						objFiles[objFiles.length()] = resObj;
+						objFiles.push(resObj);
 					};
 				};
 #endif
@@ -764,7 +772,7 @@ namespace XYO {
 						     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 				};
 
-				if(compileCppToObj.length() > 0) {
+				if(!compileCppToObj.isEmpty()) {
 					if(!compileCppToObj.process()) {
 						return false;
 					};
@@ -800,7 +808,7 @@ namespace XYO {
 						return false;
 					};
 
-					objFiles[objFiles.length()] = resObj;
+					objFiles.push(resObj);
 				};
 #endif
 				return makeObjToExe(
@@ -965,7 +973,7 @@ namespace XYO {
 						     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 				};
 
-				if(compileCToObj.length() > 0) {
+				if(!compileCToObj.isEmpty()) {
 					if(!compileCToObj.process()) {
 						return false;
 					};
@@ -1002,7 +1010,7 @@ namespace XYO {
 							return false;
 						};
 
-						objFiles[objFiles.length()] = resObj;
+						objFiles.push(resObj);
 					};
 				};
 #endif
@@ -1097,7 +1105,7 @@ namespace XYO {
 						     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 				};
 
-				if(compileCToObj.length() > 0) {
+				if(!compileCToObj.isEmpty()) {
 					if(!compileCToObj.process()) {
 						return false;
 					};
@@ -1132,7 +1140,7 @@ namespace XYO {
 						return false;
 					};
 
-					objFiles[objFiles.length()] = resObj;
+					objFiles.push(resObj);
 				};
 #endif
 
@@ -1168,7 +1176,7 @@ namespace XYO {
 				};
 				out = fileName;
 				out += ".so";
-				if(version.length()) {
+				if(!version.isEmpty()) {
 					out += ".";
 					out += version;
 				};
@@ -1180,7 +1188,7 @@ namespace XYO {
 					return true;
 				};
 				out = fileName;
-				if(version.length()) {
+				if(!version.isEmpty()) {
 					out += "-";
 					out += version;
 				};

@@ -50,6 +50,9 @@ namespace XYO {
 			XYO_EXPORT bool fileToCStringDirect(
 				const char *fileNameIn,
 				const char *fileNameOut);
+			XYO_EXPORT bool fileHashSHA512(
+				const char *fileName,
+				String &hash);
 		};
 	};
 };

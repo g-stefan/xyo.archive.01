@@ -7,10 +7,10 @@
 			"label": "Build",
 			"type": "shell",
 			"windows": {
-				"command": "cmd.exe /c build.msvc.cmd",
+				"command": "cmd.exe /c build.cmd",
 			},
 			"liux": {
-				"command": "/bin/sh -- build.ubuntu.sh",
+				"command": "/bin/sh -- build.sh",
 			}
 			"problemMatcher": [
 				"$msCompile", "$gcc"

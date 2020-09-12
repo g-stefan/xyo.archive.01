@@ -173,10 +173,10 @@ namespace XYO {
 			};
 
 			bool removeFileAndDirectoryIfEmpty(const String &target) {
-				if(target.length() > 0) {
+				if(!target.isEmpty()) {
 					if(removeFile(target)) {
 						String path = getFilePath(target);
-						if(path.length() > 0) {
+						if(!path.isEmpty()) {
 							return removeEmptyDir(path);
 						};
 					};
@@ -477,7 +477,7 @@ namespace XYO {
 
 			bool mkdirRecursively(const String &dirName) {
 				String dirName_ = normalize(dirName);
-				if(dirName_.length() == 0) {
+				if(dirName_.isEmpty()) {
 					return false;
 				};
 				TDynamicArray<String> dirList;
@@ -740,7 +740,7 @@ namespace XYO {
 
 			bool mkdirFilePath(const String &fileName) {
 				String path = getFilePath(fileName);
-				if(path.length()) {
+				if(!path.isEmpty()) {
 					return mkdirRecursivelyIfNotExists(path);
 				};
 				return true;

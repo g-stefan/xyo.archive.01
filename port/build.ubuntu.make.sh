@@ -33,6 +33,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
 	XYO_PLATFORM="mingw32"
 	XYO_OS="XYO_OS_WINDOWS"
 	XYO_APPLICATION="XYO_APPLICATION_32BIT"
+	CC_LIB="-luser32 -lws2_32"
 elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW64_NT" ]; then
 	XYO_PLATFORM="mingw64"
 	XYO_OS="XYO_OS_WINDOWS"
@@ -67,12 +68,12 @@ SRC="$SRC util/xyo-cc/xyo-cc-license.cpp"
 SRC="$SRC source/xyo.amalgam.cpp"
 
 cmdX gcc -o build/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
-cmdX build/xyo.cc --mode=$ACTION @util/xyo.static.compile.info
-cmdX build/xyo.cc --mode=$ACTION @util/xyo.dynamic.compile.info
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.01 @util/xyo.test.compile.info
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.02 @util/xyo.test.compile.info
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.03 @util/xyo.test.compile.info
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.04 @util/xyo.test.compile.info
+cmdX build/xyo.cc --mode=$ACTION @util/xyo.static.compile
+cmdX build/xyo.cc --mode=$ACTION @util/xyo.dynamic.compile
+cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.01 @util/xyo.test.compile
+cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.02 @util/xyo.test.compile
+cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.03 @util/xyo.test.compile
+cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.04 @util/xyo.test.compile
 
-cmdX build/xyo.cc --mode=$ACTION @util/xyo-cc.compile.info
+cmdX build/xyo.cc --mode=$ACTION @util/xyo-cc.compile
 

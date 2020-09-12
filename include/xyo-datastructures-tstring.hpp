@@ -332,6 +332,10 @@ namespace XYO {
 					return retV;
 				};
 
+				inline bool isEmpty() const {
+					return (length()==0);
+				}
+
 				// ---
 
 				static inline TString trimWithElement(const TString &o, const TString &x) {
@@ -599,19 +603,19 @@ namespace XYO {
 				static inline bool explode(const TString &delimiter, const TString &strToExplode, TDynamicArray<TString> &out) {
 					size_t index = 0;
 					size_t indexNext = 0;
-					if(delimiter.length() == 0) {
+					if(delimiter.isEmpty()) {
 						return false;
 					};
 					for(;;) {
 						if(indexOf(strToExplode, delimiter, index, indexNext)) {
-							out[out.length()] = substring(strToExplode, index, indexNext - index);
+							out.push(substring(strToExplode, index, indexNext - index));
 							index = indexNext + delimiter.length();
 							continue;
 						};
 						break;
 					};
 					if(index < strToExplode.length()) {
-						out[out.length()] = substring(strToExplode, index, strToExplode.length() - index);
+						out.push(substring(strToExplode, index, strToExplode.length() - index));
 					};
 					return true;
 				};

@@ -91,12 +91,19 @@ namespace XYO {
 					Object *parameter);
 				XYO_EXPORT void setNumberOfThreads(int numberOfThreads_);
 				XYO_EXPORT int getNumberOfThreads();
-				XYO_EXPORT bool process();
-				XYO_EXPORT size_t length();
+				XYO_EXPORT bool process();				
 				XYO_EXPORT TPointer<Object> getReturnValue(size_t index);
 				XYO_EXPORT void setParameter(size_t index, Object *parameter);
 				XYO_EXPORT void reset();
 				XYO_EXPORT WorkerQueueNode &index(size_t index);
+
+				size_t length() const {
+					return queue.length();
+				};
+
+				bool isEmpty() const {
+					return queue.isEmpty();
+				};
 		};
 
 		template<typename ReturnT,

@@ -14,6 +14,8 @@
 #include "xyo-multithreading-workerqueue.hpp"
 #include "xyo-datastructures-ini.hpp"
 #include "xyo-system-util.hpp"
+#include "xyo-system-file.hpp"
+#include "xyo-cryptography-sha512.hpp"
 #include "xyo-encoding-string.hpp"
 
 namespace XYO {
@@ -286,6 +288,32 @@ namespace XYO {
 				String content;
 				if(Shell::fileGetContents(fileNameIn, content)) {
 					return Shell::filePutContents(fileNameOut, String::encodeC(content));
+				};
+				return false;
+			};
+
+			bool fileHashSHA512(
+				const char *fileName,
+				String &hash) {
+				File fileIn;
+				if(fileIn.openRead(fileName)){
+					size_t readLn;
+					SHA512 hashFile;
+					hashFile.processInit();
+					uint8_t buffer[16384];
+					for(;;) {
+						readLn=fileIn.read(buffer, 16384);
+						if(readLn > 0) {
+							hashFile.processU8(buffer, readLn);
+						};
+						if(readLn < 16384) {
+							break;
+						};
+					};
+					hashFile.processDone();
+					hash=hashFile.getHashHex();
+					fileIn.close();
+					return true;
 				};
 				return false;
 			};

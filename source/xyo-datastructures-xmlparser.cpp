@@ -362,7 +362,7 @@ namespace XYO {
 
 				if(mode == XMLParserMode::Trim) {
 					String tmp = String::trimAscii(node->name);
-					if(tmp.length() > 0) {
+					if(!tmp.isEmpty()) {
 						node->name = tmp;
 						document.add(node);
 					};
@@ -465,7 +465,7 @@ namespace XYO {
 
 		bool XMLWriter::indentationIsEmpty(String &value, int mode) {
 			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
-				return ((String::trimAscii(value)).length() == 0);
+				return ((String::trimAscii(value)).isEmpty());
 			};
 			return false;
 		};
@@ -473,7 +473,7 @@ namespace XYO {
 		bool XMLWriter::writeIndentationTrim(String &value, int mode) {
 			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab) || (mode == XMLParserMode::Trim)) {
 				String tmp = String::trimAscii(value);
-				if(tmp.length() > 0) {
+				if(!tmp.isEmpty()) {
 					if(!write(tmp)) {
 						return false;
 					};

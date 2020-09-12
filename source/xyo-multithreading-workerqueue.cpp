@@ -110,11 +110,7 @@ namespace XYO {
 #endif
 			allDone = true;
 			return true;
-		};
-
-		size_t WorkerQueue::length() {
-			return queue.length();
-		};
+		};		
 
 		TPointer<Object> WorkerQueue::getReturnValue(size_t index) {
 #ifdef XYO_MULTI_THREAD

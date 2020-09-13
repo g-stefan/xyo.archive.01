@@ -70,5 +70,4 @@ call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.01 @util/xyo.test.compile
 call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.02 @util/xyo.test.compile
 call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.03 @util/xyo.test.compile
 call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.04 @util/xyo.test.compile
-
 call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo-cc.compile

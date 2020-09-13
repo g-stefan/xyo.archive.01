@@ -426,18 +426,18 @@ namespace XYO {
 				const String &projectName,
 				const String &localDependencyPath,
 				TDynamicArray<String> &repositoryDependencyPath,
-				bool &forceMake) {
+				bool &forceMake) {				
 				INIFile localDependency;
 				INIFile localDependencyScan;
 				if(!INIFileX::joinSection(localDependency, projectName, projectDependency, projectName)) {
 					return false;
-				};
+				};				
 				if(!loadDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 					return false;
-				};
+				};				
 				if(!INIFileX::joinSection(localDependencyScan, projectName, projectDependency, projectName)) {
 					return false;
-				};
+				};				
 				if(!getDependency(localDependencyScan, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 					return false;
 				};
@@ -447,18 +447,19 @@ namespace XYO {
 				items = INIFileX::count(localDependencyScan, projectName, "project");
 				size_t k, m;
 				String project;
-				String version;
+				String version;				
 				for(k = 0; k < items; ++k) {
 					if(!INIFileX::get(localDependencyScan, projectName, "project", project, k)) {
 						return false;
-					};
+					};					
 					if(!Shell::fileExists(localDependencyPath + "/" + project + ".dependency.ini")) {
-						for(m = 0; m < repositoryDependencyPath.length(); ++m) {
-							if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
+						for(m = 0; m < repositoryDependencyPath.length(); ++m) {							
+							if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {								
 								if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
 										localDependencyPath + "/" + project + ".dependency.ini")) {
 									return false;
 								};
+								break;
 							};
 						};
 					};
@@ -486,7 +487,7 @@ namespace XYO {
 			bool copyDependency(
 				const String &projectName,
 				const String &localDependencyPath,
-				TDynamicArray<String> &repositoryDependencyPath) {
+				TDynamicArray<String> &repositoryDependencyPath) {				
 				INIFile localDependency;
 				INIFile repositoryDependency;
 				if(!getDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, false)) {
@@ -500,12 +501,13 @@ namespace XYO {
 					if(!INIFileX::get(localDependency, projectName, "project", project, k)) {
 						return false;
 					};
-					for(m = 0; m < repositoryDependencyPath.length(); ++m) {
+					for(m = 0; m < repositoryDependencyPath.length(); ++m) {						
 						if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
 							if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
 									localDependencyPath + "/" + project + ".dependency.ini")) {
 								return false;
 							};
+							break;
 						};
 					};
 				};

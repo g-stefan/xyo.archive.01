@@ -35,7 +35,7 @@ namespace Main {
 	void Application::showUsage() {
 		printf("xyo-cc - c++ compiler command driver\n");
 #ifndef XYO_CC_NO_VERSION
-		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
+		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());		
 #endif
 		printf("%s\n\n", XYOCC::Copyright::fullCopyright());
 
@@ -222,7 +222,7 @@ namespace Main {
 		size_t w;
 		for(w = 0; w < repositoryPathDependency.length(); ++w) {
 			repositoryPathDependencyLib.push(repositoryPathDependency[w] + "/lib");
-		};
+		};		
 
 		bool doMake = false;
 		String cmdMake;
@@ -821,6 +821,7 @@ namespace Main {
 		};
 
 		String versionHash = Compiler::getVersionHash(versionFile, projectBase);
+		INIFileX::insert(projectDependency, "project", "version", Compiler::getVersion(versionFile, projectBase));
 		INIFileX::insert(projectDependency, "project", "version.hash", versionHash);
 
 		String libVersion;
@@ -1634,7 +1635,7 @@ namespace Main {
 					return 1;
 				};
 			};
-			if((doInstall && (!doInstallRelease)) || doInstallDev) {
+			if(doInstall && ((!doInstallRelease) || doInstallDev)) {
 				if(!Compiler::copyExeToFolder(binPath + "/" + projectName, pathInstall + "/bin")) {
 					printf("Error: copy exe %s to folder %s\n", (binPath + "/" + projectName).value(), (pathInstall + "/bin").value());
 					return 1;

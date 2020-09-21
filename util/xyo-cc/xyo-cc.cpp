@@ -26,24 +26,38 @@ namespace Main {
 
 			inline Application() {};
 
+			void showVersion();
 			void showUsage();
 			void showLicense();
 
 			int main(int cmdN, char *cmdS[]);
 	};
 
-	void Application::showUsage() {
+	void Application::showVersion() {
 		printf("xyo-cc - c++ compiler command driver\n");
 #ifndef XYO_CC_NO_VERSION
-		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());		
+		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
 #endif
 		printf("%s\n\n", XYOCC::Copyright::fullCopyright());
+	};
+
+	void Application::showLicense() {
+		printf("%s", XYOCC::License::content());
+	};
+
+	void Application::showUsage() {
+		showVersion();
 
 		printf("%s",
 			"options:\n"
+			"    --version                      show version\n"
 			"    --license                      show license\n"
 			"    --usage                        this info\n"
-			"    --bump-version                 increment version number\n"
+			"    --bump-version                 increment version build number\n"
+			"    --bump-version-build           increment version build number\n"
+			"    --bump-version-patch           increment version patch number\n"
+			"    --bump-version-minor           increment version minor number\n"
+			"    --bump-version-major           increment version major number\n"
 			"    --debug                        build debug version\n"
 			"    --release                      build release version\n"
 			"    --exe                          build executable (.exe)\n"
@@ -64,7 +78,11 @@ namespace Main {
 			"        [empty] or make            - build release or debug if XYO_COMPILE_DEBUG is defined in environment\n"
 			"        release                    - build release\n"
 			"        debug                      - build debug\n"
-			"        version                    - bump version\n"
+			"        version                    - bump version build\n"
+			"        version-build              - bump version build\n"
+			"        version-patch              - bump version patch\n"
+			"        version-minor              - bump version minor\n"
+			"        version-major              - bump version major\n"
 			"        install                    - install to repository\n"
 			"        install-release            - install to release repository\n"
 			"        test                       - do nothing (return)\n"
@@ -127,10 +145,6 @@ namespace Main {
 		printf("\n");
 	};
 
-	void Application::showLicense() {
-		printf("%s", XYOCC::License::content());
-	};
-
 	int Application::main(int cmdN, char *cmdS[]) {
 		int i;
 		String opt;
@@ -140,7 +154,6 @@ namespace Main {
 		bool makeExecutable = false;
 		bool makeLibrary = false;
 		bool makeDynamicLibrary = false;
-		bool doBumpVersion = false;
 		bool isRelease = true;
 		bool modeIsVersion = false;
 		bool doInstall = false;
@@ -158,6 +171,10 @@ namespace Main {
 		bool doSourceExtract = false;
 		bool archiveRelease = false;
 		bool archiveReleaseSHA512 = false;
+		bool doBumpVersionBuild = false;
+		bool doBumpVersionPatch = false;
+		bool doBumpVersionMinor = false;
+		bool doBumpVersionMajor = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -222,7 +239,7 @@ namespace Main {
 		size_t w;
 		for(w = 0; w < repositoryPathDependency.length(); ++w) {
 			repositoryPathDependencyLib.push(repositoryPathDependency[w] + "/lib");
-		};		
+		};
 
 		bool doMake = false;
 		String cmdMake;
@@ -272,16 +289,36 @@ namespace Main {
 					optValue = String::substring(opt, optIndex + 1);
 					opt = String::substring(opt, 0, optIndex);
 				};
-				if (opt == "usage") {
-					showUsage();
+				if (opt == "version") {
+					showVersion();
 					return 0;
 				};
 				if (opt == "license") {
 					showLicense();
 					return 0;
 				};
+				if (opt == "usage") {
+					showUsage();
+					return 0;
+				};
 				if (opt == "bump-version") {
-					doBumpVersion = true;
+					doBumpVersionBuild = true;
+					continue;
+				};
+				if (opt == "bump-version-build") {
+					doBumpVersionBuild = true;
+					continue;
+				};
+				if (opt == "bump-version-patch") {
+					doBumpVersionPatch = true;
+					continue;
+				};
+				if (opt == "bump-version-minor") {
+					doBumpVersionMinor = true;
+					continue;
+				};
+				if (opt == "bump-version-major") {
+					doBumpVersionMajor = true;
 					continue;
 				};
 				if (opt == "debug") {
@@ -339,7 +376,10 @@ namespace Main {
 					continue;
 				};
 				if (opt == "no-version") {
-					doBumpVersion = false;
+					doBumpVersionBuild = false;
+					doBumpVersionPatch = false;
+					doBumpVersionMinor = false;
+					doBumpVersionMajor = false;
 					continue;
 				};
 				if (opt == "dll-no-version") {
@@ -374,7 +414,27 @@ namespace Main {
 						continue;
 					};
 					if (optValue == "version") {
-						doBumpVersion = true;
+						doBumpVersionBuild = true;
+						modeIsVersion = true;
+						continue;
+					};
+					if (optValue == "version-build") {
+						doBumpVersionBuild = true;
+						modeIsVersion = true;
+						continue;
+					};
+					if (optValue == "version-patch") {
+						doBumpVersionPatch = true;
+						modeIsVersion = true;
+						continue;
+					};
+					if (optValue == "version-minor") {
+						doBumpVersionMinor = true;
+						modeIsVersion = true;
+						continue;
+					};
+					if (optValue == "version-major") {
+						doBumpVersionMajor = true;
 						modeIsVersion = true;
 						continue;
 					};
@@ -454,7 +514,7 @@ namespace Main {
 					sscanf(optValue.value(), "%d", &numThreads);
 					continue;
 				};
-				if (opt == "inc") {					
+				if (opt == "inc") {
 					if(optValue.isEmpty()) {
 						printf("Error: inc path is empty\n");
 						return 1;
@@ -462,7 +522,7 @@ namespace Main {
 					incPath.push(optValue);
 					continue;
 				};
-				if (opt == "inc-repository") {					
+				if (opt == "inc-repository") {
 					if(optValue.isEmpty()) {
 						printf("Error: inc path is empty\n");
 						return 1;
@@ -470,7 +530,7 @@ namespace Main {
 					incPath.push(pathRepository + "/include/" + optValue);
 					continue;
 				};
-				if (opt == "def") {					
+				if (opt == "def") {
 					if(optValue.isEmpty()) {
 						printf("Error: def parameter is empty\n");
 						return 1;
@@ -478,7 +538,7 @@ namespace Main {
 					cppDefine.push(optValue);
 					continue;
 				};
-				if (opt == "rc-inc") {					
+				if (opt == "rc-inc") {
 					if(optValue.isEmpty()) {
 						printf("Error: rc-inc path is empty\n");
 						return 1;
@@ -486,7 +546,7 @@ namespace Main {
 					incPathRC.push(optValue);
 					continue;
 				};
-				if (opt == "rc-def") {				
+				if (opt == "rc-def") {
 					if(optValue.isEmpty()) {
 						printf("Error: rc-def parameter is empty\n");
 						return 1;
@@ -494,7 +554,7 @@ namespace Main {
 					rcDefine.push(optValue);
 					continue;
 				};
-				if (opt == "use-lib-path") {					
+				if (opt == "use-lib-path") {
 					if(optValue.isEmpty()) {
 						printf("Error: use-lib-path is empty\n");
 						return 1;
@@ -502,7 +562,7 @@ namespace Main {
 					libDependencyPath.push(optValue);
 					continue;
 				};
-				if (opt == "use-lib") {					
+				if (opt == "use-lib") {
 					if(optValue.isEmpty()) {
 						printf("Error: use-lib is empty\n");
 						return 1;
@@ -666,7 +726,7 @@ namespace Main {
 						return 1;
 					};
 					continue;
-				};				
+				};
 				if (opt == "src-h") {
 					if(optValue.isEmpty()) {
 						printf("Error: src-h file not provided\n");
@@ -711,23 +771,23 @@ namespace Main {
 					noDefaultSource = true;
 					continue;
 				};
-				if (opt == "platform"){
+				if (opt == "platform") {
 					if(optValue.isEmpty()) {
 						printf("Error: platform to match in not provided\n");
 						return 1;
 					};
-					if(!Compiler::matchPlatform(optValue)){
+					if(!Compiler::matchPlatform(optValue)) {
 						++i;
 						continue;
 					};
 					continue;
 				};
-				if (opt == "not-platform"){
+				if (opt == "not-platform") {
 					if(optValue.isEmpty()) {
 						printf("Error: platform to match in not provided\n");
 						return 1;
 					};
-					if(Compiler::matchPlatform(optValue)){
+					if(Compiler::matchPlatform(optValue)) {
 						++i;
 						continue;
 					};
@@ -787,16 +847,16 @@ namespace Main {
 			int k;
 			for(k=0; k<sha512File.length(); ++k) {
 				csvRow.empty();
-				if(!Util::fileHashSHA512(sha512File[k],csvRow[0])) {
-					printf("Error: sha512-file on %s failed\n",sha512File[k].value());
+				if(!Util::fileHashSHA512(sha512File[k], csvRow[0])) {
+					printf("Error: sha512-file on %s failed\n", sha512File[k].value());
 					return 1;
-				};				
+				};
 				csvRow[1]=sha512File[k];
-				if(!CSVFileX::encode(csvLine,csvRow)) {
+				if(!CSVFileX::encode(csvLine, csvRow)) {
 					printf("Error: csv encoding\n");
 					return 1;
 				};
-				printf("%s",csvLine.value());
+				printf("%s", csvLine.value());
 			};
 			return 0;
 		};
@@ -841,7 +901,7 @@ namespace Main {
 		} else {
 			pathRelease = Compiler::getPathRelease(installProjectName, installVersionFile, isRelease);
 		};
-		
+
 		// <archive>
 
 		String projectNameWithVersion = projectName + "-" + Compiler::getVersion(versionFile, projectBase);
@@ -857,7 +917,7 @@ namespace Main {
 					return 1;
 				};
 
-				if(!Shell::rename("source",projectNameWithVersion)) {
+				if(!Shell::rename("source", projectNameWithVersion)) {
 					printf("Error: source directory in use\r\n");
 					Shell::chdir(originalPath);
 					return 1;
@@ -877,13 +937,13 @@ namespace Main {
 					Shell::chdir(originalPath);
 					return 1;
 				};
-				if(!Shell::rename(projectNameWithVersion,"source")) {
-					printf("Error: %s or source directory in use\r\n",projectNameWithVersion.value());
+				if(!Shell::rename(projectNameWithVersion, "source")) {
+					printf("Error: %s or source directory in use\r\n", projectNameWithVersion.value());
 					Shell::chdir(originalPath);
 					return 1;
 				};
 				Shell::chdir(originalPath);
-				return 0;				
+				return 0;
 			};
 		};
 
@@ -891,7 +951,7 @@ namespace Main {
 			if(sourceExtract) {
 				String originalPath = Shell::getCwd();
 				Shell::chdir(workspacePath);
-				if(!Shell::removeDirRecursively("source")){
+				if(!Shell::removeDirRecursively("source")) {
 					printf("Error: unable to remove source, directory in use\r\n");
 					Shell::chdir(originalPath);
 					return 1;
@@ -910,8 +970,8 @@ namespace Main {
 					Shell::chdir(originalPath);
 					return 1;
 				};
-				if(!Shell::rename(projectNameWithVersion,"source")) {
-					printf("Error: %s or source directory in use\r\n",projectNameWithVersion.value());
+				if(!Shell::rename(projectNameWithVersion, "source")) {
+					printf("Error: %s or source directory in use\r\n", projectNameWithVersion.value());
 					Shell::chdir(originalPath);
 					return 1;
 				};
@@ -930,15 +990,15 @@ namespace Main {
 			return 0;
 		};
 
-		if(archiveRelease){
-			String originalPath = Shell::getCwd();			
+		if(archiveRelease) {
+			String originalPath = Shell::getCwd();
 			String releaseName=Shell::getFileName(pathRelease);
 			Shell::chdir(pathRelease+"/..");
 
 			// bin
 
-			if(Shell::directoryExists(releaseName)){
-				if(Shell::fileExists(releaseName+".7z")){
+			if(Shell::directoryExists(releaseName)) {
+				if(Shell::fileExists(releaseName+".7z")) {
 					Shell::removeFile(releaseName+".7z");
 				};
 				Shell::system(p7zipCompress+releaseName+".7z "+releaseName);
@@ -948,18 +1008,18 @@ namespace Main {
 					String csvLine;
 					String fileName=releaseName+".7z";
 					csvRow.empty();
-					if(!Util::fileHashSHA512(fileName,csvRow[0])) {
-						printf("Error: sha512-file on %s failed\n",fileName.value());
+					if(!Util::fileHashSHA512(fileName, csvRow[0])) {
+						printf("Error: sha512-file on %s failed\n", fileName.value());
 						return 1;
 					};
 					csvRow[1]=fileName;
-					if(!CSVFileX::encode(csvLine,csvRow)) {
+					if(!CSVFileX::encode(csvLine, csvRow)) {
 						printf("Error: csv encoding\n");
 						return 1;
 					};
 					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
 						printf("Error: unable to write sha512 hash\n");
-						return 1;					
+						return 1;
 					};
 				};
 			};
@@ -967,8 +1027,8 @@ namespace Main {
 			// dev
 
 			releaseName+="-dev";
-			if(Shell::directoryExists(releaseName)){				
-				if(Shell::fileExists(releaseName+".7z")){
+			if(Shell::directoryExists(releaseName)) {
+				if(Shell::fileExists(releaseName+".7z")) {
 					Shell::removeFile(releaseName+".7z");
 				};
 				Shell::system(p7zipCompress+releaseName+".7z "+releaseName);
@@ -978,23 +1038,23 @@ namespace Main {
 					String csvLine;
 					String fileName=releaseName+".7z";
 					csvRow.empty();
-					if(!Util::fileHashSHA512(fileName,csvRow[0])) {
-						printf("Error: sha512-file on %s failed\n",fileName.value());
+					if(!Util::fileHashSHA512(fileName, csvRow[0])) {
+						printf("Error: sha512-file on %s failed\n", fileName.value());
 						return 1;
 					};
 					csvRow[1]=fileName;
-					if(!CSVFileX::encode(csvLine,csvRow)) {
+					if(!CSVFileX::encode(csvLine, csvRow)) {
 						printf("Error: csv encoding\n");
 						return 1;
 					};
 					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
 						printf("Error: unable to write sha512 hash\n");
-						return 1;					
+						return 1;
 					};
 				};
 			};
 
-			//			
+			//
 
 			Shell::chdir(originalPath);
 			return 0;
@@ -1162,8 +1222,44 @@ namespace Main {
 			sourcePath << "/" << sourcePathX;
 		};
 
-		if(doBumpVersion) {
-			if(!Compiler::bumpVersion(
+		if(doBumpVersionBuild) {
+			if(!Compiler::bumpVersionBuild(
+					versionFile,
+					projectBase,
+					sourcePath,
+					includePath)) {
+				printf("Error: version update fail\n");
+				return 1;
+			};
+			return 0;
+		};
+
+		if(doBumpVersionPatch) {
+			if(!Compiler::bumpVersionPatch(
+					versionFile,
+					projectBase,
+					sourcePath,
+					includePath)) {
+				printf("Error: version update fail\n");
+				return 1;
+			};
+			return 0;
+		};
+
+		if(doBumpVersionMinor) {
+			if(!Compiler::bumpVersionMinor(
+					versionFile,
+					projectBase,
+					sourcePath,
+					includePath)) {
+				printf("Error: version update fail\n");
+				return 1;
+			};
+			return 0;
+		};
+
+		if(doBumpVersionMajor) {
+			if(!Compiler::bumpVersionMajor(
 					versionFile,
 					projectBase,
 					sourcePath,
@@ -1267,7 +1363,7 @@ namespace Main {
 				// .source.hpp - internal header source
 				if(String::endsWith(hppFilesIn[k], ".source.hpp")) {
 					hppFiles.push(hppFilesIn[k]);
-						continue;
+					continue;
 				};
 				hppFiles.push(hppFilesIn[k]);
 			};
@@ -1656,7 +1752,7 @@ namespace Main {
 							printf("Error: install-file src is empty\n");
 							return 1;
 						};
-						dstFile = String::substring(installFile[k] , scanIndex + 1);
+						dstFile = String::substring(installFile[k], scanIndex + 1);
 						if(dstFile.length()==0) {
 							printf("Error: install-file dst is empty\n");
 							return 1;
@@ -1664,7 +1760,7 @@ namespace Main {
 						srcFile = workspacePath + "/" + srcFile;
 						dstFile = pathInstall  + "/" + dstFile;
 						if(!Shell::copyFile(srcFile, dstFile)) {
-							printf("Error: copy %s to %s\n",srcFile.value(),dstFile.value());
+							printf("Error: copy %s to %s\n", srcFile.value(), dstFile.value());
 							return 1;
 						};
 					} else {

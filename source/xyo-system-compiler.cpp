@@ -82,6 +82,108 @@ namespace XYO {
 				return false;
 			};
 
+			bool versionPatchBump(
+				String versionIni,
+				String projectName) {
+				INIFile versionInfo;
+				String value;
+				int versionPatch;
+				int versionMinor;
+				int versionMajor;
+				char buf[32];
+				DateTime now;
+				if(INIFileX::load(versionIni, versionInfo)) {
+					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+						value = "0.0.0";
+					};
+					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					++versionPatch;
+					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+						return false;
+					};
+					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+						return false;
+					};
+					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+						return false;
+					};
+					return INIFileX::save(versionIni, versionInfo);
+				};
+				return false;
+			};
+
+			bool versionMinorBump(
+				String versionIni,
+				String projectName) {
+				INIFile versionInfo;
+				String value;
+				int versionPatch;
+				int versionMinor;
+				int versionMajor;
+				char buf[32];
+				DateTime now;
+				if(INIFileX::load(versionIni, versionInfo)) {
+					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+						value = "0.0.0";
+					};
+					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					versionPatch = 0;
+					++versionMinor;
+					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+						return false;
+					};
+					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+						return false;
+					};
+					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+						return false;
+					};
+					return INIFileX::save(versionIni, versionInfo);
+				};
+				return false;
+			};
+
+			bool versionMajorBump(
+				String versionIni,
+				String projectName) {
+				INIFile versionInfo;
+				String value;
+				int versionPatch;
+				int versionMinor;
+				int versionMajor;
+				char buf[32];
+				DateTime now;
+				if(INIFileX::load(versionIni, versionInfo)) {
+					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+						value = "0.0.0";
+					};
+					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					versionPatch = 0;
+					versionMinor = 0;
+					++versionMajor;
+					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+						return false;
+					};
+					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+						return false;
+					};
+					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+						return false;
+					};
+					return INIFileX::save(versionIni, versionInfo);
+				};
+				return false;
+			};
+
 			bool versionProcessTemplate(
 				String versionIni,
 				String projectName,
@@ -189,7 +291,7 @@ namespace XYO {
 				return INIFileX::save(versionIni, versionInfo);
 			};
 
-			bool bumpVersion(
+			bool bumpVersionBuild(
 				String versionFile,
 				String projectName,
 				String sourcePath,
@@ -217,14 +319,96 @@ namespace XYO {
 				return true;
 			};
 
+			bool bumpVersionPatch(
+				String versionFile,
+				String projectName,
+				String sourcePath,
+				String includePath,
+				size_t maxLineSize) {
+				if(!versionPatchBump(versionFile, projectName)) {
+					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+						return false;
+					};
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.hpp",
+						includePath + "/" + projectName + "-version.hpp",
+						maxLineSize)) {
+					return false;
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.cpp",
+						sourcePath + "/" + projectName + "-version.cpp",
+						maxLineSize)) {
+					return false;
+				};
+				return true;
+			};
+
+			bool bumpVersionMinor(
+				String versionFile,
+				String projectName,
+				String sourcePath,
+				String includePath,
+				size_t maxLineSize) {
+				if(!versionMinorBump(versionFile, projectName)) {
+					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+						return false;
+					};
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.hpp",
+						includePath + "/" + projectName + "-version.hpp",
+						maxLineSize)) {
+					return false;
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.cpp",
+						sourcePath + "/" + projectName + "-version.cpp",
+						maxLineSize)) {
+					return false;
+				};
+				return true;
+			};
+
+			bool bumpVersionMajor(
+				String versionFile,
+				String projectName,
+				String sourcePath,
+				String includePath,
+				size_t maxLineSize) {
+				if(!versionMajorBump(versionFile, projectName)) {
+					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+						return false;
+					};
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.hpp",
+						includePath + "/" + projectName + "-version.hpp",
+						maxLineSize)) {
+					return false;
+				};
+				if(!versionProcessTemplate(versionFile,
+						projectName,
+						sourcePath + "/" + projectName + "-version.template.cpp",
+						sourcePath + "/" + projectName + "-version.cpp",
+						maxLineSize)) {
+					return false;
+				};
+				return true;
+			};
+
 			String getVersionHash(
 				String versionFile,
 				String projectName) {
 				INIFile versionInfo;
 				String value;
 				String hash;
-				DateTime now;
-				char buf[32];
 				if(INIFileX::load(versionFile, versionInfo)) {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
@@ -235,22 +419,18 @@ namespace XYO {
 					};
 					hash << "." << value;
 					if(!INIFileX::get(versionInfo, projectName, "date", value)) {
-						sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
-						value = buf;
+						value = "date-unknown";
 					};
 					hash << "." << value;
 					if(!INIFileX::get(versionInfo, projectName, "time", value)) {
-						sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
-						value = buf;
+						value = "time-unknown";
 					};
 					hash << "." << value;
 					return MD5::getHashString(hash);
 				};
 				hash = "0.0.0.0";
-				sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
-				hash << "." << buf;
-				sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
-				hash << "." << buf;
+				hash << "." << "date-unknown";
+				hash << "." << "time-unknown";
 				return MD5::getHashString(hash);
 			};
 
@@ -426,18 +606,18 @@ namespace XYO {
 				const String &projectName,
 				const String &localDependencyPath,
 				TDynamicArray<String> &repositoryDependencyPath,
-				bool &forceMake) {				
+				bool &forceMake) {
 				INIFile localDependency;
 				INIFile localDependencyScan;
 				if(!INIFileX::joinSection(localDependency, projectName, projectDependency, projectName)) {
 					return false;
-				};				
+				};
 				if(!loadDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 					return false;
-				};				
+				};
 				if(!INIFileX::joinSection(localDependencyScan, projectName, projectDependency, projectName)) {
 					return false;
-				};				
+				};
 				if(!getDependency(localDependencyScan, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 					return false;
 				};
@@ -447,14 +627,14 @@ namespace XYO {
 				items = INIFileX::count(localDependencyScan, projectName, "project");
 				size_t k, m;
 				String project;
-				String version;				
+				String version;
 				for(k = 0; k < items; ++k) {
 					if(!INIFileX::get(localDependencyScan, projectName, "project", project, k)) {
 						return false;
-					};					
+					};
 					if(!Shell::fileExists(localDependencyPath + "/" + project + ".dependency.ini")) {
-						for(m = 0; m < repositoryDependencyPath.length(); ++m) {							
-							if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {								
+						for(m = 0; m < repositoryDependencyPath.length(); ++m) {
+							if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
 								if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
 										localDependencyPath + "/" + project + ".dependency.ini")) {
 									return false;
@@ -487,7 +667,7 @@ namespace XYO {
 			bool copyDependency(
 				const String &projectName,
 				const String &localDependencyPath,
-				TDynamicArray<String> &repositoryDependencyPath) {				
+				TDynamicArray<String> &repositoryDependencyPath) {
 				INIFile localDependency;
 				INIFile repositoryDependency;
 				if(!getDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, false)) {
@@ -501,7 +681,7 @@ namespace XYO {
 					if(!INIFileX::get(localDependency, projectName, "project", project, k)) {
 						return false;
 					};
-					for(m = 0; m < repositoryDependencyPath.length(); ++m) {						
+					for(m = 0; m < repositoryDependencyPath.length(); ++m) {
 						if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
 							if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
 									localDependencyPath + "/" + project + ".dependency.ini")) {

@@ -356,7 +356,7 @@ namespace XYO {
 					};
 					content << " -l" << String::replace(libDependency[k], "lib", "");
 				};
-				
+
 #ifdef XYO_OS_WINDOWS
 				if(options & CompilerOptions::CRTStatic) {
 					content << " -static-libstdc++ -static-libgcc";

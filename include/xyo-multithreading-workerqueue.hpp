@@ -91,7 +91,7 @@ namespace XYO {
 					Object *parameter);
 				XYO_EXPORT void setNumberOfThreads(int numberOfThreads_);
 				XYO_EXPORT int getNumberOfThreads();
-				XYO_EXPORT bool process();				
+				XYO_EXPORT bool process();
 				XYO_EXPORT TPointer<Object> getReturnValue(size_t index);
 				XYO_EXPORT void setParameter(size_t index, Object *parameter);
 				XYO_EXPORT void reset();

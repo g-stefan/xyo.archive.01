@@ -83,7 +83,12 @@ namespace XYO {
 				cppFile = String::replace(cppFile, "/", "\\");
 				objFile = String::replace(objFile, "/", "\\");
 
-				cmd = "cl.exe";
+				String cxx = Shell::getEnv("CXX");
+				if(cxx.length()==0) {
+					cxx="cl.exe";
+				};
+
+				cmd = cxx;
 				content = " /nologo";
 
 				if(options & CompilerOptions::Release) {
@@ -832,7 +837,12 @@ namespace XYO {
 				cFile = String::replace(cFile, "/", "\\");
 				objFile = String::replace(objFile, "/", "\\");
 
-				cmd = "cl.exe";
+				String cc = Shell::getEnv("CC");
+				if(cc.length()==0) {
+					cc="cl.exe";
+				};
+
+				cmd = cc;
 				content = " /nologo";
 
 				if(options & CompilerOptions::Release) {

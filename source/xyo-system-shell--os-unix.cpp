@@ -86,9 +86,9 @@ namespace XYO {
 					fIn = fdopen(readFd, "rb");
 					if (fIn != nullptr) {
 						writeFd = open(destination, O_WRONLY | O_CREAT | O_TRUNC, statBuf.st_mode);
-						if (writeFd) {					
+						if (writeFd) {
 							fOut = fdopen(writeFd, "wb");
-							if (fOut != nullptr) {								
+							if (fOut != nullptr) {
 								while (true) {
 									wd = 0;
 									rd = fread(buf, 1, 16384, fIn);
@@ -97,7 +97,7 @@ namespace XYO {
 										if (rd < 16384) {
 											break;
 										};
-									};									
+									};
 								};
 								if (wd == rd) {
 									retV = true;

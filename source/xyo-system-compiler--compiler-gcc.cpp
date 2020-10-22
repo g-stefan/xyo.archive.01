@@ -80,7 +80,11 @@ namespace XYO {
 
 				cppFile = String::replace(cppFile, "\\", "/");
 				objFile = String::replace(objFile, "\\", "/");
-				cmd = "gcc -O1 -std=c++11 -std=gnu++11 -fpermissive";
+				String cxx = Shell::getEnv("CXX");
+				if(cxx.length()==0) {
+					cxx="gcc";
+				};
+				cmd = cxx + " -O1 -std=c++11 -std=gnu++11 -fpermissive";
 				if(options & CompilerOptions::Release) {
 					cmd += " -DXYO_COMPILE_RELEASE";
 				};
@@ -256,7 +260,11 @@ namespace XYO {
 #endif
 
 					Shell::filePutContents(buildPath + "/" + libName + ".o2so", content);
-					cmd = "gcc @";
+					String cxx = Shell::getEnv("CXX");
+					if(cxx.length()==0) {
+						cxx="gcc";
+					};
+					cmd = cxx + " @";
 					cmd << buildPath + "/" + libName + ".o2so";
 					if(echoCmd) {
 						printf("%s\n", cmd.value());
@@ -375,7 +383,11 @@ namespace XYO {
 				content << " -ldl";
 #endif
 				Shell::filePutContents(buildPath + "/" + exeName + ".o2elf", content);
-				cmd = "gcc @";
+				String cxx = Shell::getEnv("CXX");
+				if(cxx.length()==0) {
+					cxx="gcc";
+				};
+				cmd = cxx + " @";
 				cmd << buildPath + "/" + exeName + ".o2elf";
 
 				if(echoCmd) {
@@ -840,7 +852,11 @@ namespace XYO {
 
 				cFile = String::replace(cFile, "\\", "/");
 				objFile = String::replace(objFile, "\\", "/");
-				cmd = "gcc -O1";
+				String cc = Shell::getEnv("CC");
+				if(cc.length()==0) {
+					cc="gcc";
+				};
+				cmd = cc + " -O1";
 				if(options & CompilerOptions::Release) {
 					cmd += " -DXYO_COMPILE_RELEASE";
 				};

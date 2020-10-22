@@ -96,9 +96,9 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
 					++versionPatch;
-					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};
@@ -129,10 +129,10 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
 					versionPatch = 0;
 					++versionMinor;
-					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};
@@ -163,11 +163,11 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor,&versionMinor,&versionPatch);
+					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
 					versionPatch = 0;
 					versionMinor = 0;
 					++versionMajor;
-					sprintf(buf, "%d.%d.%d", versionMajor,versionMinor,versionPatch);
+					sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};

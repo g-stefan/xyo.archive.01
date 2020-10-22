@@ -129,7 +129,7 @@ namespace XYO {
 
 				dir = directory;
 
-				// check for simple drive check X: => X:\                                               
+				// check for simple drive check X: => X:\ .
 				ln = strlen(dir);
 #ifdef XYO_COMPILER_GCC
 				ln = strlen(dir); // strange gcc bug!? (ln=0) on X:

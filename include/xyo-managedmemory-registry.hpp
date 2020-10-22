@@ -7,7 +7,7 @@
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
 //
 
-#ifndef XYO_CANAGEDMEMORY_REGISTRY_HPP
+#ifndef XYO_MANAGEDMEMORY_REGISTRY_HPP
 #define XYO_MANAGEDMEMORY_REGISTRY_HPP
 
 #ifndef XYO__DEPENDENCY_HPP

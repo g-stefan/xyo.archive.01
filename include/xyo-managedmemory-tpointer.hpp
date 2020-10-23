@@ -22,7 +22,7 @@ namespace XYO {
 	namespace ManagedMemory {
 
 		template<typename T>
-		class TMemory;
+		struct TMemory;
 
 		template<typename T>
 		class TPointerX;

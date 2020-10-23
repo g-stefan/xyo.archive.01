@@ -54,7 +54,12 @@ INC="$INC -Isource"
 SRC=""
 SRC="$SRC util/xyo.config.cpp"
 
-cmdX gcc -o build/xyo.config -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm
+if [ "$CXX" = "" ]; then
+	CXX=gcc
+	export CXX=$CXX
+fi
+
+cmdX $CXX -o build/xyo.config -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm
 cmdX ./build/xyo.config
 
 DEF=""
@@ -67,7 +72,7 @@ SRC="$SRC util/xyo-cc/xyo-cc-copyright.cpp"
 SRC="$SRC util/xyo-cc/xyo-cc-license.cpp"
 SRC="$SRC source/xyo.amalgam.cpp"
 
-cmdX gcc -o build/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
+cmdX $CXX -o build/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
 cmdX build/xyo.cc --mode=$ACTION @util/xyo.static.compile
 cmdX build/xyo.cc --mode=$ACTION @util/xyo.dynamic.compile
 cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.01 @util/xyo.test.compile

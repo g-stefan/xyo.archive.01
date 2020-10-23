@@ -41,7 +41,6 @@ namespace XYO {
 			String getFileName(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				size_t index2;
 				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, index + 1);
 				};
@@ -67,7 +66,6 @@ namespace XYO {
 			String getFilePath(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				size_t index2;
 				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, 0, index);
 				};
@@ -77,7 +75,6 @@ namespace XYO {
 			String getFilePathX(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				size_t index2;
 				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, 0, index + 1);
 				};
@@ -506,7 +503,7 @@ namespace XYO {
 
 			bool removeEmptyDirRecursively(const String &dirName) {
 				TDynamicArray<String> dirList;
-				size_t k, m;
+				size_t k;
 				ShellFind scan;
 				k = 0;
 
@@ -1095,7 +1092,6 @@ namespace XYO {
 			};
 
 			void mainArgsSet(const char *cmdLine, int &cmdN, char ** &cmdS) {
-				int cmdSize;
 				int k;
 
 				mainArgsParse(false, cmdLine, cmdN, cmdS);

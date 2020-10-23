@@ -135,7 +135,6 @@ namespace XYO {
 				token.ignoreSpaceOrComment();
 				if (token.is1('{')) {
 					String key;
-					size_t index = 0;
 					TPointer<VAssociativeArray> vAssociativeArray;
 					vAssociativeArray.newMemory();
 					result = vAssociativeArray;

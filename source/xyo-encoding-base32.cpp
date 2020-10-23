@@ -23,9 +23,7 @@ namespace XYO {
 			String encode(const String &toEncode) {
 				String retV;
 				uint32_t c;
-				uint32_t cx;
 				uint32_t co;
-				uint32_t cz;
 				uint64_t n;
 				uint32_t n0, n1, n2, n3, n4, n5, n6, n7;
 				char buf[2];

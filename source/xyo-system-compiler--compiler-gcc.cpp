@@ -144,8 +144,7 @@ namespace XYO {
 
 				String cmd;
 				int k;
-				String content;
-				bool toMakeObjToLib;
+				String content;				
 				String libNameOut;
 
 				if(objFiles.isEmpty()) {

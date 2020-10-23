@@ -27,6 +27,9 @@ if [ "$XYO_PLATFORM" = "mingw64" ]; then
 	DEFAULT_PLATFORM=mingw64
 fi
 if [ "$DEFAULT_PLATFORM" = "" ]; then
+	if [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+                DEFAULT_PLATFORM=ubuntu
+        fi
 	if [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
 		DEFAULT_PLATFORM=mingw32
 	fi

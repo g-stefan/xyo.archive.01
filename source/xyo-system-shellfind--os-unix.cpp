@@ -94,7 +94,7 @@ namespace XYO {
 				struct stat attrib;
 				stat(shellFind_->finddata->d_name, &attrib);
 
-				isReadOnly = (attrib.st_mode & S_IWUSR == 0);
+				isReadOnly = (attrib.st_mode & (S_IWUSR == 0));
 				return true;
 			};
 
@@ -146,7 +146,7 @@ namespace XYO {
 					struct stat attrib;
 					stat(shellFind_->finddata->d_name, &attrib);
 
-					isReadOnly = (attrib.st_mode & S_IWUSR == 0);
+					isReadOnly = (attrib.st_mode & (S_IWUSR == 0));
 					return true;
 				};
 			};

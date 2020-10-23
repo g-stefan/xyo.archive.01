@@ -255,7 +255,6 @@ namespace XYO {
 			bool addSection(INIFile &iniFile, const char *section) {
 				size_t k;
 				String sectionX;
-				bool inSection = false;
 				sectionX << "[" << section << "]";
 				for(k = 0; k < iniFile.length(); ++k) {
 					if(iniFile[k].type == INILineType::Section) {
@@ -272,7 +271,6 @@ namespace XYO {
 			bool removeSection(INIFile &iniFile, const char *section) {
 				size_t k;
 				String sectionX;
-				bool inSection = false;
 				sectionX << "[" << section << "]";
 				for(k = 0; k < iniFile.length(); ++k) {
 					if(iniFile[k].type == INILineType::Section) {
@@ -297,7 +295,6 @@ namespace XYO {
 			bool sectionIndex(INIFile &iniFile, const char *section, size_t &index) {
 				size_t k;
 				String sectionX;
-				bool inSection = false;
 				sectionX << "[" << section << "]";
 				for(k = 0; k < iniFile.length(); ++k) {
 					if(iniFile[k].type == INILineType::Section) {
@@ -313,7 +310,6 @@ namespace XYO {
 			bool sectionLastIndex(INIFile &iniFile, const char *section, size_t &index) {
 				size_t k;
 				String sectionX;
-				bool inSection = false;
 				sectionX << "[" << section << "]";
 				for(k = 0; k < iniFile.length(); ++k) {
 					if(iniFile[k].type == INILineType::Section) {

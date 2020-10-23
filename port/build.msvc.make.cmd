@@ -49,7 +49,9 @@ set INC= %INC% /Isource
 set SRC=
 set SRC=%SRC% util\xyo.config.cpp
 
-call :cmdX cl /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.config.exe
+if "%CXX%" == "" set CXX=cl
+
+call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.config.exe
 call :cmdX build\xyo.config.exe
 
 set DEF=
@@ -63,7 +65,7 @@ set SRC=%SRC% util\xyo-cc\xyo-cc-copyright.cpp
 set SRC=%SRC% util\xyo-cc\xyo-cc-license.cpp
 set SRC=%SRC% source\xyo.amalgam.cpp
 
-call :cmdX cl /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.cc.exe
+call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.cc.exe
 call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo.static.compile
 call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo.dynamic.compile
 call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.01 @util/xyo.test.compile

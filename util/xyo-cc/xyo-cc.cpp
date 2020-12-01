@@ -511,7 +511,9 @@ namespace Main {
 					continue;
 				};
 				if (opt == "threads") {
-					sscanf(optValue.value(), "%d", &numThreads);
+					if(sscanf(optValue.value(), "%d", &numThreads)!=1){
+						numThreads=8;
+					};
 					continue;
 				};
 				if (opt == "inc") {

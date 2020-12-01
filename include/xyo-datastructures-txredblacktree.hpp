@@ -153,9 +153,7 @@ namespace XYO {
 				z->parent = y;
 				if (!y) {
 					root = z;
-					return;
-				};
-				if (TComparator<typename TNode::Key>::isLess(z->key, y->key)) {
+				} else if (TComparator<typename TNode::Key>::isLess(z->key, y->key)) {
 					y->left = z;
 				} else {
 					y->right = z;
@@ -164,6 +162,9 @@ namespace XYO {
 				z->right = nullptr;
 				z->color = TNode::Red;
 				while (isRed(z->parent)) {
+					if (!z->parent) {
+						break;
+					};
 					if (!z->parent->parent) {
 						break;
 					};
@@ -252,6 +253,9 @@ namespace XYO {
 					y->color = z->color;
 				};
 				if (yOriginalColor == TNode::Black) {
+					if(!x) {
+						return;
+					};
 					while ((x != root) && (x->color == TNode::Black)) {
 						if (x == x->parent->left) {
 							w = x->parent->right;
@@ -265,25 +269,19 @@ namespace XYO {
 								isBlack(w->right)) {
 								w->color = TNode::Red;
 								x = x->parent;
-							} else if (isBlack(w->right)) {
-								w->left->color = TNode::Black;
-								w->color = TNode::Red;
-								leftRotate(root, w);
-								w = x->parent->right;
-							};
-							if (!x->parent) {
-								w->color = TNode::Black;
 							} else {
+								if (isBlack(w->right)) {
+									w->left->color = TNode::Black;
+									w->color = TNode::Red;
+									rightRotate(root, w);
+									w = x->parent->right;
+								};
 								w->color = x->parent->color;
-							};
-							if (!x->parent) {
 								x->parent->color = TNode::Black;
-							};
-							if (w->right) {
 								w->right->color = TNode::Black;
+								leftRotate(root, x->parent);
+								x = root;
 							};
-							leftRotate(root, x->parent);
-							x = root;
 						} else {
 							w = x->parent->left;
 							if (isRed(w)) {
@@ -296,30 +294,22 @@ namespace XYO {
 								isBlack(w->left)) {
 								w->color = TNode::Red;
 								x = x->parent;
-							} else if (isBlack(w->left)) {
-								w->right->color = TNode::Black;
-								w->color = TNode::Red;
-								rightRotate(root, w);
-								w = x->parent->left;
-							};
-							if (x->parent) {
-								w->color = x->parent->color;
 							} else {
-								w->color = TNode::Black;
-							};
-							if (x->parent) {
+								if (isBlack(w->left)) {
+									w->right->color = TNode::Black;
+									w->color = TNode::Red;
+									leftRotate(root, w);
+									w = x->parent->left;
+								};
+								w->color = x->parent->color;
 								x->parent->color = TNode::Black;
+								w->left->color = TNode::Black;
+								rightRotate(root, x->parent);
+								x = root;
 							};
-							if (w->right) {
-								w->right->color = TNode::Black;
-							};
-							rightRotate(root, x->parent);
-							x = root;
 						};
 					};
-					if(x) {
-						x->color = TNode::Black;
-					};
+					x->color = TNode::Black;
 				};
 			};
 

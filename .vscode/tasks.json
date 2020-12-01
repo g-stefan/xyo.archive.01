@@ -58,6 +58,19 @@
 			"problemMatcher": [
 				"$msCompile", "$gcc"
 			]
+		},
+		{
+			"label": "Version",
+			"type": "shell",
+			"windows": {
+				"command": "cmd.exe /c build.cmd version",
+			},
+			"linux": {
+				"command": "/bin/sh -- build.sh version",
+			}
+			"problemMatcher": [
+				"$msCompile", "$gcc"
+			]
 		}
 	]
 }

@@ -108,10 +108,10 @@ namespace XYO {
 			XYO_EXPORT bool copyFileIfExists(const String &source, const String &target);
 			//
 			XYO_EXPORT void mainArgsFilter(char *cmdX);
-			XYO_EXPORT void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char** &cmdS);
+			XYO_EXPORT void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char ** &cmdS);
 			XYO_EXPORT void mainArgsDelete(int cmdN, char **cmdS);
-			XYO_EXPORT void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char** &cmdS);
-			XYO_EXPORT void mainArgsSet(const char *cmdLine, int &cmdN, char** &cmdS);
+			XYO_EXPORT void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char ** &cmdS);
+			XYO_EXPORT void mainArgsSet(const char *cmdLine, int &cmdN, char ** &cmdS);
 
 		};
 	};

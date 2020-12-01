@@ -189,9 +189,9 @@ namespace XYO {
 					return true;
 				};
 				if (token.isN("null")) {
-					TPointer<VNull> value;
-					value.newMemory();
-					result = value;
+					TPointer<VNull> vNull;
+					vNull.newMemory();
+					result = vNull;
 					return true;
 				};
 				return false;

@@ -137,6 +137,9 @@ namespace XYO {
 			static inline void insertNode(TNode *&root, TNode *z) {
 				TNode *x;
 				TNode *y;
+				if(!z) {
+					return;
+				};
 				y = nullptr;
 				x = root;
 				while (x) {
@@ -150,12 +153,12 @@ namespace XYO {
 				z->parent = y;
 				if (!y) {
 					root = z;
+					return;
+				};
+				if (TComparator<typename TNode::Key>::isLess(z->key, y->key)) {
+					y->left = z;
 				} else {
-					if (TComparator<typename TNode::Key>::isLess(z->key, y->key)) {
-						y->left = z;
-					} else {
-						y->right = z;
-					};
+					y->right = z;
 				};
 				z->left = nullptr;
 				z->right = nullptr;

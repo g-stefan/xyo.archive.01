@@ -165,6 +165,7 @@ namespace XYO {
 			size_t m = length % 64;
 			uint64_t finalLength = length * 8;
 			uint8_t data[8];
+			memset(data, 0, sizeof(data));
 			if(m < 56) {
 				data[0] = 0x80;
 				processU8(data, 1);

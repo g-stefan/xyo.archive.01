@@ -887,7 +887,7 @@ namespace XYO {
 				*result = '\0';
 			};
 
-			void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char ** &cmdS) {
+			void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char** &cmdS) {
 				const char *cmdLineScan;
 				const char *cmdLastLineScan;
 				int cmdSize;
@@ -1010,9 +1010,6 @@ namespace XYO {
 								};
 								++cmdN;
 
-								cmdLastLineScan = cmdLineScan;
-								cmdSize = 0;
-
 								break;
 							};
 							continue;
@@ -1040,7 +1037,7 @@ namespace XYO {
 				delete[] cmdS;
 			};
 
-			void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char ** &cmdS) {
+			void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char** &cmdS) {
 				int cmdSize;
 				int k;
 
@@ -1091,7 +1088,7 @@ namespace XYO {
 				};
 			};
 
-			void mainArgsSet(const char *cmdLine, int &cmdN, char ** &cmdS) {
+			void mainArgsSet(const char *cmdLine, int &cmdN, char** &cmdS) {
 				int k;
 
 				mainArgsParse(false, cmdLine, cmdN, cmdS);

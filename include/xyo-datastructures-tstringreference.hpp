@@ -239,6 +239,9 @@ namespace XYO {
 				};
 
 				inline  size_t memoryNewCheck_(size_t newLength_) {
+					if(chunk_ == 0) {
+						chunk_ = 32;
+					};
 					if (newLength_ >= chunk_) {
 						newMemory_((( newLength_ / chunk_) + 1) * chunk_);
 					} else {

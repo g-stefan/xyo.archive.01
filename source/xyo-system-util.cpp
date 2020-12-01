@@ -142,9 +142,6 @@ namespace XYO {
 							fprintf(output, "\n\t");
 						};
 
-						++index;
-						index %= 32;
-
 						fprintf(output, "\n];\n");
 						fclose(output);
 						fclose(input);
@@ -182,7 +179,6 @@ namespace XYO {
 							if (k == 2) {
 								if (flag == 1) {
 									fprintf(output, ",");
-									flag = 0;
 								};
 								fprintf(output, "0x%04X", ch);
 								flag = 1;
@@ -192,7 +188,6 @@ namespace XYO {
 						if (k == 1) {
 							if (flag == 1) {
 								fprintf(output, ",");
-								flag = 0;
 							};
 							fprintf(output, "0x%04X}\n", ch);
 						} else {

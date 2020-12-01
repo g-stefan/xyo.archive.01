@@ -144,7 +144,7 @@ namespace XYO {
 
 				String cmd;
 				int k;
-				String content;				
+				String content;
 				String libNameOut;
 
 				if(objFiles.isEmpty()) {
@@ -298,7 +298,9 @@ namespace XYO {
 				TDynamicArray<String> &libDependency,
 				bool echoCmd,
 				bool force) {
+#ifdef XYO_OS_WINDOWS
 				options = filterOptions(options);
+#endif
 
 				String cmd;
 				int k;

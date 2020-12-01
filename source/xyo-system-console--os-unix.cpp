@@ -47,6 +47,7 @@ namespace XYO {
 				struct timeval tv;
 				fd_set fs;
 
+				memset(&fs, 0, sizeof(fs));
 				FD_ZERO(&fs);
 				tv.tv_sec = 0;
 				tv.tv_usec = 0;

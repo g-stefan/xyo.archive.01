@@ -63,17 +63,19 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "build", value)) {
 						value = "0";
 					};
-					sscanf(value.value(), "%d", &versionBuild);
+					if(sscanf(value.value(), "%d", &versionBuild)!=1) {
+						versionBuild=0;
+					}
 					++versionBuild;
 					sprintf(buf, "%d", versionBuild);
 					if(!INIFileX::set(versionInfo, projectName, "build", buf)) {
 						return false;
 					};
-					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 						return false;
 					};
-					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 						return false;
 					};
@@ -96,17 +98,21 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
+					if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
+						versionMajor=0;
+						versionMinor=0;
+						versionPatch=0;
+					};
 					++versionPatch;
 					sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};
-					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 						return false;
 					};
-					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 						return false;
 					};
@@ -129,18 +135,22 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
+					if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
+						versionMajor=0;
+						versionMinor=0;
+						versionPatch=0;
+					};
 					versionPatch = 0;
 					++versionMinor;
 					sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};
-					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 						return false;
 					};
-					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 						return false;
 					};
@@ -163,7 +173,11 @@ namespace XYO {
 					if(!INIFileX::get(versionInfo, projectName, "version", value)) {
 						value = "0.0.0";
 					};
-					sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch);
+					if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
+						versionMajor=0;
+						versionMinor=0;
+						versionPatch=0;
+					};
 					versionPatch = 0;
 					versionMinor = 0;
 					++versionMajor;
@@ -171,11 +185,11 @@ namespace XYO {
 					if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
 						return false;
 					};
-					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 						return false;
 					};
-					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 						return false;
 					};
@@ -211,7 +225,7 @@ namespace XYO {
 				c = 0;
 				d = 0;
 
-				sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d",
+				sprintf(buf, "%04u-%02u-%02u %02u:%02u:%02u",
 					now.getYear(), now.getMonth(), now.getDay(),
 					now.getHour(), now.getMinute(), now.getSecond());
 				replace[3][1] = buf;
@@ -219,25 +233,31 @@ namespace XYO {
 				if(INIFileX::load(versionIni, versionInfo)) {
 					if(INIFileX::get(versionInfo, projectName, "version", value)) {
 						replace[1][1] = value;
-						sscanf(value.value(), "%d.%d.%d", &a, &b, &c);
+						if(sscanf(value.value(), "%d.%d.%d", &a, &b, &c)!=3) {
+							a=0;
+							b=0;
+							c=0;
+						};
 					};
 					if(INIFileX::get(versionInfo, projectName, "build", value)) {
 						replace[2][1] = value;
-						sscanf(value.value(), "%d", &d);
+						if(sscanf(value.value(), "%d", &d)!=1) {
+							d=0;
+						};
 					};
 
 					sprintf(buf, "%d,%d,%d,%d", a, b, c, d);
 					replace[0][1] = buf;
 
 					if(!INIFileX::get(versionInfo, projectName, "date", value)) {
-						sprintf(buf, "%04d-%02d-%02d",
+						sprintf(buf, "%04u-%02u-%02u",
 							now.getYear(), now.getMonth(), now.getDay());
 						value = buf;
 					};
 					datetime = value;
 					datetime += " ";
 					if(!INIFileX::get(versionInfo, projectName, "time", value)) {
-						sprintf(buf, "%02d:%02d:%02d",
+						sprintf(buf, "%02u:%02u:%02u",
 							now.getHour(), now.getMinute(), now.getSecond());
 						value = buf;
 					};
@@ -263,11 +283,11 @@ namespace XYO {
 					if(!INIFileX::set(versionInfo, projectName, "version", version)) {
 						return false;
 					};
-					sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+					sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 					if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 						return false;
 					};
-					sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+					sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 					if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 						return false;
 					};
@@ -280,11 +300,11 @@ namespace XYO {
 				if(!INIFileX::set(versionInfo, projectName, "build", "0")) {
 					return false;
 				};
-				sprintf(buf, "%04d-%02d-%02d", now.getYear(), now.getMonth(), now.getDay());
+				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
 				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
-				sprintf(buf, "%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
 				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};

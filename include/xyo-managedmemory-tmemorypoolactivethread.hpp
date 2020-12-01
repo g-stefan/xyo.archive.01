@@ -214,14 +214,14 @@ namespace XYO {
 					};
 
 					if(itemListToFree != nullptr) {
-						Link *this_;
+						Link *link_;
 						while (itemListToFree) {
-							this_ = itemListToFree;
+							link_ = itemListToFree;
 							itemListToFree = itemListToFree->next;
-							TIfHasActiveFinalizer<T>::activeFinalizer(reinterpret_cast<T *>(&this_->value[0]));
-							TIfHasSetDeleteMemory<T>::setDeleteMemory(reinterpret_cast<T *>(&this_->value[0]), nullptr, nullptr);
-							(reinterpret_cast<T *>(&this_->value[0]))->~T();
-							ListLink::deleteNode(this_);
+							TIfHasActiveFinalizer<T>::activeFinalizer(reinterpret_cast<T *>(&link_->value[0]));
+							TIfHasSetDeleteMemory<T>::setDeleteMemory(reinterpret_cast<T *>(&link_->value[0]), nullptr, nullptr);
+							(reinterpret_cast<T *>(&link_->value[0]))->~T();
+							ListLink::deleteNode(link_);
 						};
 					};
 

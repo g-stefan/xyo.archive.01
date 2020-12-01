@@ -12,9 +12,9 @@ namespace Main {
 	class Application :
 		public virtual IMain {
 			XYO_DISALLOW_COPY_ASSIGN_MOVE(Application);
-		public:			
+		public:
 
-			inline Application() {				
+			inline Application() {
 			};
 
 			void test();
@@ -101,10 +101,10 @@ namespace Main {
 			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
 
 		} catch(const Error &e) {
-			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			printf("Error: %s\n", ((const_cast<Error &>(e)).getMessage()).value());
 			retV=1;
 		} catch (const std::exception &e) {
-			printf("Error: %s\n",e.what());
+			printf("Error: %s\n", e.what());
 			retV=1;
 		} catch (...) {
 			printf("Error: Unknown\n");

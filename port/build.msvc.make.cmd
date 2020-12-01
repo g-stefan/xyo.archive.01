@@ -10,7 +10,7 @@ echo -^> %ACTION% xyo
 
 goto cmdXDefined
 :cmdX
-%*
+cmd.exe /C "%*"
 if errorlevel 1 goto cmdXError
 goto :eof
 :cmdXError

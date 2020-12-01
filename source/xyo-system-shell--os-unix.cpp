@@ -97,7 +97,12 @@ namespace XYO {
 										if (rd < 16384) {
 											break;
 										};
+										if (wd != rd) {
+											break;
+										};
+										continue;
 									};
+									break;
 								};
 								if (wd == rd) {
 									retV = true;

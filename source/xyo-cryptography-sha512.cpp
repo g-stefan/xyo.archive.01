@@ -183,6 +183,7 @@ namespace XYO {
 			uint64_t finalLength1 = (length1 << 3) | (length0 >> 61);
 			uint64_t finalLength0 = length0 << 3;
 			uint8_t data[8];
+			memset(data, 0, sizeof(data));
 			if(m < 112) {
 				data[0] = 0x80;
 				processU8(data, 1);

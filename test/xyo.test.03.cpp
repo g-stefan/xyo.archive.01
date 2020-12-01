@@ -38,8 +38,8 @@ namespace Main {
 			utfFile.close();
 		};
 
-		if(!isOk){
-			throw(Error("Unable to write utf.test.02.01.bin"));			
+		if(!isOk) {
+			throw(Error("Unable to write utf.test.02.01.bin"));
 		};
 
 		isOk=false;
@@ -50,11 +50,11 @@ namespace Main {
 				isOk=true;
 			};
 			utf8Write.close();
-			utfFile.close();			
+			utfFile.close();
 		};
 
-		if(!isOk){
-			throw(Error("Unable to write utf.test.02.02.bin"));			
+		if(!isOk) {
+			throw(Error("Unable to write utf.test.02.02.bin"));
 		};
 
 		isOk=false;
@@ -68,7 +68,7 @@ namespace Main {
 			utfFile.close();
 		};
 
-		if(!isOk){
+		if(!isOk) {
 			throw(Error("Unable to write utf.test.02.03.bin"));
 		};
 
@@ -89,7 +89,7 @@ namespace Main {
 			utfFile.close();
 		};
 
-		if(!isOk){
+		if(!isOk) {
 			throw(Error("Unable to read utf.test.02.01.bin"));
 		};
 
@@ -108,7 +108,7 @@ namespace Main {
 			utfFile.close();
 		};
 
-		if(!isOk){
+		if(!isOk) {
 			throw(Error("Unable to read utf.test.02.02.bin"));
 		};
 
@@ -127,7 +127,7 @@ namespace Main {
 			utfFile.close();
 		};
 
-		if(!isOk){
+		if(!isOk) {
 			throw(Error("Unable to read utf.test.02.03.bin"));
 		};
 	};
@@ -156,10 +156,10 @@ namespace Main {
 			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
 
 		} catch(const Error &e) {
-			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			printf("Error: %s\n", ((const_cast<Error &>(e)).getMessage()).value());
 			retV=1;
 		} catch (const std::exception &e) {
-			printf("Error: %s\n",e.what());
+			printf("Error: %s\n", e.what());
 			retV=1;
 		} catch (...) {
 			printf("Error: Unknown\n");

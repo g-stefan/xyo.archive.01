@@ -2,5 +2,18 @@
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
 	"editor.tabSize": 8,
-	"files.encoding": "utf8"
+	"files.encoding": "utf8",
+	"cSpell.words": [
+		"LPSTR",
+		"SIZET",
+		"STARTF",
+		"TCOMPARATOR",
+		"TMEMORYPOOL",
+		"TMEMORYPOOLACTIVEPROCESS",
+		"TMEMORYPOOLACTIVETHREAD",
+		"TMEMORYPOOLUNIFIEDTHREAD",
+		"TMEMORYSYSTEM",
+		"TXREDBLACKTREE",
+		"TXRed"
+	]
 }

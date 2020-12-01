@@ -68,7 +68,9 @@ namespace XYO {
 					retV->value = -std::numeric_limits<double>::infinity();
 					return retV;
 				};
-				sscanf(value, "%lf", &retV->value);
+				if(sscanf(value, "%lf", &retV->value)!=1) {
+					retV->value=0;
+				};
 				return retV;
 			};
 

@@ -31,6 +31,7 @@ namespace XYO {
 				if (!Utf8Core::elementIsValid(in)) {
 					return 0;
 				};
+				*out = 0;
 				switch (in_sz) {
 					case 1:
 						*out = (utf32) * in;
@@ -135,6 +136,7 @@ namespace XYO {
 				if (sz == 0) {
 					return 0;
 				};
+				*out = 0;
 				switch (sz) {
 					case 1:
 						*out = (utf8) in;
@@ -225,6 +227,7 @@ namespace XYO {
 				if (sz == 0) {
 					return 0;
 				};
+				*out = 0;
 				switch (sz) {
 					case 1:
 						*out = (utf16) in;
@@ -249,6 +252,7 @@ namespace XYO {
 				if (!Utf16Core::elementIsValid(in)) {
 					return false;
 				};
+				*out = 0;
 				switch (sz) {
 					case 1:
 						*out = (utf32) * in;

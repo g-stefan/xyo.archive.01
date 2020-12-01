@@ -132,7 +132,9 @@ namespace XYO {
 				// check for simple drive check X: => X:\ .
 				ln = strlen(dir);
 #ifdef XYO_COMPILER_GCC
-				ln = strlen(dir); // strange gcc bug!? (ln=0) on X:
+				if(ln == 0) {
+					ln = strlen(dir); // strange gcc bug!? (ln=0) on X:
+				};
 #endif
 				if(ln > 0) {
 					if(dir[ln - 1] == ':') {
@@ -273,14 +275,16 @@ namespace XYO {
 							if(total_buffer_ln > 0) {
 								while(total_buffer_ln > 16384) {
 									buffer_ln = 16384;
-									ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr);
-									WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+									if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+										WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+									};
 									total_buffer_ln -= 16384;
 								};
 								if(total_buffer_ln > 0) {
 									buffer_ln = total_buffer_ln;
-									ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr);
-									WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+									if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+										WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+									};
 								};
 							} else {
 								//test end of process
@@ -288,17 +292,18 @@ namespace XYO {
 
 									if(PeekNamedPipe(hReadProc, nullptr, 0, nullptr, &total_buffer_ln, nullptr)) {
 
-
 										while(total_buffer_ln > 16384) {
 											buffer_ln = 16384;
-											ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr);
-											WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+											if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+												WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+											};
 											total_buffer_ln -= 16384;
 										};
 										if(total_buffer_ln > 0) {
 											buffer_ln = total_buffer_ln;
-											ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr);
-											WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+											if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+												WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
+											};
 										};
 
 									};

@@ -121,12 +121,12 @@ namespace Main {
 			endTimestampInMilliseconds = DateTime::timestampInMilliseconds();
 			intervalTimestampInMilliseconds = endTimestampInMilliseconds - beginTimestampInMilliseconds;
 
-			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);			
+			printf("-> execution time: " XYO_FORMAT_SIZET " ms\n", (size_t)intervalTimestampInMilliseconds);
 		} catch(const Error &e) {
-			printf("Error: %s\n",((const_cast<Error &>(e)).getMessage()).value());			
+			printf("Error: %s\n", ((const_cast<Error &>(e)).getMessage()).value());
 			retV=1;
 		} catch (const std::exception &e) {
-			printf("Error: %s\n",e.what());
+			printf("Error: %s\n", e.what());
 			retV=1;
 		} catch (...) {
 			printf("Error: Unknown\n");

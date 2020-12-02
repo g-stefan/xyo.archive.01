@@ -137,7 +137,7 @@ namespace Main {
 			"    --source-is-archived           if source folder not found extract from archive\n"
 			"    --source-has-archive           source-archive, source-extract and source-is-archived\n"
 			"    --archive-release              archive install-release folder\n"
-			"    --archive-release-sha512       archive install-release folder and append sha512 hash to csv\n"
+			"    --archive-release-sha512       archive install-release folder and append/update sha512 hash to csv\n"
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
@@ -511,7 +511,7 @@ namespace Main {
 					continue;
 				};
 				if (opt == "threads") {
-					if(sscanf(optValue.value(), "%d", &numThreads)!=1){
+					if(sscanf(optValue.value(), "%d", &numThreads)!=1) {
 						numThreads=8;
 					};
 					continue;
@@ -1009,6 +1009,7 @@ namespace Main {
 					CSVRow csvRow;
 					String csvLine;
 					String fileName=releaseName+".7z";
+					String fileNameSHA512CSV=projectNameWithVersion+".sha512.csv";
 					csvRow.empty();
 					if(!Util::fileHashSHA512(fileName, csvRow[0])) {
 						printf("Error: sha512-file on %s failed\n", fileName.value());
@@ -1019,9 +1020,36 @@ namespace Main {
 						printf("Error: csv encoding\n");
 						return 1;
 					};
-					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
-						printf("Error: unable to write sha512 hash\n");
-						return 1;
+
+					if(!Shell::fileExists(fileNameSHA512CSV)) {
+						if(!Shell::filePutContentsAppend(fileNameSHA512CSV, csvLine+"\r\n")) {
+							printf("Error: unable to write sha512 hash\n");
+							return 1;
+						};
+					} else {
+						CSVFile updateCSV;
+						if(!CSVFileX::load(fileNameSHA512CSV, updateCSV)) {
+							printf("Error: unable to load sha512 hash csv file\n");
+							return 1;
+						};
+						bool found=false;
+						for(i=0; i<updateCSV.length(); ++i) {
+							if(updateCSV[i].length()>1) {
+								if(updateCSV[i][1]==csvRow[1]) {
+									updateCSV[i][0]=csvRow[0];
+									found=true;
+								};
+							};
+						};
+						if(!found) {
+							CSVRow &newRow=updateCSV.push();
+							newRow[0]=csvRow[0];
+							newRow[1]=csvRow[1];
+						};
+						if(!CSVFileX::save(fileNameSHA512CSV, updateCSV)) {
+							printf("Error: unable to update sha512 hash csv file\n");
+							return 1;
+						};
 					};
 				};
 			};
@@ -1039,6 +1067,7 @@ namespace Main {
 					CSVRow csvRow;
 					String csvLine;
 					String fileName=releaseName+".7z";
+					String fileNameSHA512CSV=projectNameWithVersion+".sha512.csv";
 					csvRow.empty();
 					if(!Util::fileHashSHA512(fileName, csvRow[0])) {
 						printf("Error: sha512-file on %s failed\n", fileName.value());
@@ -1049,9 +1078,36 @@ namespace Main {
 						printf("Error: csv encoding\n");
 						return 1;
 					};
-					if(!Shell::filePutContentsAppend(projectNameWithVersion+".sha512.csv", csvLine+"\r\n")) {
-						printf("Error: unable to write sha512 hash\n");
-						return 1;
+
+					if(!Shell::fileExists(fileNameSHA512CSV)) {
+						if(!Shell::filePutContentsAppend(fileNameSHA512CSV, csvLine+"\r\n")) {
+							printf("Error: unable to write sha512 hash\n");
+							return 1;
+						};
+					} else {
+						CSVFile updateCSV;
+						if(!CSVFileX::load(fileNameSHA512CSV, updateCSV)) {
+							printf("Error: unable to load sha512 hash csv file\n");
+							return 1;
+						};
+						bool found=false;
+						for(i=0; i<updateCSV.length(); ++i) {
+							if(updateCSV[i].length()>1) {
+								if(updateCSV[i][1]==csvRow[1]) {
+									updateCSV[i][0]=csvRow[0];
+									found=true;
+								};
+							};
+						};
+						if(!found) {
+							CSVRow &newRow=updateCSV.push();
+							newRow[0]=csvRow[0];
+							newRow[1]=csvRow[1];
+						};
+						if(!CSVFileX::save(fileNameSHA512CSV, updateCSV)) {
+							printf("Error: unable to update sha512 hash csv file\n");
+							return 1;
+						};
 					};
 				};
 			};

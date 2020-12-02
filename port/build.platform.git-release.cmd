@@ -7,10 +7,10 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 echo -^> git-release xyo
 
-if not exist release\ echo Error - no release & exit 1
+if not exist release\ echo Error - no release && exit 1
 
 set PROJECT=xyo
-if not exist source\%PROJECT%.version.ini echo Error - no version & exit 1
+if not exist source\%PROJECT%.version.ini echo Error - no version && exit 1
 FOR /F "tokens=* USEBACKQ" %%F IN (`xyo-version --no-bump --get "--version-file=source\%PROJECT%.version.ini" %PROJECT%`) DO (
 	SET VERSION=%%F
 )
@@ -25,8 +25,8 @@ git push --tags
 echo Create release %PROJECT% v%VERSION%
 github-release release --repo %PROJECT% --tag v%VERSION% --name "v%VERSION%" --description "Release"
 pushd release
-for /r %%i in (*.7z) do echo Upload %%~nxi & github-release upload --repo %PROJECT% --tag v%VERSION% --name "%%~nxi" --file "%%i"
-for /r %%i in (*.csv) do echo Upload %%~nxi & github-release upload --repo %PROJECT% --tag v%VERSION% --name "%%~nxi" --file "%%i"
+for /r %%i in (%PROJECT%-%VERSION%*.7z) do echo Upload %%~nxi & github-release upload --repo %PROJECT% --tag v%VERSION% --name "%%~nxi" --file "%%i"
+for /r %%i in (%PROJECT%-%VERSION%*.csv) do echo Upload %%~nxi & github-release upload --repo %PROJECT% --tag v%VERSION% --name "%%~nxi" --file "%%i"
 popd
 
 goto :eof

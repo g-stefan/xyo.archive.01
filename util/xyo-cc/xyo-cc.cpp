@@ -1096,6 +1096,7 @@ namespace Main {
 								if(updateCSV[i][1]==csvRow[1]) {
 									updateCSV[i][0]=csvRow[0];
 									found=true;
+									break;
 								};
 							};
 						};

@@ -5,7 +5,7 @@ rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-echo -^> git-release xyo
+echo -^> github-release xyo
 
 if not exist release\ echo Error - no release & exit 1
 

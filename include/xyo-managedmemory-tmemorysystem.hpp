@@ -99,8 +99,9 @@ namespace XYO {
 
 			public:
 
-				static inline T *newMemory() {
-					T *this_ = new T();
+				template<typename... Args>
+				static inline T *newMemory(Args &&... args) {
+					T *this_ = new T(std::forward<Args>(args)...);
 					TIfHasSetDeleteMemory<T>::setDeleteMemory(this_, (DeleteMemory)deleteMemory_, this_);
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
 					return this_;

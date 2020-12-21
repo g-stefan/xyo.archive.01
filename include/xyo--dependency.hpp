@@ -129,5 +129,4 @@
 	~T() = default;\
 	XYO_DISALLOW_COPY_ASSIGN_MOVE(T)
 
-
 #endif

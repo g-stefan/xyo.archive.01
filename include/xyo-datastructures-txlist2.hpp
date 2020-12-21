@@ -41,6 +41,10 @@ namespace XYO {
 				TNodeMemory<TNode>::initMemory();
 			};
 
+			static inline void init(TNode *&head) {
+				head = nullptr;
+			};
+
 			static inline void deleteList(TNode *head) {
 				TNode *this_;
 				while (head) {

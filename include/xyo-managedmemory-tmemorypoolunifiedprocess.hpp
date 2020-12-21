@@ -352,15 +352,12 @@ namespace XYO {
 
 			public:
 
-				static inline T *newMemory() {
+				template<typename... Args>
+				static inline T *newMemory(Args &&... args) {
 					if(!TMemoryPoolUnifiedProcessImplement<sizeof(T)>::memoryPool.get()) {
 						initMemory();
 					};
-					T *this_ = new(
-						(
-							TMemoryPoolUnifiedProcessImplement<sizeof(T)>::memoryPool.get()
-						)->newMemory()
-					) T();
+					T *this_ = new((TMemoryPoolUnifiedProcessImplement<sizeof(T)>::memoryPool.get())->newMemory()) T(std::forward<Args>(args)...);
 					TIfHasSetDeleteMemory<T>::setDeleteMemory(this_, (DeleteMemory)deleteMemory_, this_);
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
 					return this_;

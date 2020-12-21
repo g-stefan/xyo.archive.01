@@ -324,13 +324,14 @@ namespace XYO {
 
 			public:
 
-				static inline T *newMemory() {
+				template<typename... Args>
+				static inline T *newMemory(Args &&... args) {
 					T *this_ = reinterpret_cast<T *>(RegistryThread::getValue(TMemoryPoolUnifiedThreadImplement<sizeof(T)>::registryLink));
 					if(!this_) {
 						initMemory();
 						this_ = reinterpret_cast<T *>(RegistryThread::getValue(TMemoryPoolUnifiedThreadImplement<sizeof(T)>::registryLink));
 					};
-					this_ = new((reinterpret_cast<TMemoryPoolUnifiedThreadImplement<sizeof(T)> *>(this_))->newMemory()) T();
+					this_ = new((reinterpret_cast<TMemoryPoolUnifiedThreadImplement<sizeof(T)> *>(this_))->newMemory()) T(std::forward<Args>(args)...);
 					TIfHasSetDeleteMemory<T>::setDeleteMemory(this_, (DeleteMemory)deleteMemory_, this_);
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
 					return this_;

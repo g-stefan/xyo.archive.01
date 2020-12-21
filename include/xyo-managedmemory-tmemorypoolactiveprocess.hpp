@@ -328,9 +328,7 @@ namespace XYO {
 					if(!TMemoryPoolActiveProcessImplement<T>::memoryPool.get()) {
 						initMemory();
 					};
-					return (
-							TMemoryPoolActiveProcessImplement<T>::memoryPool.get()
-						)->newMemory();
+					return (TMemoryPoolActiveProcessImplement<T>::memoryPool.get())->newMemory();
 				};
 
 				static inline void deleteMemory(T *this_) {

@@ -95,13 +95,13 @@ namespace XYO {
 				criticalSection = new CriticalSection();
 #endif
 
-				root = nullptr;
+				RBTree::constructor(root);
 				threadKey = 1;
 			};
 
 			void processEnd() {
 
-				RBTree::empty(root);
+				RBTree::destructor(root);
 
 #ifdef XYO_MULTI_THREAD
 				delete criticalSection;

@@ -42,11 +42,11 @@ namespace XYO {
 				TNode *head;
 
 				inline TStackPointerUnsafe() {
-					head = nullptr;
+					TXStack::constructor(head);
 				};
 
 				inline ~TStackPointerUnsafe() {
-					TXStack::deleteList(head);
+					TXStack::destructor(head);
 				};
 
 				inline void push(const T *value) {

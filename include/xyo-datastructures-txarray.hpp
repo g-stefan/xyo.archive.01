@@ -36,13 +36,13 @@ namespace XYO {
 				TMemory<T>::initMemory();
 			};
 
-			static inline void newArray(ArrayT &this_, size_t size) {
+			static inline void constructor(ArrayT &this_, size_t size) {
 				this_.size = size;
 				this_.root = new T[size]();
 				this_.length = 0;
 			};
 
-			static inline void deleteArray(ArrayT &this_) {
+			static inline void destructor(ArrayT &this_) {
 				TIfHasActiveDestructor<T>::activeDestructorArray(this_.root, this_.length);
 				TIfHasActiveFinalizer<T>::activeFinalizerArray(this_.root, this_.length);
 				delete[] this_.root;

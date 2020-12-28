@@ -27,10 +27,10 @@ namespace XYO {
 
 				RegistryKey::processBegin();
 
-				data[RegistryLevel::Singleton] = nullptr;
-				data[RegistryLevel::Active] = nullptr;
-				data[RegistryLevel::Static] = nullptr;
-				data[RegistryLevel::System] = nullptr;
+				List::constructor(data[RegistryLevel::Singleton]);
+				List::constructor(data[RegistryLevel::Active]);
+				List::constructor(data[RegistryLevel::Static]);
+				List::constructor(data[RegistryLevel::System]);
 
 #ifdef XYO_MULTI_THREAD
 				RegistryThread::processBegin();
@@ -52,10 +52,10 @@ namespace XYO {
 				RegistryData::deleteResource(data[RegistryLevel::Static]);
 				RegistryData::deleteResource(data[RegistryLevel::System]);
 
-				List::empty(data[RegistryLevel::Singleton]);
-				List::empty(data[RegistryLevel::Active]);
-				List::empty(data[RegistryLevel::Static]);
-				List::empty(data[RegistryLevel::System]);
+				List::destructor(data[RegistryLevel::Singleton]);
+				List::destructor(data[RegistryLevel::Active]);
+				List::destructor(data[RegistryLevel::Static]);
+				List::destructor(data[RegistryLevel::System]);
 
 				RegistryKey::processEnd();
 

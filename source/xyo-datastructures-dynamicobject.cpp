@@ -21,17 +21,15 @@ namespace XYO {
 		XYO_DYNAMIC_TYPE_IMPLEMENT(DynamicObject, "{C2BF7FE6-A879-4A2B-827F-DDE629233C5F}");
 
 		DynamicObject::DynamicObject() {
-			objectType_ = nullptr;
+			DynamicTypeList::constructor(objectType_);
 			XYO_DYNAMIC_TYPE_PUSH(DynamicObject);
 		};
 
 		DynamicObject::~DynamicObject() {
-			DynamicTypeList::deleteList(objectType_);
+			DynamicTypeList::destructor(objectType_);
 		};
 
-		class TypeRegistryNode:
-			public TXRedBlackTreeNode<TypeRegistryNode, const char *> {
-			public:
+		struct TypeRegistryNode: TXRedBlackTreeNode<TypeRegistryNode, const char *> {			
 		};
 
 		class TypeRegistry {
@@ -48,11 +46,11 @@ namespace XYO {
 		};
 
 		TypeRegistry::TypeRegistry() {
-			root = nullptr;
+			RBTree::constructor(root);
 		};
 
 		TypeRegistry::~TypeRegistry() {
-			RBTree::empty(root);
+			RBTree::destructor(root);
 		};
 
 		void DynamicObject::registerType(const void *&type, const char *key) {

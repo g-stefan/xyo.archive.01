@@ -70,8 +70,7 @@ namespace XYO {
 					FreeElementCount = 16
 				};
 
-				struct Link {
-					Link *next;
+				struct Link : TXList1Node<Link> {					
 
 					uint8_t value[sizeOfT];
 #ifdef XYO_TMEMORYPOOL_CHECK
@@ -90,7 +89,7 @@ namespace XYO {
 #endif
 
 				inline TMemoryPoolUnifiedThreadImplement() {
-					rootFreeLink = nullptr;
+					ListLink::constructor(rootFreeLink);
 					rootFreeLinkCount = 0;
 #ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
 					checkCount = 0;
@@ -111,7 +110,7 @@ namespace XYO {
 						fflush(stdout);
 					};
 #endif
-					ListLink::deleteList(rootFreeLink);
+					ListLink::destructor(rootFreeLink);
 				};
 
 				inline void grow() {
@@ -188,7 +187,7 @@ namespace XYO {
 
 
 					if(itemListToFree) {
-						ListLink::deleteList(itemListToFree);
+						ListLink::destructor(itemListToFree);
 					};
 				};
 

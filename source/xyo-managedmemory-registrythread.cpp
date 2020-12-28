@@ -22,12 +22,11 @@ namespace XYO {
 	namespace ManagedMemory {
 		namespace RegistryThread {
 
-			class RegistryThreadData {
-				public:
-					RegistryDataNode *data[4];
+			struct RegistryThreadData {
+				RegistryDataNode *data[4];
 			};
 
-			typedef RegistryDataList DataList;
+			typedef RegistryDataList List;
 
 			static XYO_THREAD_LOCAL size_t fastTrackSize = 0;
 			static XYO_THREAD_LOCAL RegistryThreadData *thisThread = nullptr;
@@ -74,10 +73,10 @@ namespace XYO {
 
 				RegistryThreadData *this_ = new RegistryThreadData();
 
-				this_->data[RegistryLevel::Singleton] = nullptr;
-				this_->data[RegistryLevel::Active] = nullptr;
-				this_->data[RegistryLevel::Static] = nullptr;
-				this_->data[RegistryLevel::System] = nullptr;
+				List::constructor(this_->data[RegistryLevel::Singleton]);
+				List::constructor(this_->data[RegistryLevel::Active]);
+				List::constructor(this_->data[RegistryLevel::Static]);
+				List::constructor(this_->data[RegistryLevel::System]);
 
 				thisThread = this_;
 
@@ -101,10 +100,10 @@ namespace XYO {
 				RegistryData::deleteResource(this_->data[RegistryLevel::Static]);
 				RegistryData::deleteResource(this_->data[RegistryLevel::System]);
 
-				DataList::empty(this_->data[RegistryLevel::Singleton]);
-				DataList::empty(this_->data[RegistryLevel::Active]);
-				DataList::empty(this_->data[RegistryLevel::Static]);
-				DataList::empty(this_->data[RegistryLevel::System]);
+				List::destructor(this_->data[RegistryLevel::Singleton]);
+				List::destructor(this_->data[RegistryLevel::Active]);
+				List::destructor(this_->data[RegistryLevel::Static]);
+				List::destructor(this_->data[RegistryLevel::System]);
 
 				delete this_;
 
@@ -142,8 +141,8 @@ namespace XYO {
 					resizeFastTrack(registryLink);
 				};
 
-				RegistryDataNode *node = DataList::newNode();
-				DataList::push(thisThread->data[categoryLevel], node);
+				RegistryDataNode *node = List::newNode();
+				List::push(thisThread->data[categoryLevel], node);
 				node->resourceThis = resourceThis;
 				node->deleteResource = deleteResource;
 				node->finalizeResource = finalizeResource;

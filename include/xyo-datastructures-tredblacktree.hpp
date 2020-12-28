@@ -86,11 +86,11 @@ namespace XYO {
 				TNode *root;
 
 				inline TRedBlackTree() {
-					root = nullptr;
+					TXRBTree::constructor(root);
 				};
 
 				inline ~TRedBlackTree() {
-					TXRBTree::deleteTree(root);
+					TXRBTree::destructor(root);
 				};
 
 				inline void empty() {

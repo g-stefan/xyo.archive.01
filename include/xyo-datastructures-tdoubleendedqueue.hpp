@@ -67,12 +67,11 @@ namespace XYO {
 				TNode *tail;
 
 				inline TDoubleEndedQueue() {
-					head = nullptr;
-					tail = nullptr;
+					TXList::constructor(head, tail);					
 				};
 
 				inline ~TDoubleEndedQueue() {
-					TXList::deleteList(head);
+					TXList::destructor(head);
 				};
 
 				inline void push(const T &value) {

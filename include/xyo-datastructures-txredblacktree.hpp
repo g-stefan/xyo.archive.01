@@ -56,17 +56,21 @@ namespace XYO {
 				TNodeMemory<TNode>::initMemory();
 			};
 
-			static inline void deleteTree(TNode *root) {
+			static inline void constructor(TNode *&root) {
+				root = nullptr;
+			};
+
+			static inline void destructor(TNode *root) {
 				if (root) {
-					deleteTree(root->left);
-					deleteTree(root->right);
+					destructor(root->left);
+					destructor(root->right);
 					deleteNode(root);
 				};
 			};
 
 			static inline void empty(TNode *&root) {
-				deleteTree(root);
-				root = nullptr;
+				destructor(root);
+				constructor(root);
 			};
 
 			static inline bool isBlack(const TNode *node) {

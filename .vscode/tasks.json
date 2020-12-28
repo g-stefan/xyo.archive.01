@@ -21,6 +21,23 @@
 			}
 		},
 		{
+			"label": "Test",
+			"type": "shell",
+			"windows": {
+				"command": "cmd.exe /c build.cmd test",
+			},
+			"linux": {
+				"command": "/bin/sh -- build.sh test",
+			}
+			"problemMatcher": [
+				"$msCompile", "$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Analyze",
 			"type": "shell",
 			"windows": {

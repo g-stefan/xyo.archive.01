@@ -29,7 +29,7 @@ namespace XYO {
 			DynamicTypeList::destructor(objectType_);
 		};
 
-		struct TypeRegistryNode: TXRedBlackTreeNode<TypeRegistryNode, const char *> {			
+		struct TypeRegistryNode: TXRedBlackTreeNode<TypeRegistryNode, const char *> {
 		};
 
 		class TypeRegistry {

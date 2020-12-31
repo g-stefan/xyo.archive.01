@@ -81,7 +81,7 @@ namespace XYO {
 					FreeElementCount = 16
 				};
 
-				struct Link : TXList1Node<Link> {					
+				struct Link : TXList1Node<Link> {
 
 					uint8_t value[sizeof(T)];
 #ifdef XYO_TMEMORYPOOL_CHECK

@@ -379,6 +379,7 @@ namespace XYO {
 				SInfo.dwFlags = STARTF_USESHOWWINDOW;
 				SInfo.wShowWindow = SW_SHOW;
 
+#pragma warning( suppress : 6335 )
 				if(CreateProcessA(
 						nullptr,
 						(LPSTR)cmd,
@@ -408,6 +409,7 @@ namespace XYO {
 				SInfo.dwFlags = STARTF_USESHOWWINDOW;
 				SInfo.wShowWindow = SW_HIDE;
 
+#pragma warning( suppress : 6335 )
 				if(CreateProcessA(
 						nullptr,
 						(LPSTR)cmd,

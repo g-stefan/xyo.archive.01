@@ -141,28 +141,38 @@ namespace XYO {
 						if(totalBufferLn > 0) {
 							while(totalBufferLn > 16384) {
 								bufferLn = 16384;
-								ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr);
+								if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+									totalBufferLn = 0;
+									break;
+								};
 								totalBufferLn -= 16384;
 							};
 							if(totalBufferLn > 0) {
 								bufferLn = totalBufferLn;
-								ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr);
+								if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+									continue;
+								};
 							};
-						} else {
-							if(WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
-								if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
-									while(totalBufferLn > 16384) {
-										bufferLn = 16384;
-										ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr);
-										totalBufferLn -= 16384;
+							continue;
+						};
+						if(WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
+							if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
+								while(totalBufferLn > 16384) {
+									bufferLn = 16384;
+									if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+										totalBufferLn = 0;
+										break;
 									};
-									if(totalBufferLn > 0) {
-										bufferLn = totalBufferLn;
-										ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr);
+									totalBufferLn -= 16384;
+								};
+								if(totalBufferLn > 0) {
+									bufferLn = totalBufferLn;
+									if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+										break;
 									};
 								};
-								break;
 							};
+							break;
 						};
 						continue;
 					};

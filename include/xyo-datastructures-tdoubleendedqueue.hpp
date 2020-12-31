@@ -67,7 +67,7 @@ namespace XYO {
 				TNode *tail;
 
 				inline TDoubleEndedQueue() {
-					TXList::constructor(head, tail);					
+					TXList::constructor(head, tail);
 				};
 
 				inline ~TDoubleEndedQueue() {

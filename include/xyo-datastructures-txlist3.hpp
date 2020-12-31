@@ -57,7 +57,7 @@ namespace XYO {
 
 			static inline void empty(TNode *&head, TNode *&tail) {
 				destructor(head);
-				constructor(head, tail);				 
+				constructor(head, tail);
 			};
 
 			static inline void push(TNode *&head, TNode *&tail, TNode *node) {

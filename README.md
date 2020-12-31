@@ -1,4 +1,4 @@
-# XYO
+# XYO library
 
 C++ library
 - Memory manager built around multi-threading support in "isolation", every thread has its own

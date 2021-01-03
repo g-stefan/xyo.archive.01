@@ -45,7 +45,7 @@ namespace XYO {
 			};
 
 			static inline void constructor(TNode *&root) {
-				head = nullptr;
+				root = nullptr;
 			};
 
 			static inline void destructor(TNode *root) {

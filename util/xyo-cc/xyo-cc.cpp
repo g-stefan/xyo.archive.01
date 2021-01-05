@@ -129,6 +129,7 @@ namespace Main {
 			"    --no-default-source            don't search for source files\n"
 			"    --platform=match option        if match platform activate next option\n"
 			"    --not-platform=match option    if not match platform activate next option\n"
+			"    --for-platform=match           if match platform do build, otherwise do nothing\n"
 			"\n"
 			"Options that require 7zr in your path\n"
 			"\n"
@@ -792,6 +793,16 @@ namespace Main {
 					if(Compiler::matchPlatform(optValue)) {
 						++i;
 						continue;
+					};
+					continue;
+				};
+				if (opt == "for-platform") {
+					if(optValue.isEmpty()) {
+						printf("Error: platform to match in not provided\n");
+						return 1;
+					};
+					if(!Compiler::matchPlatform(optValue)) {
+						return 0;
 					};
 					continue;
 				};

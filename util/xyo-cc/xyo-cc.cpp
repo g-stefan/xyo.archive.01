@@ -176,6 +176,8 @@ namespace Main {
 		bool doBumpVersionPatch = false;
 		bool doBumpVersionMinor = false;
 		bool doBumpVersionMajor = false;
+		bool forPlatform = false;
+		bool forPlatformCheck = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -801,9 +803,8 @@ namespace Main {
 						printf("Error: platform to match in not provided\n");
 						return 1;
 					};
-					if(!Compiler::matchPlatform(optValue)) {
-						return 0;
-					};
+					forPlatform = true;
+					forPlatformCheck |= Compiler::matchPlatform(optValue);
 					continue;
 				};
 				if (opt == "source-archive") {
@@ -850,6 +851,12 @@ namespace Main {
 				continue;
 			};
 			projectName = cmdLine[i];
+		};
+
+		if(forPlatform) {
+			if(!forPlatformCheck) {
+				return 0;
+			};
 		};
 
 		// <hash>

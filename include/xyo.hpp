@@ -117,6 +117,7 @@
 #include "xyo-system-shellfind.hpp"
 #include "xyo-system-shell.hpp"
 #include "xyo-system-processinteractive.hpp"
+#include "xyo-system-processor.hpp"
 #include "xyo-encoding-utfstream.hpp"
 #include "xyo-encoding-hex.hpp"
 #include "xyo-encoding-base16.hpp"

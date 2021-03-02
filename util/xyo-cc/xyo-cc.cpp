@@ -196,7 +196,7 @@ namespace Main {
 			p7zipCompress="sh.exe -- 7zr a -mx9 -mmt4 -r- -w. -y -t7z ";
 		};
 
-		int numThreads = 8;
+		int numThreads = Processor::getCount();
 		String binPath = workspacePath + "/bin";
 		String buildPath = workspacePath + "/build";
 		String libPath = workspacePath + "/lib";
@@ -515,7 +515,7 @@ namespace Main {
 				};
 				if (opt == "threads") {
 					if(sscanf(optValue.value(), "%d", &numThreads)!=1) {
-						numThreads=8;
+						numThreads=Processor::getCount();
 					};
 					continue;
 				};

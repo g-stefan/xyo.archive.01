@@ -50,6 +50,8 @@
 #include "xyo-system-shell.cpp"
 #include "xyo-system-processinteractive--os-windows.cpp"
 #include "xyo-system-processinteractive--os-unix.cpp"
+#include "xyo-system-processor--os-windows.cpp"
+#include "xyo-system-processor--os-unix.cpp"
 #include "xyo-encoding-utfstream.cpp"
 #include "xyo-encoding-base16.cpp"
 #include "xyo-encoding-base32.cpp"

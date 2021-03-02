@@ -24,6 +24,7 @@
 #endif
 
 #include "xyo-system-shell.hpp"
+#include "xyo-system-filetime.hpp"
 #include "xyo-system-file.hpp"
 #include "xyo-stream-streamx.hpp"
 #include "xyo-datastructures-tdynamicarray.hpp"
@@ -781,8 +782,12 @@ namespace XYO {
 				if(!fileExists(target)) {
 					return true;
 				};
+				FileTime targetTime;
+				FileTime sourceTime;
+				targetTime.getLastWriteTime(target);
 				for(k = 0; k < source.length(); ++k) {
-					if(compareLastWriteTime(target, source[k]) < 0) {
+					sourceTime.getLastWriteTime(source[k]);
+					if(targetTime.compare(sourceTime) < 0) {
 						return true;
 					};
 				};

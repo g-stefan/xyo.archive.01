@@ -10,6 +10,7 @@
 #include "xyo-system-compiler.hpp"
 #include "xyo-system-shell.hpp"
 #include "xyo-system-datetime.hpp"
+#include "xyo-system-filetime.hpp"
 #include "xyo-cryptography-md5.hpp"
 #include "xyo-multithreading-workerqueue.hpp"
 #include "xyo-datastructures-ini.hpp"
@@ -599,20 +600,34 @@ namespace XYO {
 					projectName << ".lib";
 				};
 
+				TDynamicArray<FileTime> cppFilesTime;
+				TDynamicArray<FileTime> incFilesTime;
+				TDynamicArray<FileTime> objFilesTime;
+
+				for(k = 0; k < incFiles.length(); ++k) {
+					incFilesTime[k].getLastWriteTime(incFiles[k]);
+				};
+
 				for(k = 0; k < cppFiles.length(); ++k) {
 					objFiles[k] = objFilename(projectName, cppFiles[k], buildPath, options);
+					cppFilesTime[k].getLastWriteTime(cppFiles[k]);
+					objFilesTime[k].getLastWriteTime(objFiles[k]);
+				};
+
+				for(k = 0; k < cppFiles.length(); ++k) {
 					toMakeCppToObj = false;
-					if(Shell::isChanged(cppFiles[k], incFiles)) {
+					if(cppFilesTime[k].isChanged(incFilesTime)) {						
 						Shell::touchIfExists(cppFiles[k]);
 						toMakeCppToObj = true;
 					};
-					if(!Shell::fileExists(objFiles[k])) {
+					if(!Shell::fileExists(objFiles[k])) {						
 						toMakeCppToObj = true;
 					} else {
-						if(Shell::compareLastWriteTime(objFiles[k], cppFiles[k]) < 0) {
+						if(objFilesTime[k].compare(cppFilesTime[k]) < 0) {							
 							toMakeCppToObj = true;
 						};
 					};
+
 					if(!force) {
 						if(!toMakeCppToObj) {
 							continue;
@@ -728,17 +743,30 @@ namespace XYO {
 
 				projectName << ".exe";
 
+				TDynamicArray<FileTime> cppFilesTime;
+				TDynamicArray<FileTime> incFilesTime;
+				TDynamicArray<FileTime> objFilesTime;
+
+				for(k = 0; k < incFiles.length(); ++k) {
+					incFilesTime[k].getLastWriteTime(incFiles[k]);
+				};
+
 				for(k = 0; k < cppFiles.length(); ++k) {
 					objFiles[k] = objFilename(projectName, cppFiles[k], buildPath, options);
+					cppFilesTime[k].getLastWriteTime(cppFiles[k]);
+					objFilesTime[k].getLastWriteTime(objFiles[k]);
+				};
+
+				for(k = 0; k < cppFiles.length(); ++k) {
 					toMakeCppToObj = false;
-					if(Shell::isChanged(cppFiles[k], incFiles)) {
+					if(cppFilesTime[k].isChanged(incFilesTime)) {
 						Shell::touchIfExists(cppFiles[k]);
 						toMakeCppToObj = true;
 					};
 					if(!Shell::fileExists(objFiles[k])) {
 						toMakeCppToObj = true;
 					} else {
-						if(Shell::compareLastWriteTime(objFiles[k], cppFiles[k]) < 0) {
+						if(objFilesTime[k].compare(cppFilesTime[k]) < 0) {
 							toMakeCppToObj = true;
 						};
 					};
@@ -959,17 +987,30 @@ namespace XYO {
 					projectName << ".lib";
 				};
 
+				TDynamicArray<FileTime> cFilesTime;
+				TDynamicArray<FileTime> incFilesTime;
+				TDynamicArray<FileTime> objFilesTime;
+
+				for(k = 0; k < incFiles.length(); ++k) {
+					incFilesTime[k].getLastWriteTime(incFiles[k]);
+				};
+
 				for(k = 0; k < cFiles.length(); ++k) {
 					objFiles[k] = objFilename(projectName, cFiles[k], buildPath, options);
+					cFilesTime[k].getLastWriteTime(cFiles[k]);
+					objFilesTime[k].getLastWriteTime(objFiles[k]);
+				};
+
+				for(k = 0; k < cFiles.length(); ++k) {
 					toMakeCToObj = false;
-					if(Shell::isChanged(cFiles[k], incFiles)) {
+					if(cFilesTime[k].isChanged(incFilesTime)) {
 						Shell::touchIfExists(cFiles[k]);
 						toMakeCToObj = true;
 					};
 					if(!Shell::fileExists(objFiles[k])) {
 						toMakeCToObj = true;
 					} else {
-						if(Shell::compareLastWriteTime(objFiles[k], cFiles[k]) < 0) {
+						if(objFilesTime[k].compare(cFilesTime[k]) < 0) {
 							toMakeCToObj = true;
 						};
 					};
@@ -1090,17 +1131,30 @@ namespace XYO {
 
 				projectName << ".exe";
 
+				TDynamicArray<FileTime> cFilesTime;
+				TDynamicArray<FileTime> incFilesTime;
+				TDynamicArray<FileTime> objFilesTime;
+
+				for(k = 0; k < incFiles.length(); ++k) {
+					incFilesTime[k].getLastWriteTime(incFiles[k]);
+				};
+
 				for(k = 0; k < cFiles.length(); ++k) {
 					objFiles[k] = objFilename(projectName, cFiles[k], buildPath, options);
+					cFilesTime[k].getLastWriteTime(cFiles[k]);
+					objFilesTime[k].getLastWriteTime(objFiles[k]);
+				};
+
+				for(k = 0; k < cFiles.length(); ++k) {
 					toMakeCToObj = false;
-					if(Shell::isChanged(cFiles[k], incFiles)) {
+					if(cFilesTime[k].isChanged(incFilesTime)) {
 						Shell::touchIfExists(cFiles[k]);
 						toMakeCToObj = true;
 					};
 					if(!Shell::fileExists(objFiles[k])) {
 						toMakeCToObj = true;
 					} else {
-						if(Shell::compareLastWriteTime(objFiles[k], cFiles[k]) < 0) {
+						if(objFilesTime[k].compare(cFilesTime[k]) < 0) {
 							toMakeCToObj = true;
 						};
 					};

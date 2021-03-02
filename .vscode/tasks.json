@@ -31,11 +31,7 @@
 			}
 			"problemMatcher": [
 				"$msCompile", "$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
+			]
 		},
 		{
 			"label": "Analyze",

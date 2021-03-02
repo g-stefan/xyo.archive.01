@@ -47,7 +47,7 @@ namespace XYO {
 			XYO_EXPORT String objFilename(
 				const String &project,
 				const String &fileName,
-				const String &buildPath,
+				const String &tmpPath,
 				int options);
 
 			XYO_EXPORT bool cppToObj(
@@ -62,7 +62,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &objFiles,
 				String defFile,
@@ -75,7 +75,7 @@ namespace XYO {
 			XYO_EXPORT bool makeObjToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &objFiles,
 				TDynamicArray<String> &libDependencyPath,
@@ -107,7 +107,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cppDefine,
 				TDynamicArray<String> &incPath,
@@ -127,7 +127,7 @@ namespace XYO {
 			XYO_EXPORT bool makeCppToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cppDefine,
 				TDynamicArray<String> &incPath,
@@ -218,7 +218,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cDefine,
 				TDynamicArray<String> &incPath,
@@ -238,7 +238,7 @@ namespace XYO {
 			XYO_EXPORT bool makeCToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cDefine,
 				TDynamicArray<String> &incPath,

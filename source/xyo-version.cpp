@@ -12,10 +12,10 @@
 namespace XYO {
 	namespace Version {
 
-		static const char *version_ = "3.5.0";
-		static const char *build_ = "31";
-		static const char *versionWithBuild_ = "3.5.0.31";
-		static const char *datetime_ = "2021-03-02 14:36:10";
+		static const char *version_ = "4.0.0";
+		static const char *build_ = "33";
+		static const char *versionWithBuild_ = "4.0.0.33";
+		static const char *datetime_ = "2021-03-02 21:25:23";
 
 		const char *version() {
 			return version_;

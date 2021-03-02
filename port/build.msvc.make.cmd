@@ -24,7 +24,7 @@ if "%XYO_PLATFORM%" == "win64-msvc-2017" set DEFX= /DXYO_APPLICATION_64BIT /DXYO
 if "%XYO_PLATFORM%" == "win32-msvc-2017" set DEFX= /DXYO_APPLICATION_32BIT /DXYO_PLATFORM=%XYO_PLATFORM%
 
 if not exist bin\ mkdir bin
-if not exist build\ mkdir build
+if not exist temp\ mkdir temp
 
 set DEF=
 set DEF= %DEF% /DXYO_OS_WINDOWS
@@ -51,8 +51,8 @@ set SRC=%SRC% util\xyo.config.cpp
 
 if "%CXX%" == "" set CXX=cl
 
-call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.config.exe
-call :cmdX build\xyo.config.exe
+call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fotemp\ /Fetemp/xyo.config.exe
+call :cmdX temp\xyo.config.exe
 
 set DEF=
 set DEF= %DEF% /D_CRT_SECURE_NO_WARNINGS
@@ -65,11 +65,11 @@ set SRC=%SRC% util\xyo-cc\xyo-cc-copyright.cpp
 set SRC=%SRC% util\xyo-cc\xyo-cc-license.cpp
 set SRC=%SRC% source\xyo.amalgam.cpp
 
-call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fobuild\ /Febuild/xyo.cc.exe
-call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo.static.compile
-call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo.dynamic.compile
-call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.01 @util/xyo.test.compile
-call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.02 @util/xyo.test.compile
-call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.03 @util/xyo.test.compile
-call :cmdX build\xyo.cc --mode=%ACTION% --exe xyo.test.04 @util/xyo.test.compile
-call :cmdX build\xyo.cc --mode=%ACTION% @util/xyo-cc.compile
+call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fotemp\ /Fetemp/xyo.cc.exe
+call :cmdX temp\xyo.cc --mode=%ACTION% @util/xyo.static.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @util/xyo.dynamic.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.01 @util/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.02 @util/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.03 @util/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.04 @util/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @util/xyo-cc.compile

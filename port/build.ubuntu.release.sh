@@ -17,4 +17,4 @@ export XYO_PATH_RELEASE=release
 cmdX /bin/sh ./port/build.ubuntu.sh make
 cmdX /bin/sh ./port/build.ubuntu.sh install
 cmdX /bin/sh ./port/build.ubuntu.sh install-release
-cmdX ./build/xyo.cc xyo --archive-release-sha512 --version-file=source/xyo.version.ini
+cmdX ./temp/xyo.cc xyo --archive-release-sha512 --version-file=source/xyo.version.ini

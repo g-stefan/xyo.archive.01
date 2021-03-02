@@ -51,7 +51,7 @@
 
 # Development
 /bin/
-/build/
+/temp/
 /lib/
 /include/xyo--config.hpp
 /release/

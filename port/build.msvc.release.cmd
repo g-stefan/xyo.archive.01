@@ -21,4 +21,4 @@ call :cmdX call port\build.msvc.cmd make
 call :cmdX call port\build.msvc.cmd sign
 call :cmdX call port\build.msvc.cmd install
 call :cmdX call port\build.msvc.cmd install-release
-call :cmdX build\xyo.cc xyo --archive-release-sha512 --version-file=source/xyo.version.ini
+call :cmdX temp\xyo.cc xyo --archive-release-sha512 --version-file=source/xyo.version.ini

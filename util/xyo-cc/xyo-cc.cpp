@@ -93,7 +93,7 @@ namespace Main {
 			"    --no-install                   do not perform any install\n"
 			"    --workspace-path=path          workspace path to use, default is current folder\n"
 			"    --bin-path=path                location to bin folder, default to workspace/bin\n"
-			"    --build-path=path              location to build folder, default to workspace/build\n"
+			"    --temp-path=path               location to temp folder, default to workspace/temp\n"
 			"    --lib-path=path                location to lib folder, default to workspace/lib\n"
 			"    --threads=count                specify number of threads to use\n"
 			"    --inc=path                     add path to include in search\n"
@@ -198,7 +198,7 @@ namespace Main {
 
 		int numThreads = Processor::getCount();
 		String binPath = workspacePath + "/bin";
-		String buildPath = workspacePath + "/build";
+		String tmpPath = workspacePath + "/temp";
 		String libPath = workspacePath + "/lib";
 
 		TDynamicArray<String> incPath;
@@ -497,10 +497,10 @@ namespace Main {
 					};
 					continue;
 				};
-				if (opt == "build-path") {
-					buildPath = optValue;
-					if(buildPath.isEmpty()) {
-						printf("Error: build-path is empty\n");
+				if (opt == "temp-path") {
+					tmpPath = optValue;
+					if(tmpPath.isEmpty()) {
+						printf("Error: temp-path is empty\n");
 						return 1;
 					};
 					continue;
@@ -1155,10 +1155,10 @@ namespace Main {
 
 		if(doWriteDependency) {
 			if(makeLibrary || makeDynamicLibrary) {
-				Shell::mkdirRecursivelyIfNotExists(buildPath);
+				Shell::mkdirRecursivelyIfNotExists(tmpPath);
 				Shell::mkdirRecursivelyIfNotExists(libPath);
-				if(!INIFileX::save(buildPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
 				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
@@ -1172,7 +1172,7 @@ namespace Main {
 		if(!Compiler::checkDependencyVersion(
 				projectDependency,
 				projectName,
-				buildPath,
+				tmpPath,
 				repositoryPathDependencyLib,
 				forceMake)) {
 			printf("Error: check dependecy version\n");
@@ -1180,8 +1180,8 @@ namespace Main {
 		};
 
 		if(forceMake) {
-			if(!INIFileX::save(buildPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-				printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".dependency.ini").value());
+			if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+				printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
 				return 1;
 			};
 		};
@@ -1193,8 +1193,8 @@ namespace Main {
 			return 1;
 		};
 
-		if(!Compiler::getDependency(dependency, projectName, buildPath, repositoryPathDependencyLib, true)) {
-			printf("Error: get dependency %s\n", (buildPath + "/" + projectName + ".dependency.ini").value());
+		if(!Compiler::getDependency(dependency, projectName, tmpPath, repositoryPathDependencyLib, true)) {
+			printf("Error: get dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
 			return 1;
 		};
 
@@ -1545,7 +1545,7 @@ namespace Main {
 						libName.length()?libName:projectName + ".static",
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::StaticLibrary,
 						cppDefine,
 						incPath,
@@ -1564,8 +1564,8 @@ namespace Main {
 					printf("Error: building library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(buildPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(tmpPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
 				if(!INIFileX::save(libPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
@@ -1578,7 +1578,7 @@ namespace Main {
 						libName.length()?libName:projectName + ".static",
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::StaticLibrary,
 						cppDefine,
 						incPath,
@@ -1597,8 +1597,8 @@ namespace Main {
 					printf("Error: building library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(buildPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(tmpPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
 				if(!INIFileX::save(libPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
@@ -1645,7 +1645,7 @@ namespace Main {
 						projectName,
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::DynamicLibrary | dllOption,
 						cppDefine,
 						incPath,
@@ -1664,8 +1664,8 @@ namespace Main {
 					printf("Error: building dynamic library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(buildPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
 				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
@@ -1679,7 +1679,7 @@ namespace Main {
 						projectName,
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::DynamicLibrary | dllOption,
 						cppDefine,
 						incPath,
@@ -1698,8 +1698,8 @@ namespace Main {
 					printf("Error: building dynamic library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(buildPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (buildPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
 				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
@@ -1760,8 +1760,8 @@ namespace Main {
 			if(cSource.length() > 0) {
 				if(!Compiler::makeCToExe(
 						projectName,
-						doMake ? buildPath : binPath,
-						buildPath,
+						doMake ? tmpPath : binPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption,
 						cppDefine,
 						incPath,
@@ -1783,8 +1783,8 @@ namespace Main {
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToExe(
 						projectName,
-						doMake ? buildPath : binPath,
-						buildPath,
+						doMake ? tmpPath : binPath,
+						tmpPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption,
 						cppDefine,
 						incPath,
@@ -1851,7 +1851,7 @@ namespace Main {
 		if(forceMake) {
 			if(!Compiler::copyDependency(
 					projectName,
-					buildPath,
+					tmpPath,
 					repositoryPathDependencyLib)) {
 				printf("Error: copy dependecy\n");
 				return 1;
@@ -1860,8 +1860,8 @@ namespace Main {
 
 		if(doMake) {
 			String cmd;
-			if(!Compiler::getFileNameExe(buildPath + "/" + projectName, cmd)) {
-				printf("Error: get filename exe %s\n", (buildPath + "/" + projectName).value());
+			if(!Compiler::getFileNameExe(tmpPath + "/" + projectName, cmd)) {
+				printf("Error: get filename exe %s\n", (tmpPath + "/" + projectName).value());
 				return 1;
 			};
 			cmd << " " << cmdMake;

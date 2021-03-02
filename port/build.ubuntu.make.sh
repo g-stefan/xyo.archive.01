@@ -18,7 +18,7 @@ cmdX(){
 }
 
 [ -d bin ] || mkdir -p bin
-[ -d build ] || mkdir -p build
+[ -d temp ] || mkdir -p temp
 
 XYO_PLATFORM="unknown"
 XYO_APPLICATION="XYO_APPLICATION_64BIT"
@@ -59,8 +59,8 @@ if [ "$CXX" = "" ]; then
 	export CXX=$CXX
 fi
 
-cmdX $CXX -o build/xyo.config -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm
-cmdX ./build/xyo.config
+cmdX $CXX -o temp/xyo.config -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm
+cmdX ./temp/xyo.config
 
 DEF=""
 DEF="$DEF -DXYO_NO_VERSION"
@@ -72,13 +72,13 @@ SRC="$SRC util/xyo-cc/xyo-cc-copyright.cpp"
 SRC="$SRC util/xyo-cc/xyo-cc-license.cpp"
 SRC="$SRC source/xyo.amalgam.cpp"
 
-cmdX $CXX -o build/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
-cmdX build/xyo.cc --mode=$ACTION @util/xyo.static.compile
-cmdX build/xyo.cc --mode=$ACTION @util/xyo.dynamic.compile
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.01 @util/xyo.test.compile
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.02 @util/xyo.test.compile
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.03 @util/xyo.test.compile
-cmdX build/xyo.cc --mode=$ACTION --exe xyo.test.04 @util/xyo.test.compile
+cmdX $CXX -o temp/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
+cmdX temp/xyo.cc --mode=$ACTION @util/xyo.static.compile
+cmdX temp/xyo.cc --mode=$ACTION @util/xyo.dynamic.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.01 @util/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.02 @util/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.03 @util/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.04 @util/xyo.test.compile
 
-cmdX build/xyo.cc --mode=$ACTION @util/xyo-cc.compile
+cmdX temp/xyo.cc --mode=$ACTION @util/xyo-cc.compile
 

@@ -75,7 +75,7 @@ bool fileCompare(string fileName1, string fileName2) {
 
 string configFileIn="source/xyo--config.template.hpp";
 string configFileOut="include/xyo--config.hpp";
-string configFileCheck="build/xyo--config.hpp";
+string configFileCheck="temp/xyo--config.hpp";
 
 map<string, string> configMap;
 

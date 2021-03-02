@@ -6,5 +6,5 @@
 echo "-> clean xyo"
 
 rm -rf bin
-rm -rf build
+rm -rf temp
 rm -rf lib

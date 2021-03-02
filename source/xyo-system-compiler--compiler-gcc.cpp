@@ -30,7 +30,7 @@ namespace XYO {
 			String objFilename(
 				const String &project,
 				const String &fileName,
-				const String &buildPath,
+				const String &tmpPath,
 				int options) {
 				options = filterOptions(options);
 
@@ -57,7 +57,7 @@ namespace XYO {
 				md5 += ".";
 				md5 += fileName;
 
-				String retV = buildPath;
+				String retV = tmpPath;
 				retV << Shell::pathSeparator << Shell::getFileName(project) << "." << MD5::getHashString(md5) << ".";
 				retV << Shell::getFileName(fileName) << ".o";
 
@@ -132,7 +132,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &objFiles,
 				String defFile,
@@ -158,13 +158,13 @@ namespace XYO {
 				if(!Shell::mkdirRecursivelyIfNotExists(libPath)) {
 					return false;
 				};
-				if(!Shell::mkdirRecursivelyIfNotExists(buildPath)) {
+				if(!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
 					return false;
 				};
 
 				binPath = String::replace(binPath, "\\", "/");
 				libPath = String::replace(libPath, "\\", "/");
-				buildPath = String::replace(buildPath, "\\", "/");
+				tmpPath = String::replace(tmpPath, "\\", "/");
 
 				if(options & CompilerOptions::StaticLibrary) {
 					libNameOut = libPath + "/" + libName + ".a";
@@ -259,13 +259,13 @@ namespace XYO {
 					content << " -luser32 -lws2_32";
 #endif
 
-					Shell::filePutContents(buildPath + "/" + libName + ".o2so", content);
+					Shell::filePutContents(tmpPath + "/" + libName + ".o2so", content);
 					String cxx = Shell::getEnv("CXX");
 					if(cxx.length()==0) {
 						cxx="gcc";
 					};
 					cmd = cxx + " @";
-					cmd << buildPath + "/" + libName + ".o2so";
+					cmd << tmpPath + "/" + libName + ".o2so";
 					if(echoCmd) {
 						printf("%s\n", cmd.value());
 					};
@@ -292,7 +292,7 @@ namespace XYO {
 			bool makeObjToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &objFiles,
 				TDynamicArray<String> &libDependencyPath,
@@ -315,12 +315,12 @@ namespace XYO {
 				if(!Shell::mkdirRecursivelyIfNotExists(binPath)) {
 					return false;
 				};
-				if(!Shell::mkdirRecursivelyIfNotExists(buildPath)) {
+				if(!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
 					return false;
 				};
 
 				binPath = String::replace(binPath, "\\", "/");
-				buildPath = String::replace(buildPath, "\\", "/");
+				tmpPath = String::replace(tmpPath, "\\", "/");
 
 				exeNameOut = binPath << "/" << exeName;
 #ifdef XYO_OS_WINDOWS
@@ -384,13 +384,13 @@ namespace XYO {
 				content << " -lm";
 				content << " -ldl";
 #endif
-				Shell::filePutContents(buildPath + "/" + exeName + ".o2elf", content);
+				Shell::filePutContents(tmpPath + "/" + exeName + ".o2elf", content);
 				String cxx = Shell::getEnv("CXX");
 				if(cxx.length()==0) {
 					cxx="gcc";
 				};
 				cmd = cxx + " @";
-				cmd << buildPath + "/" + exeName + ".o2elf";
+				cmd << tmpPath + "/" + exeName + ".o2elf";
 
 				if(echoCmd) {
 					printf("%s\n", cmd.value());
@@ -583,7 +583,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cppDefine,
 				TDynamicArray<String> &incPath,
@@ -626,7 +626,7 @@ namespace XYO {
 				};
 
 				for(k = 0; k < cppFiles.length(); ++k) {
-					objFiles[k] = objFilename(projectName, cppFiles[k], buildPath, options);
+					objFiles[k] = objFilename(projectName, cppFiles[k], tmpPath, options);
 					cppFilesTime[k].getLastWriteTime(cppFiles[k]);
 					objFilesTime[k].getLastWriteTime(objFiles[k]);
 				};
@@ -694,7 +694,7 @@ namespace XYO {
 							Shell::touchIfExists(rcFiles[k]);
 						};
 
-						resObj = objFilename(projectName, rcFiles[k], buildPath, options);
+						resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
 						if(!makeRcToObj(
 								rcFiles[k],
@@ -715,7 +715,7 @@ namespace XYO {
 						libName,
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						options,
 						objFiles,
 						defFile,
@@ -730,7 +730,7 @@ namespace XYO {
 			bool makeCppToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cppDefine,
 				TDynamicArray<String> &incPath,
@@ -770,7 +770,7 @@ namespace XYO {
 				};
 
 				for(k = 0; k < cppFiles.length(); ++k) {
-					objFiles[k] = objFilename(projectName, cppFiles[k], buildPath, options);
+					objFiles[k] = objFilename(projectName, cppFiles[k], tmpPath, options);
 					cppFilesTime[k].getLastWriteTime(cppFiles[k]);
 					objFilesTime[k].getLastWriteTime(objFiles[k]);
 				};
@@ -837,7 +837,7 @@ namespace XYO {
 						Shell::touchIfExists(rcFiles[k]);
 					};
 
-					resObj = objFilename(projectName, rcFiles[k], buildPath, options);
+					resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
 					if(!makeRcToObj(
 							rcFiles[k],
@@ -855,7 +855,7 @@ namespace XYO {
 				return makeObjToExe(
 						exeName,
 						binPath,
-						buildPath,
+						tmpPath,
 						options,
 						objFiles,
 						libDependencyPath,
@@ -945,7 +945,7 @@ namespace XYO {
 				String libName,
 				String binPath,
 				String libPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cDefine,
 				TDynamicArray<String> &incPath,
@@ -988,7 +988,7 @@ namespace XYO {
 				};
 
 				for(k = 0; k < cFiles.length(); ++k) {
-					objFiles[k] = objFilename(projectName, cFiles[k], buildPath, options);
+					objFiles[k] = objFilename(projectName, cFiles[k], tmpPath, options);
 					cFilesTime[k].getLastWriteTime(cFiles[k]);
 					objFilesTime[k].getLastWriteTime(objFiles[k]);
 				};
@@ -1056,7 +1056,7 @@ namespace XYO {
 							Shell::touchIfExists(rcFiles[k]);
 						};
 
-						resObj = objFilename(projectName, rcFiles[k], buildPath, options);
+						resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
 						if(!makeRcToObj(
 								rcFiles[k],
@@ -1078,7 +1078,7 @@ namespace XYO {
 						libName,
 						binPath,
 						libPath,
-						buildPath,
+						tmpPath,
 						options,
 						objFiles,
 						defFile,
@@ -1093,7 +1093,7 @@ namespace XYO {
 			bool makeCToExe(
 				String exeName,
 				String binPath,
-				String buildPath,
+				String tmpPath,
 				int options,
 				TDynamicArray<String> &cDefine,
 				TDynamicArray<String> &incPath,
@@ -1133,7 +1133,7 @@ namespace XYO {
 				};
 
 				for(k = 0; k < cFiles.length(); ++k) {
-					objFiles[k] = objFilename(projectName, cFiles[k], buildPath, options);
+					objFiles[k] = objFilename(projectName, cFiles[k], tmpPath, options);
 					cFilesTime[k].getLastWriteTime(cFiles[k]);
 					objFilesTime[k].getLastWriteTime(objFiles[k]);
 				};
@@ -1199,7 +1199,7 @@ namespace XYO {
 						Shell::touchIfExists(rcFiles[k]);
 					};
 
-					resObj = objFilename(projectName, rcFiles[k], buildPath, options);
+					resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
 					if(!makeRcToObj(
 							rcFiles[k],
@@ -1219,7 +1219,7 @@ namespace XYO {
 				return makeObjToExe(
 						exeName,
 						binPath,
-						buildPath,
+						tmpPath,
 						options,
 						objFiles,
 						libDependencyPath,

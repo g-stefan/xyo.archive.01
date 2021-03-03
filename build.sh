@@ -4,8 +4,8 @@
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
 if ! [ "$1" = "" ]; then
-	if [ -f "./port/build.$1.sh" ]; then
-		. ./port/build.$1.sh $2
+	if [ -f "./build/build.$1.sh" ]; then
+		. ./build/build.$1.sh $2
 		RETV=$?
 		if [ "$RETV" = "1" ]; then
 			exit 1
@@ -41,7 +41,7 @@ if [ "$DEFAULT_PLATFORM" = "" ]; then
 	echo "build [platform] [mode]"
 	exit 0
 fi	
-. ./port/build.$DEFAULT_PLATFORM.sh $1
+. ./build/build.$DEFAULT_PLATFORM.sh $1
 RETV=$?
 if [ "$RETV" = "1" ]; then
 	exit 1

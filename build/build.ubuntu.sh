@@ -3,8 +3,8 @@
 # http://unlicense.org/
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
-if [ -f ./port/build.ubuntu.config.sh ]; then
-	. ./port/build.ubuntu.config.sh
+if [ -f ./build/build.ubuntu.config.sh ]; then
+	. ./build/build.ubuntu.config.sh
 fi
 
 RESTORE_PATH=$PATH
@@ -46,12 +46,12 @@ export XYO_PATH_RELEASE
 RETV=0
 
 if [ "$1" = "" ]; then
-	. ./port/build.ubuntu.make.sh make
+	. ./build/build.ubuntu.make.sh make
 else
-	if [ -f "./port/build.ubuntu.$1.sh" ]; then
-		. ./port/build.ubuntu.$1.sh
+	if [ -f "./build/build.ubuntu.$1.sh" ]; then
+		. ./build/build.ubuntu.$1.sh
 	else
-		. ./port/build.ubuntu.make.sh $1
+		. ./build/build.ubuntu.make.sh $1
 	fi
 fi
 

@@ -9,7 +9,7 @@ export XYO_PATH_REPOSITORY_LIBRARY=
 export PATH=$PATH:/c/msys64/mingw32/bin/../libexec;
 
 export WSL_BUILD_PROCESS_PATH=$HOME/SDK32/source/xyo
-/bin/sh -- ./port/build.wsl.process.sh $1
+/bin/sh -- ./build/build.wsl.process.sh $1
 RETV=$?
 
 if [ "$RETV" = "1" ]; then

@@ -3,7 +3,7 @@ rem Public domain
 rem http://unlicense.org/
 rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
-if exist .\port\build.msvc.config.cmd call .\port\build.msvc.config.cmd
+if exist .\build\build.msvc.config.cmd call .\build\build.msvc.config.cmd
 
 set ACTION=%1
 set MSVC_PLATFORM_MACHINE=win64
@@ -71,13 +71,13 @@ set PATH=%CD%;%PATH%
 popd
 :BuildBegin
 
-if not exist port\build.msvc.%ACTION%.cmd goto BuildDoMake
-call port\build.msvc.%ACTION%.cmd
+if not exist build\build.msvc.%ACTION%.cmd goto BuildDoMake
+call build\build.msvc.%ACTION%.cmd
 if errorlevel 1 goto BuildStepError
 goto BuildStepDone
 
 :BuildDoMake
-call port\build.msvc.make.cmd %ACTION%
+call build\build.msvc.make.cmd %ACTION%
 if errorlevel 1 goto BuildStepError
 goto BuildStepDone
 

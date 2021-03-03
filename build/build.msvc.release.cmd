@@ -17,8 +17,8 @@ exit 1
 
 set XYO_PATH_RELEASE=release
 
-call :cmdX call port\build.msvc.cmd make
-call :cmdX call port\build.msvc.cmd sign
-call :cmdX call port\build.msvc.cmd install
-call :cmdX call port\build.msvc.cmd install-release
+call :cmdX call build\build.msvc.cmd make
+call :cmdX call build\build.msvc.cmd sign
+call :cmdX call build\build.msvc.cmd install
+call :cmdX call build\build.msvc.cmd install-release
 call :cmdX temp\xyo.cc xyo --archive-release-sha512 --version-file=source/xyo.version.ini

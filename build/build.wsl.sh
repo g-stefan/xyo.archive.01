@@ -10,4 +10,4 @@ export XYO_PATH_REPOSITORY=$HOME/SDK
 export XYO_PATH_RELEASE=$HOME/SDK/release
 export XYO_PATH_REPOSITORY_LIBRARY=
 
-. ./port/build.wsl.process.sh
+. ./build/build.wsl.process.sh

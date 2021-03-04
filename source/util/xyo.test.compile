@@ -1,0 +1,4 @@
+--use-path=source/test
+--use-lib=:xyo.static
+--no-version
+--no-install

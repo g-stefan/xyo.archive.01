@@ -1,5 +1,0 @@
---use-path=test
---inc=include
---use-lib=:xyo.static
---no-version
---no-install

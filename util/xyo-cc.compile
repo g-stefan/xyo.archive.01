@@ -1,8 +1,0 @@
---exe xyo-cc
---use-path=util/xyo-cc
---inc=include
---rc-inc=include
---use-lib=:xyo.static
---install-project=xyo
---install-version-file=source/xyo.version.ini
---install-dev

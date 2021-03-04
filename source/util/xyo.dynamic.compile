@@ -1,0 +1,7 @@
+--dll xyo
+--dependency-set=rc.inc=xyo
+--use-path=source/xyo
+--build-include
+--no-version
+--dependency-license=mit
+--version-file=version.ini

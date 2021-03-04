@@ -5,10 +5,9 @@
             "name": "Win32",
             "intelliSenseMode": "msvc-x64",
             "includePath": [
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/source",
-                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/ATLMFC/include",
-                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/include",
+                "${workspaceRoot}/source/xyo",                
+                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/ATLMFC/include",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/include",
                 "C:/Program Files (x86)/Windows Kits/NETFXSDK/4.8/include/um",
                 "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/ucrt",
                 "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/shared",
@@ -23,11 +22,10 @@
                 "XYO_PLATFORM=\"win64-msvc-2019\""
             ],
             "browse": {
-                "path": [
-                    "${workspaceRoot}/include",
-                    "${workspaceRoot}/source",
-                    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/ATLMFC/include",
-                    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/include",
+                "path": [                    
+                    "${workspaceRoot}/source/xyo",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/ATLMFC/include",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/include",
                     "C:/Program Files (x86)/Windows Kits/NETFXSDK/4.8/include/um",
                     "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/ucrt",
                     "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/shared",

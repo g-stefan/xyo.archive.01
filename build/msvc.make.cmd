@@ -46,7 +46,7 @@ set INC=
 set INC= %INC% /Isource\xyo
 
 set SRC=
-set SRC=%SRC% source\util\xyo.config.cpp
+set SRC=%SRC% build\source\xyo.config.cpp
 
 if "%CXX%" == "" set CXX=cl
 
@@ -65,10 +65,10 @@ set SRC=%SRC% source\xyo-cc\xyo-cc-license.cpp
 set SRC=%SRC% source\xyo\xyo.amalgam.cpp
 
 call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fotemp\ /Fetemp/xyo.cc.exe
-call :cmdX temp\xyo.cc --mode=%ACTION% @source/util/xyo.static.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% @source/util/xyo.dynamic.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.01 @source/util/xyo.test.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.02 @source/util/xyo.test.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.03 @source/util/xyo.test.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.04 @source/util/xyo.test.compile
-call :cmdX temp\xyo.cc --mode=%ACTION% @source/util/xyo-cc.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @build/source/xyo.static.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @build/source/xyo.dynamic.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.01 @build/source/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.02 @build/source/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.03 @build/source/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.04 @build/source/xyo.test.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @build/source/xyo-cc.compile

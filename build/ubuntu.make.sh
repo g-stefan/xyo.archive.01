@@ -51,7 +51,7 @@ INC=""
 INC="$INC -Isource/xyo"
 
 SRC=""
-SRC="$SRC source/util/xyo.config.cpp"
+SRC="$SRC build/source/xyo.config.cpp"
 
 if [ "$CXX" = "" ]; then
 	CXX=gcc
@@ -72,12 +72,12 @@ SRC="$SRC source/xyo-cc/xyo-cc-license.cpp"
 SRC="$SRC source/xyo/xyo.amalgam.cpp"
 
 cmdX $CXX -o temp/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB
-cmdX temp/xyo.cc --mode=$ACTION @source/util/xyo.static.compile
-cmdX temp/xyo.cc --mode=$ACTION @source/util/xyo.dynamic.compile
-cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.01 @source/util/xyo.test.compile
-cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.02 @source/util/xyo.test.compile
-cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.03 @source/util/xyo.test.compile
-cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.04 @source/util/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION @build/source/xyo.static.compile
+cmdX temp/xyo.cc --mode=$ACTION @build/source/xyo.dynamic.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.01 @build/source/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.02 @build/source/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.03 @build/source/xyo.test.compile
+cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.04 @build/source/xyo.test.compile
 
-cmdX temp/xyo.cc --mode=$ACTION @source/util/xyo-cc.compile
+cmdX temp/xyo.cc --mode=$ACTION @build/source/xyo-cc.compile
 

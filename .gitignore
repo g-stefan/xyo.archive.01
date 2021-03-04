@@ -50,8 +50,7 @@
 *.config.md5
 
 # Development
-/bin/
+/output/
 /temp/
-/lib/
-/include/xyo--config.hpp
 /release/
+/source/xyo/xyo--config.hpp

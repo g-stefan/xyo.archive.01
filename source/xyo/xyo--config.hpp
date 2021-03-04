@@ -20,11 +20,11 @@
 //#define XYO_COMPILER_GCC
 
 // -- Platform
-#define XYO_PLATFORM "win32-msvc-2019"
+#define XYO_PLATFORM "win64-msvc-2019"
 
 // -- Application
-//#define XYO_APPLICATION_64BIT
-#define XYO_APPLICATION_32BIT
+#define XYO_APPLICATION_64BIT
+//#define XYO_APPLICATION_32BIT
 
 // -- Thread support
 //#define XYO_SINGLE_THREAD

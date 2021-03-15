@@ -12,12 +12,12 @@
 [ -d $WSL_BUILD_PROCESS_PATH/release ] || mkdir -p $WSL_BUILD_PROCESS_PATH/release
 [ -d $WSL_BUILD_PROCESS_PATH/test ] || mkdir -p $WSL_BUILD_PROCESS_PATH/test
 
-cp -rfu ./source/* $WSL_BUILD_PROCESS_PATH/source/
 cp -rfu ./build/ubuntu*.sh $WSL_BUILD_PROCESS_PATH/build/
-cp -rfu ./build/source/* $WSL_BUILD_PROCESS_PATH/build/source/
-cp -rfu ./release/*.csv $WSL_BUILD_PROCESS_PATH/release/
-cp -rfu ./test/* $WSL_BUILD_PROCESS_PATH/test/
-cp -rfu ./version.ini $WSL_BUILD_PROCESS_PATH/
+[ -d ./source/ ] && cp -rfu ./source/* $WSL_BUILD_PROCESS_PATH/source/
+[ -d ./build/source/ ] && cp -rfu ./build/source/* $WSL_BUILD_PROCESS_PATH/build/source/
+[ -d ./release/ ] && cp -rfu ./release/*.csv $WSL_BUILD_PROCESS_PATH/release/
+[ -d ./test/ ] && cp -rfu ./test/* $WSL_BUILD_PROCESS_PATH/test/
+[ -f ./version.ini ] && cp -rfu ./version.ini $WSL_BUILD_PROCESS_PATH/
 
 WSL_POPD=$PWD
 cd $WSL_BUILD_PROCESS_PATH

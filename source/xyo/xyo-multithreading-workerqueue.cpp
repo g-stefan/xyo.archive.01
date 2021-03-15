@@ -9,10 +9,12 @@
 
 #include "xyo-multithreading-workerqueue.hpp"
 #include "xyo-multithreading-synchronize.hpp"
+#include "xyo-system-processor.hpp"
 
 namespace XYO {
 	namespace Multithreading {
 		using namespace XYO::DataStructures;
+		using namespace XYO::System;
 
 		WorkerQueue::WorkerQueue() {
 			numberOfThreads = 8;
@@ -43,7 +45,7 @@ namespace XYO {
 		void WorkerQueue::setNumberOfThreads(int numberOfThreads_) {
 			numberOfThreads = numberOfThreads_;
 			if(numberOfThreads == 0) {
-				numberOfThreads = 8;
+				numberOfThreads = Processor::getCount();
 			};
 		};
 

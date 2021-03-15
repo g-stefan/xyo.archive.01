@@ -52,27 +52,13 @@ namespace Main {
 			"options:\n"
 			"    --version                      show version\n"
 			"    --license                      show license\n"
-			"    --usage                        this info\n"
-			"    --bump-version                 increment version build number\n"
-			"    --bump-version-build           increment version build number\n"
-			"    --bump-version-patch           increment version patch number\n"
-			"    --bump-version-minor           increment version minor number\n"
-			"    --bump-version-major           increment version major number\n"
+			"    --usage                        this info\n"			
 			"    --debug                        build debug version\n"
 			"    --release                      build release version\n"
 			"    --exe                          build executable (.exe)\n"
 			"    --lib                          build library (.lib)\n"
 			"    --dll                          build dynamic library (.dll)\n"
-			"    --dll-x-static                 build dynamic library with static linking (.dll)\n"
-			"    --crt-dynamic                  build using dynamic crt (default for dll)\n"
-			"    --crt-static                   build using static crt (default for lib)\n"
-			"    --source-is-separate           source code is separated in include and source folders\n"
-			"    --include-path=path            folder where include files (.hpp/.h) are stored\n"
-			"    --source-path=path             folder where source files (.cpp/.c) are stored\n"
-			"    --use-path=path                folder where source files (.cpp/.c) are stored\n"
-			"    --no-version                   do not bump version\n"
-			"    --dll-no-version               generate dll without version number in name\n"
-			"    --dll-with-version             generate dll with version number in name\n"
+			"    --dll-x-static                 build dynamic library with static linking (.dll)\n"			
 			"\n"
 			"    --mode=[mode]                  compile using mode as reference:\n"
 			"        [empty] or make            - build release or debug if XYO_COMPILE_DEBUG is defined in environment\n"
@@ -90,11 +76,26 @@ namespace Main {
 			"        archive                    - archive source, works only if --source-archive present, ignored otherwise\n"
 			"        extract                    - extract source from archive, works only if --source-extract present, ignored otherwise\n"
 			"\n"
-			"    --no-install                   do not perform any install\n"
-			"    --workspace-path=path          workspace path to use, default is current folder\n"
-			"    --bin-path=path                location to bin folder, default to workspace/output/bin\n"
-			"    --lib-path=path                location to lib folder, default to workspace/output/lib\n"
+			"    --workspace-path=path          workspace path to use, default is current folder\n"			
+			"    --source-path=path             folder where source files (.hpp/.h/.cpp/.c) are stored, default workspace/source\n"
+			"    --output-path=path             location to output folder, default to workspace/output\n"
+			"    --output-bin-path=path         location to output bin folder, default to workspace/output/bin\n"
+			"    --output-include-path=path     location to output include folder, default to workspace/output/include\n"
+			"    --output-lib-path=path         location to output lib folder, default to workspace/output/lib\n"			
 			"    --temp-path=path               location to temp folder, default to workspace/temp\n"
+			"    --source-code-path=path        folder where source files (.cpp/.c) are stored, default workspace/source\n"
+			"    --source-include-path=path     folder where include files (.hpp/.h) are stored, default workspace/source\n"
+			"    --bump-version                 increment version build number\n"
+			"    --bump-version-build           increment version build number\n"
+			"    --bump-version-patch           increment version patch number\n"
+			"    --bump-version-minor           increment version minor number\n"
+			"    --bump-version-major           increment version major number\n"
+			"    --crt-dynamic                  build using dynamic crt (default for dll)\n"
+			"    --crt-static                   build using static crt (default for lib)\n"
+			"    --no-version                   do not bump version\n"
+			"    --dll-no-version               generate dll without version number in name\n"
+			"    --dll-with-version             generate dll with version number in name\n"			
+			"    --no-install                   do not perform any install\n"			
 			"    --threads=count                specify number of threads to use\n"
 			"    --inc=path                     add path to include in search\n"
 			"    --inc-repository=path          add path to include in search from repository/include/path\n"
@@ -142,8 +143,11 @@ namespace Main {
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
-			"    --output-path=path             location to output folder, default to workspace/output\n"
-			"    --build-include                build include folder (output/include)\n"
+			"    --build-include                build include folder (output/include)\n"			
+			"    --install-include-direct       install include folder without project prefix\n"
+			"    --source-include-path-source   source include path (relative to source)\n"
+			"    --output-include-path-source   output include path (relative to output/include)\n"
+			"    --output-bin-path-is-output    output bin path becames output\n"
 		);
 		printf("\n");
 	};
@@ -181,15 +185,15 @@ namespace Main {
 		bool forPlatform = false;
 		bool forPlatformCheck = false;
 		bool buildInclude = false;
+		bool installIncludeDirect = false;
+		bool outputBinPathIsOutput = false;
 
 		String workspacePath = Shell::getCwd();
-		String projectName;
-		String includePathX;
-		String sourcePathX;
+		String projectName;		
 		String installProjectName;
 		String installVersionFile;
 		String installInc;
-		String libName;
+		String libName;		
 
 		String p7zipCompress="7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z ";
 		if(Compiler::matchPlatform("ubuntu*")) {
@@ -200,10 +204,18 @@ namespace Main {
 		};
 
 		int numThreads = Processor::getCount();
+
+		String sourceIncludePath = workspacePath + "/source";
+		String sourceCodePath = workspacePath + "/source";
 		String outputPath = workspacePath + "/output";
-		String binPath = outputPath + "/bin";
-		String libPath = outputPath + "/lib";
-		String tmpPath = workspacePath + "/temp";
+		String outputBinPath = outputPath + "/bin";
+		String outputIncludePath = outputPath + "/include";
+		String outputLibPath = outputPath + "/lib";
+		String tempPath = workspacePath + "/temp";		
+
+		String outputIncludePathSource;
+		String sourceIncludePathSource;
+		String sourceCodePathSource;
 
 		TDynamicArray<String> incPath;
 		TDynamicArray<String> cppDefine;
@@ -363,23 +375,18 @@ namespace Main {
 				if (opt == "crt-static") {
 					crtOption = CompilerOptions::CRTStatic;
 					continue;
-				};
-				if (opt == "source-is-separate") {
-					includePathX = "include";
-					sourcePathX = "source";
+				};				
+				if (opt == "source-include-path") {
+					sourceIncludePath = optValue;
 					continue;
 				};
-				if (opt == "include-path") {
-					includePathX = optValue;
+				if (opt == "source-code-path") {
+					sourceCodePath = optValue;
 					continue;
 				};
 				if (opt == "source-path") {
-					sourcePathX = optValue;
-					continue;
-				};
-				if (opt == "use-path") {
-					includePathX = optValue;
-					sourcePathX = optValue;
+					sourceIncludePath = optValue;
+					sourceCodePath = optValue;
 					continue;
 				};
 				if (opt == "no-version") {
@@ -491,32 +498,57 @@ namespace Main {
 						printf("Error: workspace-path is empty\n");
 						return 1;
 					};
+					sourceIncludePath = workspacePath + "/source";
+					sourceCodePath = workspacePath + "/source";
+					outputPath = workspacePath + "/output";
+					outputBinPath = outputPath + "/bin";
+					outputIncludePath = outputPath + "/include";
+					outputLibPath = outputPath + "/lib";
+					tempPath = workspacePath + "/temp";
 					continue;
 				};
-				if (opt == "bin-path") {
-					binPath = optValue;
-					if(binPath.isEmpty()) {
-						printf("Error: bin-path is empty\n");
+				if (opt == "output-path") {
+					if(optValue.isEmpty()) {
+						printf("Error: output-path not provided\n");
+						return 1;
+					};
+					outputPath=optValue;
+					outputBinPath = outputPath + "/bin";
+					outputIncludePath = outputPath + "/include";
+					outputLibPath = outputPath + "/lib";
+				};
+				if (opt == "output-bin-path") {
+					outputBinPath = optValue;
+					if(outputBinPath.isEmpty()) {
+						printf("Error: output-bin-path is empty\n");
+						return 1;
+					};
+					continue;
+				};
+				if (opt == "output-include-path") {
+					outputIncludePath = optValue;
+					if(outputIncludePath.isEmpty()) {
+						printf("Error: output-include-path is empty\n");
+						return 1;
+					};
+					continue;
+				};
+				if (opt == "output-lib-path") {
+					outputLibPath = optValue;
+					if(outputLibPath.isEmpty()) {
+						printf("Error: output-lib-path is empty\n");
 						return 1;
 					};
 					continue;
 				};
 				if (opt == "temp-path") {
-					tmpPath = optValue;
-					if(tmpPath.isEmpty()) {
+					tempPath = optValue;
+					if(tempPath.isEmpty()) {
 						printf("Error: temp-path is empty\n");
 						return 1;
 					};
 					continue;
-				};
-				if (opt == "lib-path") {
-					libPath = optValue;
-					if(libPath.isEmpty()) {
-						printf("Error: lib-path is empty\n");
-						return 1;
-					};
-					continue;
-				};
+				};				
 				if (opt == "threads") {
 					if(sscanf(optValue.value(), "%d", &numThreads)!=1) {
 						numThreads=Processor::getCount();
@@ -851,18 +883,43 @@ namespace Main {
 						return 1;
 					};
 					sha512File.push(optValue);
-				};
-				if (opt == "output-path") {
-					if(optValue.isEmpty()) {
-						printf("Error: output-path not provided\n");
-						return 1;
-					};
-					outputPath=optValue;
-				};
+				};				
 				if (opt == "build-include") {
 					buildInclude = true;
 					continue;
+				};				
+				if (opt == "install-include-direct") {
+					installIncludeDirect = true;
+					continue;
 				};
+				if (opt == "source-include-path-source") {
+					if(optValue.isEmpty()) {
+						printf("Error: source-include-path-source not provided\n");
+						return 1;
+					};
+					sourceIncludePathSource=optValue;
+					continue;
+				};
+				if (opt == "source-code-path-source") {
+					if(optValue.isEmpty()) {
+						printf("Error: source-code-path-source not provided\n");
+						return 1;
+					};
+					sourceCodePathSource=optValue;
+					continue;
+				};
+				if (opt == "output-include-path-source") {
+					if(optValue.isEmpty()) {
+						printf("Error: output-include-path-source not provided\n");
+						return 1;
+					};
+					outputIncludePathSource=optValue;
+					continue;
+				};
+				if (opt == "output-bin-path-is-output") {
+					outputBinPathIsOutput = true;
+					continue;
+				};				
 				continue;
 			};
 			projectName = cmdLine[i];
@@ -872,6 +929,10 @@ namespace Main {
 			if(!forPlatformCheck) {
 				return 0;
 			};
+		};
+
+		if(outputBinPathIsOutput) {
+			outputBinPath=outputPath;
 		};
 
 		// <hash>
@@ -908,10 +969,13 @@ namespace Main {
 		};
 
 		if(versionFile.isEmpty()) {
-			if(sourcePathX.length() > 0) {
-				versionFile = workspacePath + "/" + sourcePathX + "/" + projectBase + ".version.ini";
-			} else {
-				versionFile = workspacePath + "/" + projectBase + ".version.ini";
+			if(sourceCodePath.length() > 0) {
+				versionFile = sourceCodePath + "/" + projectBase + ".version.ini";
+			};
+			if(!Shell::fileExists(versionFile)){
+				if(Shell::fileExists(workspacePath + "/version.ini")){
+					versionFile = workspacePath + "/version.ini";
+				};
 			};
 		};
 
@@ -1170,15 +1234,15 @@ namespace Main {
 
 		if(doWriteDependency) {
 			if(makeLibrary || makeDynamicLibrary) {
-				Shell::mkdirRecursivelyIfNotExists(tmpPath);
-				Shell::mkdirRecursivelyIfNotExists(libPath);
-				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
+				Shell::mkdirRecursivelyIfNotExists(tempPath);
+				Shell::mkdirRecursivelyIfNotExists(outputLibPath);				
+				if(!INIFileX::save(tempPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
-				};
-				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (libPath + "/" + projectName + ".dependency.ini").value());
-					return 1;
+				};				
+				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
+					return 1;				
 				};
 			};
 			return 0;
@@ -1187,7 +1251,7 @@ namespace Main {
 		if(!Compiler::checkDependencyVersion(
 				projectDependency,
 				projectName,
-				tmpPath,
+				tempPath,
 				repositoryPathDependencyLib,
 				forceMake)) {
 			printf("Error: check dependecy version\n");
@@ -1195,8 +1259,8 @@ namespace Main {
 		};
 
 		if(forceMake) {
-			if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-				printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
+			if(!INIFileX::save(tempPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+				printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 				return 1;
 			};
 		};
@@ -1208,8 +1272,8 @@ namespace Main {
 			return 1;
 		};
 
-		if(!Compiler::getDependency(dependency, projectName, tmpPath, repositoryPathDependencyLib, true)) {
-			printf("Error: get dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
+		if(!Compiler::getDependency(dependency, projectName, tempPath, repositoryPathDependencyLib, true)) {
+			printf("Error: get dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 			return 1;
 		};
 
@@ -1303,26 +1367,29 @@ namespace Main {
 
 		if(!modeIsVersion) {
 			if(buildInclude) {
-				String outputIncludePath=outputPath + "/include";
-				String sourceIncludePath=workspacePath;
-				if(includePathX.length() > 0) {
-					sourceIncludePath << "/" << includePathX;
+				String outputIncludePath_=outputIncludePath;
+				if(outputIncludePathSource.length() > 0) {
+					outputIncludePath_ << "/" << outputIncludePathSource;
 				};
+				String sourceIncludePath_=sourceIncludePath;
+				if(sourceIncludePathSource.length() > 0) {
+					sourceIncludePath_ << "/" << sourceIncludePathSource;
+				};				
 				if(!noDefaultSource) {
-					Shell::mkdirRecursivelyIfNotExists(outputIncludePath);
+					Shell::mkdirRecursivelyIfNotExists(outputIncludePath_);
 					TDynamicArray<String> _copyFiles;
 					TDynamicArray<String> _hFiles;
 					TDynamicArray<String> _hppFiles;
-					Shell::getFileList(sourceIncludePath + "/" + projectBase + "*.h", _hFiles);
-					Shell::getFileList(sourceIncludePath + "/" + projectBase + "*.hpp", _hppFiles);
+					Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.h", _hFiles);
+					Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.hpp", _hppFiles);
 
 					TDynamicArray<String> _hFilesExtra;
 					TDynamicArray<String> _hppFilesExtra;
 
 					if(String::beginWith(projectName, "lib")) {
 						String projectBaseX = String::substring(projectBase, 3);
-						Shell::getFileList(sourceIncludePath + "/" + projectBaseX + "*.h", _hFilesExtra);
-						Shell::getFileList(sourceIncludePath + "/" + projectBaseX + "*.hpp", _hppFilesExtra);
+						Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.h", _hFilesExtra);
+						Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.hpp", _hppFilesExtra);
 					};
 
 					// add extra
@@ -1365,10 +1432,10 @@ namespace Main {
 					};
 
 					for(k = 0; k < _copyFiles.length(); ++k) {
-						if(!Shell::copy(_copyFiles[k], outputIncludePath+"/"+Shell::getFileName(_copyFiles[k]))) {
+						if(!Shell::copy(_copyFiles[k], outputIncludePath_+"/"+Shell::getFileName(_copyFiles[k]))) {
 							printf("Error: unable to copy %s to %s",
 								_copyFiles[k].value(),
-								(outputIncludePath+"/"+Shell::getFileName(_copyFiles[k])).value()
+								(outputIncludePath_+"/"+Shell::getFileName(_copyFiles[k])).value()
 							);
 							return 1;
 						};
@@ -1376,26 +1443,19 @@ namespace Main {
 
 				};
 			};
-		};
+		};		
 
 		String includePath;
 		String sourcePath;
 
-		includePath = workspacePath;
-		if(includePathX.length() > 0) {
-			includePath << "/" << includePathX;
-		};
-		if(!modeIsVersion) {
-			if(buildInclude) {
-				if(!noDefaultSource) {
-					includePath = outputPath + "/include";
-				};
-			};
+		includePath = sourceIncludePath;
+		if(sourceIncludePathSource.length() > 0) {
+			includePath << "/" << sourceIncludePathSource;
 		};
 
-		sourcePath = workspacePath;
-		if(sourcePathX.length() > 0) {
-			sourcePath << "/" << sourcePathX;
+		sourcePath = sourceCodePath;
+		if(sourceCodePathSource.length() > 0) {
+			sourcePath << "/" << sourceCodePathSource;
 		};
 
 		if(doBumpVersionBuild) {
@@ -1608,12 +1668,15 @@ namespace Main {
 			incPath.push(sourcePath);
 			incPathRC.push(sourcePath);
 		};
-
-		String outputPathInclude = outputPath+"/include";
-		if(Shell::directoryExists(outputPathInclude)) {
-			if(includePath != outputPathInclude) {
-				incPath.push(outputPathInclude);
-				incPathRC.push(outputPathInclude);
+		
+		if(Shell::directoryExists(outputIncludePath)) {
+			if(includePath != outputIncludePath) {
+				incPath.push(outputIncludePath);
+				incPathRC.push(outputIncludePath);
+			};
+			if(outputIncludePathSource.length() > 0) {
+				incPath.push(outputIncludePath + "/" + outputIncludePathSource);
+				incPathRC.push(outputIncludePath + "/" + outputIncludePathSource);
 			};
 		};
 
@@ -1625,7 +1688,7 @@ namespace Main {
 			cppDefine[cppDefine.length() - 1] = String::substring(cppDefine[cppDefine.length() - 1], 3);
 		};
 
-		libDependencyPath.push(libPath);
+		libDependencyPath.push(outputLibPath);
 
 		// last is repository
 		for(w = 0; w < repositoryPathDependency.length(); ++w) {
@@ -1648,9 +1711,9 @@ namespace Main {
 			if(cSource.length() > 0) {
 				if(!Compiler::makeCToLib(
 						libName.length()?libName:projectName + ".static",
-						binPath,
-						libPath,
-						tmpPath,
+						outputBinPath,
+						outputLibPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::StaticLibrary,
 						cppDefine,
 						incPath,
@@ -1669,21 +1732,21 @@ namespace Main {
 					printf("Error: building library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(tmpPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(tempPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
-				if(!INIFileX::save(libPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (libPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(outputLibPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
 			};
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToLib(
 						libName.length()?libName:projectName + ".static",
-						binPath,
-						libPath,
-						tmpPath,
+						outputBinPath,
+						outputLibPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::StaticLibrary,
 						cppDefine,
 						incPath,
@@ -1702,37 +1765,44 @@ namespace Main {
 					printf("Error: building library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(tmpPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(tempPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
-				if(!INIFileX::save(libPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
-					printf("Error: write dependency %s\n", (libPath + "/" + projectName + ".static.dependency.ini").value());
+				if(!INIFileX::save(outputLibPath + "/" + projectName + ".static.dependency.ini", projectDependencyStatic)) {
+					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
 			};
 			if(doInstall) {
-				if(!Compiler::copyLibToFolder(libPath + "/" + projectName + ".static", pathInstall + "/lib")) {
-					printf("Error: copy file %s to %s\n", (libPath + "/" + projectName + ".static").value(), (pathInstall + "/lib").value());
+				if(!Compiler::copyLibToFolder(outputLibPath + "/" + projectName + ".static", pathInstall + "/lib")) {
+					printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static").value(), (pathInstall + "/lib").value());
 					return 1;
 				};
-				if(!Shell::copyFileIfExists(libPath + "/" + projectName + ".static.dependency.ini",
+				if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".static.dependency.ini",
 						pathInstall + "/lib/" + projectName + ".static.dependency.ini")) {
-					printf("Error: copy file %s to %s\n", (libPath + "/" + projectName + ".static.dependency.ini").value(),
+					printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value(),
 						(pathInstall + "/lib/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
 				if(!noInc) {
-					if(includePath != workspacePath) {
-						if(installInc.length()>0) {
-							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
-								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+					if(outputIncludePath != workspacePath) {
+						if(installIncludeDirect) {
+							if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include")) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include").value());
 								return 1;
 							};
 						} else {
-							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
-								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
-								return 1;
+							if(installInc.length()>0) {
+								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + installInc)) {
+									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+									return 1;
+								};
+							} else {
+								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + projectName)) {
+									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
+									return 1;
+								};
 							};
 						};
 					};
@@ -1741,6 +1811,10 @@ namespace Main {
 		};
 
 		if(makeDynamicLibrary) {
+			if(noLib) {
+				outputLibPath=tempPath;
+			};
+
 			if((cSource.isEmpty()) && (cppSource.isEmpty())) {
 				printf("Error: no c/cpp source for dynamic library %s\n", projectName.value());
 				return 1;
@@ -1748,9 +1822,9 @@ namespace Main {
 			if(cSource.length() > 0) {
 				if(!Compiler::makeCToLib(
 						projectName,
-						binPath,
-						libPath,
-						tmpPath,
+						outputBinPath,
+						outputLibPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::DynamicLibrary | dllOption,
 						cppDefine,
 						incPath,
@@ -1769,22 +1843,22 @@ namespace Main {
 					printf("Error: building dynamic library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(tempPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
-				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (libPath + "/" + projectName + ".dependency.ini").value());
-					return 1;
+				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
+					return 1;				
 				};
 			};
 
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToLib(
 						projectName,
-						binPath,
-						libPath,
-						tmpPath,
+						outputBinPath,
+						outputLibPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption | CompilerOptions::DynamicLibrary | dllOption,
 						cppDefine,
 						incPath,
@@ -1803,53 +1877,58 @@ namespace Main {
 					printf("Error: building dynamic library %s\n", projectName.value());
 					return 1;
 				};
-				if(!INIFileX::save(tmpPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (tmpPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(tempPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
-				if(!INIFileX::save(libPath + "/" + projectName + ".dependency.ini", projectDependency)) {
-					printf("Error: write dependency %s\n", (libPath + "/" + projectName + ".dependency.ini").value());
+				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
+					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
 			};
 			if(doInstallRelease) {
-				if(!Compiler::copyDllToFolder(binPath + "/" + projectName, pathRelease, libVersion)) {
-					printf("Error: copy dll %s to folder %s\n", (binPath + "/" + projectName).value(), (pathRelease).value());
+				if(!Compiler::copyDllToFolder(outputBinPath + "/" + projectName, pathRelease, libVersion)) {
+					printf("Error: copy dll %s to folder %s\n", (outputBinPath + "/" + projectName).value(), (pathRelease).value());
 					return 1;
 				};
 			};
 			if(doInstall) {
 				if(noLib) {
-					if(!Compiler::copyDllToFolder(binPath + "/" + projectName, pathInstall + "/bin", libVersion)) {
-						printf("Error: copy dll %s to folder %s\n", (binPath + "/" + projectName).value(), (pathInstall + "/bin").value());
+					if(!Compiler::copyDllToFolder(outputBinPath + "/" + projectName, pathInstall + "/bin", libVersion)) {
+						printf("Error: copy dll %s to folder %s\n", (outputBinPath + "/" + projectName).value(), (pathInstall + "/bin").value());
 						return 1;
 					};
 				} else {
 					if(!Compiler::copyDllToFolderWithLib(
-							libPath + "/" + projectName, pathInstall + "/lib",
-							binPath + "/" + projectName, pathInstall + "/bin",
+							outputLibPath + "/" + projectName, pathInstall + "/lib",
+							outputBinPath + "/" + projectName, pathInstall + "/bin",
 							libVersion)) {
-						printf("Error: copy dll %s to folder %s with lib\n", (binPath + "/" + projectName).value(), (pathInstall + "/bin").value());
+						printf("Error: copy dll %s to folder %s with lib\n", (outputBinPath + "/" + projectName).value(), (pathInstall + "/bin").value());
 						return 1;
 					};
-				};
-				if(!Shell::copyFileIfExists(libPath + "/" + projectName + ".dependency.ini",
-						pathInstall + "/lib/" + projectName + ".dependency.ini")) {
-					printf("Error: copy file %s to %s\n", (libPath + "/" + projectName + ".dependency.ini").value(),
-						(pathInstall + "/lib/" + projectName + ".dependency.ini").value());
-					return 1;
-				};
-				if(!noLib) {
-					if(includePath != workspacePath) {
-						if(installInc.length()>0) {
-							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + installInc)) {
-								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+					if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".dependency.ini",
+							pathInstall + "/lib/" + projectName + ".dependency.ini")) {
+						printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value(),
+							(pathInstall + "/lib/" + projectName + ".dependency.ini").value());
+						return 1;
+					};
+					if(outputIncludePath != workspacePath) {
+						if(installIncludeDirect) {
+							if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include")) {
+								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include").value());
 								return 1;
 							};
 						} else {
-							if(!Shell::copyDirRecursively(includePath, pathInstall + "/include/" + projectName)) {
-								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
-								return 1;
+							if(installInc.length()>0) {
+								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + installInc)) {
+									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+									return 1;
+								};
+							} else {
+								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + projectName)) {
+									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
+									return 1;
+								};
 							};
 						};
 					};
@@ -1865,8 +1944,8 @@ namespace Main {
 			if(cSource.length() > 0) {
 				if(!Compiler::makeCToExe(
 						projectName,
-						doMake ? tmpPath : binPath,
-						tmpPath,
+						doMake ? tempPath : outputBinPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption,
 						cppDefine,
 						incPath,
@@ -1888,8 +1967,8 @@ namespace Main {
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToExe(
 						projectName,
-						doMake ? tmpPath : binPath,
-						tmpPath,
+						doMake ? tempPath : outputBinPath,
+						tempPath,
 						(isRelease ? CompilerOptions::Release : CompilerOptions::Debug) | crtOption,
 						cppDefine,
 						incPath,
@@ -1908,14 +1987,14 @@ namespace Main {
 				};
 			};
 			if(doInstallRelease) {
-				if(!Compiler::copyExeToFolder(binPath + "/" + projectName, pathRelease)) {
-					printf("Error: copy exe %s to folder %s\n", (binPath + "/" + projectName).value(), (pathRelease).value());
+				if(!Compiler::copyExeToFolder(outputBinPath + "/" + projectName, pathRelease)) {
+					printf("Error: copy exe %s to folder %s\n", (outputBinPath + "/" + projectName).value(), (pathRelease).value());
 					return 1;
 				};
 			};
 			if(doInstall && ((!doInstallRelease) || doInstallDev)) {
-				if(!Compiler::copyExeToFolder(binPath + "/" + projectName, pathInstall + "/bin")) {
-					printf("Error: copy exe %s to folder %s\n", (binPath + "/" + projectName).value(), (pathInstall + "/bin").value());
+				if(!Compiler::copyExeToFolder(outputBinPath + "/" + projectName, pathInstall + "/bin")) {
+					printf("Error: copy exe %s to folder %s\n", (outputBinPath + "/" + projectName).value(), (pathInstall + "/bin").value());
 					return 1;
 				};
 			};
@@ -1956,7 +2035,7 @@ namespace Main {
 		if(forceMake) {
 			if(!Compiler::copyDependency(
 					projectName,
-					tmpPath,
+					tempPath,
 					repositoryPathDependencyLib)) {
 				printf("Error: copy dependecy\n");
 				return 1;
@@ -1965,8 +2044,8 @@ namespace Main {
 
 		if(doMake) {
 			String cmd;
-			if(!Compiler::getFileNameExe(tmpPath + "/" + projectName, cmd)) {
-				printf("Error: get filename exe %s\n", (tmpPath + "/" + projectName).value());
+			if(!Compiler::getFileNameExe(tempPath + "/" + projectName, cmd)) {
+				printf("Error: get filename exe %s\n", (tempPath + "/" + projectName).value());
 				return 1;
 			};
 			cmd << " " << cmdMake;

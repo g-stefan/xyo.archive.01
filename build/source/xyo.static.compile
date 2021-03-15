@@ -1,6 +1,5 @@
 --lib xyo
---use-path=source/xyo
+--source-path=source/xyo
 --build-include
 --dependency-set=rc.inc=xyo
 --dependency-license=mit
---version-file=version.ini

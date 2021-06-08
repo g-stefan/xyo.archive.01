@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <cerrno>
 #include <cstdio>
 
 #include "xyo-multithreading-thread.hpp"

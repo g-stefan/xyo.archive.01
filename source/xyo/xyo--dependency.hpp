@@ -15,6 +15,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <string>
 #include <typeinfo>
 #include <utility>
 #include <stdexcept>

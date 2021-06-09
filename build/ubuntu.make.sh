@@ -29,7 +29,10 @@ if [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
 	if [ -f "/etc/lsb-release" ]; then
 		RELEASE=`cat /etc/lsb-release | grep DISTRIB_RELEASE| cut -d "=" -f 2`
 		XYO_PLATFORM="ubuntu-$RELEASE"
-	fi			
+	fi
+	if command -v termux-setup-storage; then
+		XYO_PLATFORM="termux"
+	fi
 elif [ "$(expr substr $(uname -s) 1 10)" = "MSYS_NT" ]; then
 	XYO_PLATFORM="msys"
 elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then

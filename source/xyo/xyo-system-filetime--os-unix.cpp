@@ -108,6 +108,21 @@ namespace XYO {
 			return (int) (fileTime->value.tv_sec - x.fileTime->value.tv_sec);
 		};
 
+		uint64_t FileTime::toUnixTime() {
+			if(!fileTime) {
+				return (uint64_t)0;
+			};			
+			return (uint64_t)fileTime->value.tv_sec;
+		};
+
+		void FileTime::fromUnixTime(uint64_t t) {
+			if(!fileTime) {
+				fileTime = new FileTime_();
+			};
+			fileTime->value.tv_sec = t;
+			fileTime->value.tv_nsec = 0;
+		};
+
 	};
 };
 

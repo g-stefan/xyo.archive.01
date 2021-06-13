@@ -121,6 +121,38 @@ namespace XYO {
 			return (int) CompareFileTime(&fileTime->value, &x.fileTime->value);
 		};
 
+		uint64_t FileTime::toUnixTime() {
+			if(!fileTime) {
+				return (uint64_t)0;
+			};
+			time_t t;
+
+			LONGLONG ll;
+			ll = (((LONGLONG)(fileTime->value.dwHighDateTime)) << 32) + fileTime->value.dwLowDateTime;
+#ifdef XYO_COMPILER_MSVC
+			t = (time_t)((ll - (116444736000000000ui64)) / 10000000ui64);
+#endif
+#ifdef XYO_COMPILER_GCC
+			t = (time_t)((ll - (116444736000000000ULL)) / 10000000ULL);
+#endif
+			return (uint64_t)t;
+		};
+
+		void FileTime::fromUnixTime(uint64_t t) {
+			if(!fileTime) {
+				fileTime = new FileTime_();
+			};
+
+			LONGLONG ll;
+#ifdef XYO_COMPILER_MSVC
+			ll = Int32x32To64(t, 10000000UL) + 116444736000000000ui64;
+#endif
+#ifdef XYO_COMPILER_GCC
+			ll = Int32x32To64(t, 10000000UL) + 116444736000000000ULL;
+#endif
+			fileTime->value.dwLowDateTime = (DWORD)ll;
+			fileTime->value.dwHighDateTime = (DWORD)(ll >> 32);
+		};
 
 	};
 };

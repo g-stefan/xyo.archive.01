@@ -41,6 +41,8 @@ namespace XYO {
 				XYO_EXPORT bool getLastWriteTime(const char *file);
 				XYO_EXPORT int compare(FileTime &x);
 				XYO_EXPORT bool isChanged(TDynamicArray<FileTime> &x);
+				XYO_EXPORT uint64_t toUnixTime();
+				XYO_EXPORT void fromUnixTime(uint64_t);
 		};
 
 	};

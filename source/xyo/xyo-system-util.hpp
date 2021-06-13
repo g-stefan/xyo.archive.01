@@ -28,31 +28,38 @@ namespace XYO {
 				const char *fileNameOut,
 				bool append,
 				bool isString);
+
 			XYO_EXPORT bool fileToJs(
 				const char *stringName,
 				const char *fileNameIn,
 				const char *fileNameOut,
 				bool append);
+
 			XYO_EXPORT bool fileToRc(
 				const char *stringName,
 				const char *fileNameIn,
 				const char *fileNameOut,
 				bool append);
+
 			XYO_EXPORT bool pathToHtmlRc(
 				const char *pathOrFileNameIn,
 				const char *fileNameOut,
 				bool append,
 				const char *basePath = nullptr);
+
 			XYO_EXPORT bool fileToCString(
 				const char *stringName,
 				const char *fileNameIn,
 				const char *fileNameOut);
+
 			XYO_EXPORT bool fileToCStringDirect(
 				const char *fileNameIn,
 				const char *fileNameOut);
+
 			XYO_EXPORT bool fileHashSHA256(
 				const char *fileName,
 				String &hash);
+				
 			XYO_EXPORT bool fileHashSHA512(
 				const char *fileName,
 				String &hash);

@@ -147,7 +147,7 @@ namespace Main {
 			"    --install-include-direct       install include folder without project prefix\n"
 			"    --source-include-path-source   source include path (relative to source)\n"
 			"    --output-include-path-source   output include path (relative to output/include)\n"
-			"    --output-bin-path-is-output    output bin path becames output\n"
+			"    --output-bin-path-is-output    output bin path becomes output\n"
 		);
 		printf("\n");
 	};

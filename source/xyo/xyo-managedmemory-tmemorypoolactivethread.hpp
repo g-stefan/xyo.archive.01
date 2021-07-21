@@ -340,7 +340,6 @@ namespace XYO {
 							TMemoryPoolActiveThreadImplement<T>::registryLink
 						)) {
 
-						printf("TMemoryPoolActiveThread:TIfHasInitMemory<T>::initMemory():%s\n",TMemoryPoolActiveThreadImplement<T>::registryKey());
 						TIfHasInitMemory<T>::initMemory();
 
 						RegistryThread::setValue(

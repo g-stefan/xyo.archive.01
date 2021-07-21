@@ -166,6 +166,9 @@ namespace XYO {
 #endif
 
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
+#ifdef XYO_TMEMORYPOOL_NEW_MEMORY_INFO
+					printf("# newMemory %p - %s\n", this_ ,registryKey());
+#endif
 					return this_;
 				};
 
@@ -176,6 +179,10 @@ namespace XYO {
 				};
 
 				inline void deleteMemory(T *this_) {
+#ifdef XYO_TMEMORYPOOL_DELETE_MEMORY_INFO
+					printf("# deleteMemory %p - %s\n", this_ ,registryKey());
+#endif
+
 #ifdef XYO_TMEMORYPOOL_CHECK
 					if((reinterpret_cast<Link *>( (reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value) ))->isDeleted) {
 #ifdef XYO_TMEMORYPOOL_CHECK_INFO
@@ -333,6 +340,7 @@ namespace XYO {
 							TMemoryPoolActiveThreadImplement<T>::registryLink
 						)) {
 
+						printf("TMemoryPoolActiveThread:TIfHasInitMemory<T>::initMemory():%s\n",TMemoryPoolActiveThreadImplement<T>::registryKey());
 						TIfHasInitMemory<T>::initMemory();
 
 						RegistryThread::setValue(

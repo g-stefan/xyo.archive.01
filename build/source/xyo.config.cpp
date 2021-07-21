@@ -205,6 +205,12 @@ int main(int cmdN, char *cmdS[]) {
 #ifdef XYO_OBJECT_REFERENCE_COUNT_INFO
 	configEnable("XYO_OBJECT_REFERENCE_COUNT_INFO");
 #endif
+#ifdef XYO_TMEMORYPOOL_NEW_MEMORY_INFO
+	configEnable("XYO_TMEMORYPOOL_NEW_MEMORY_INFO");
+#endif
+#ifdef XYO_TMEMORYPOOL_DELETE_MEMORY_INFO
+	configEnable("XYO_TMEMORYPOOL_DELETE_MEMORY_INFO");
+#endif
 
 	if(!fileReplaceLine(configFileIn, configFileCheck, configMap)) {
 		cout << "xyo - configuration check error\n";

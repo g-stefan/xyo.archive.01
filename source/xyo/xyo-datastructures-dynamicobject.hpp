@@ -90,6 +90,10 @@ private:
 					};
 					return false;
 				};
+
+				inline bool isSameType(DynamicObject *dynamicObject) {
+					return (objectType_->type == dynamicObject->objectType_->type);
+				};
 		};
 
 		template<typename T>

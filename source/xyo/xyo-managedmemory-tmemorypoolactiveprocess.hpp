@@ -56,6 +56,10 @@ namespace XYO {
 #       endif
 #endif
 
+#ifndef XYO_MULTITHREADING_TATOMIC_HPP
+#include "xyo-multithreading-tatomic.hpp"
+#endif
+
 namespace XYO {
 	namespace ManagedMemory {
 		using namespace XYO::DataStructures;

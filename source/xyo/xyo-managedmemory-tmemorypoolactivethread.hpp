@@ -67,6 +67,10 @@ namespace XYO {
 #include "xyo-datastructures-txlist1.hpp"
 #endif
 
+#ifndef XYO_MANAGEDMEMORY_REGISTRYTHREAD_HPP
+#include "xyo-managedmemory-registrythread.hpp"
+#endif
+
 namespace XYO {
 	namespace ManagedMemory {
 		using namespace XYO::DataStructures;

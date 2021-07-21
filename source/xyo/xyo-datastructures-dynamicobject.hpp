@@ -83,11 +83,23 @@ private:
 					};
 					return objectTypeSearchNext(type);
 				};
+
+				inline bool isTypeExact(const void *type) {
+					if(objectType_->type == type) {
+						return true;
+					};
+					return false;
+				};
 		};
 
 		template<typename T>
 		bool TIsType(DynamicObject *object) {
 			return object->isType(T::getType());
+		};
+
+		template<typename T>
+		bool TIsTypeExact(DynamicObject *object) {
+			return object->isTypeExact(T::getType());
 		};
 
 		template<typename T>

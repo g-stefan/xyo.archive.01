@@ -171,7 +171,7 @@ namespace XYO {
 
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
 #ifdef XYO_TMEMORYPOOL_NEW_MEMORY_INFO
-					printf("# newMemory %p - %s\n", this_ ,registryKey());
+					printf("# newMemory %p - %s\n", this_, registryKey());
 #endif
 					return this_;
 				};
@@ -184,7 +184,7 @@ namespace XYO {
 
 				inline void deleteMemory(T *this_) {
 #ifdef XYO_TMEMORYPOOL_DELETE_MEMORY_INFO
-					printf("# deleteMemory %p - %s\n", this_ ,registryKey());
+					printf("# deleteMemory %p - %s\n", this_, registryKey());
 #endif
 
 #ifdef XYO_TMEMORYPOOL_CHECK

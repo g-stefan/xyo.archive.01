@@ -59,7 +59,7 @@ namespace XYO {
 			XYO_EXPORT bool fileHashSHA256(
 				const char *fileName,
 				String &hash);
-				
+
 			XYO_EXPORT bool fileHashSHA512(
 				const char *fileName,
 				String &hash);

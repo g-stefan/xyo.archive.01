@@ -111,7 +111,7 @@ namespace XYO {
 		uint64_t FileTime::toUnixTime() {
 			if(!fileTime) {
 				return (uint64_t)0;
-			};			
+			};
 			return (uint64_t)fileTime->value.tv_sec;
 		};
 

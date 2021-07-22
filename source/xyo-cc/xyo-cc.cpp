@@ -52,13 +52,13 @@ namespace Main {
 			"options:\n"
 			"    --version                      show version\n"
 			"    --license                      show license\n"
-			"    --usage                        this info\n"			
+			"    --usage                        this info\n"
 			"    --debug                        build debug version\n"
 			"    --release                      build release version\n"
 			"    --exe                          build executable (.exe)\n"
 			"    --lib                          build library (.lib)\n"
 			"    --dll                          build dynamic library (.dll)\n"
-			"    --dll-x-static                 build dynamic library with static linking (.dll)\n"			
+			"    --dll-x-static                 build dynamic library with static linking (.dll)\n"
 			"\n"
 			"    --mode=[mode]                  compile using mode as reference:\n"
 			"        [empty] or make            - build release or debug if XYO_COMPILE_DEBUG is defined in environment\n"
@@ -76,12 +76,12 @@ namespace Main {
 			"        archive                    - archive source, works only if --source-archive present, ignored otherwise\n"
 			"        extract                    - extract source from archive, works only if --source-extract present, ignored otherwise\n"
 			"\n"
-			"    --workspace-path=path          workspace path to use, default is current folder\n"			
+			"    --workspace-path=path          workspace path to use, default is current folder\n"
 			"    --source-path=path             folder where source files (.hpp/.h/.cpp/.c) are stored, default workspace/source\n"
 			"    --output-path=path             location to output folder, default to workspace/output\n"
 			"    --output-bin-path=path         location to output bin folder, default to workspace/output/bin\n"
 			"    --output-include-path=path     location to output include folder, default to workspace/output/include\n"
-			"    --output-lib-path=path         location to output lib folder, default to workspace/output/lib\n"			
+			"    --output-lib-path=path         location to output lib folder, default to workspace/output/lib\n"
 			"    --temp-path=path               location to temp folder, default to workspace/temp\n"
 			"    --source-code-path=path        folder where source files (.cpp/.c) are stored, default workspace/source\n"
 			"    --source-include-path=path     folder where include files (.hpp/.h) are stored, default workspace/source\n"
@@ -94,8 +94,8 @@ namespace Main {
 			"    --crt-static                   build using static crt (default for lib)\n"
 			"    --no-version                   do not bump version\n"
 			"    --dll-no-version               generate dll without version number in name\n"
-			"    --dll-with-version             generate dll with version number in name\n"			
-			"    --no-install                   do not perform any install\n"			
+			"    --dll-with-version             generate dll with version number in name\n"
+			"    --no-install                   do not perform any install\n"
 			"    --threads=count                specify number of threads to use\n"
 			"    --inc=path                     add path to include in search\n"
 			"    --inc-repository=path          add path to include in search from repository/include/path\n"
@@ -143,7 +143,7 @@ namespace Main {
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
-			"    --build-include                build include folder (output/include)\n"			
+			"    --build-include                build include folder (output/include)\n"
 			"    --install-include-direct       install include folder without project prefix\n"
 			"    --source-include-path-source   source include path (relative to source)\n"
 			"    --output-include-path-source   output include path (relative to output/include)\n"
@@ -189,11 +189,11 @@ namespace Main {
 		bool outputBinPathIsOutput = false;
 
 		String workspacePath = Shell::getCwd();
-		String projectName;		
+		String projectName;
 		String installProjectName;
 		String installVersionFile;
 		String installInc;
-		String libName;		
+		String libName;
 
 		String p7zipCompress="7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z ";
 		if(Compiler::matchPlatform("ubuntu*")) {
@@ -211,7 +211,7 @@ namespace Main {
 		String outputBinPath = outputPath + "/bin";
 		String outputIncludePath = outputPath + "/include";
 		String outputLibPath = outputPath + "/lib";
-		String tempPath = workspacePath + "/temp";		
+		String tempPath = workspacePath + "/temp";
 
 		String outputIncludePathSource;
 		String sourceIncludePathSource;
@@ -375,7 +375,7 @@ namespace Main {
 				if (opt == "crt-static") {
 					crtOption = CompilerOptions::CRTStatic;
 					continue;
-				};				
+				};
 				if (opt == "source-include-path") {
 					sourceIncludePath = optValue;
 					continue;
@@ -548,7 +548,7 @@ namespace Main {
 						return 1;
 					};
 					continue;
-				};				
+				};
 				if (opt == "threads") {
 					if(sscanf(optValue.value(), "%d", &numThreads)!=1) {
 						numThreads=Processor::getCount();
@@ -883,11 +883,11 @@ namespace Main {
 						return 1;
 					};
 					sha512File.push(optValue);
-				};				
+				};
 				if (opt == "build-include") {
 					buildInclude = true;
 					continue;
-				};				
+				};
 				if (opt == "install-include-direct") {
 					installIncludeDirect = true;
 					continue;
@@ -919,7 +919,7 @@ namespace Main {
 				if (opt == "output-bin-path-is-output") {
 					outputBinPathIsOutput = true;
 					continue;
-				};				
+				};
 				continue;
 			};
 			projectName = cmdLine[i];
@@ -972,8 +972,8 @@ namespace Main {
 			if(sourceCodePath.length() > 0) {
 				versionFile = sourceCodePath + "/" + projectBase + ".version.ini";
 			};
-			if(!Shell::fileExists(versionFile)){
-				if(Shell::fileExists(workspacePath + "/version.ini")){
+			if(!Shell::fileExists(versionFile)) {
+				if(Shell::fileExists(workspacePath + "/version.ini")) {
 					versionFile = workspacePath + "/version.ini";
 				};
 			};
@@ -1235,14 +1235,14 @@ namespace Main {
 		if(doWriteDependency) {
 			if(makeLibrary || makeDynamicLibrary) {
 				Shell::mkdirRecursivelyIfNotExists(tempPath);
-				Shell::mkdirRecursivelyIfNotExists(outputLibPath);				
+				Shell::mkdirRecursivelyIfNotExists(outputLibPath);
 				if(!INIFileX::save(tempPath + "/" + projectName + ".dependency.ini", projectDependency)) {
 					printf("Error: write dependency %s\n", (tempPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
-				};				
+				};
 				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
-					return 1;				
+					return 1;
 				};
 			};
 			return 0;
@@ -1374,7 +1374,7 @@ namespace Main {
 				String sourceIncludePath_=sourceIncludePath;
 				if(sourceIncludePathSource.length() > 0) {
 					sourceIncludePath_ << "/" << sourceIncludePathSource;
-				};				
+				};
 				if(!noDefaultSource) {
 					Shell::mkdirRecursivelyIfNotExists(outputIncludePath_);
 					TDynamicArray<String> _copyFiles;
@@ -1443,7 +1443,7 @@ namespace Main {
 
 				};
 			};
-		};		
+		};
 
 		String includePath;
 		String sourcePath;
@@ -1668,7 +1668,7 @@ namespace Main {
 			incPath.push(sourcePath);
 			incPathRC.push(sourcePath);
 		};
-		
+
 		if(Shell::directoryExists(outputIncludePath)) {
 			if(includePath != outputIncludePath) {
 				incPath.push(outputIncludePath);
@@ -1849,7 +1849,7 @@ namespace Main {
 				};
 				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
-					return 1;				
+					return 1;
 				};
 			};
 

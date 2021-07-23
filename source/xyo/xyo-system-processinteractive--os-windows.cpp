@@ -40,6 +40,11 @@ namespace XYO {
 
 				BOOL isOk;
 				DWORD returnValue;
+
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+				HPCON hPC;
+				LPPROC_THREAD_ATTRIBUTE_LIST threadAttributeList;
+#endif
 		};
 
 		ProcessInteractive::ProcessInteractive() {
@@ -52,6 +57,10 @@ namespace XYO {
 			this_->isOk = FALSE;
 			this_->returnValue = 0;
 			linkOwner_ = nullptr;
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			this_->hPC = INVALID_HANDLE_VALUE;
+			this_->threadAttributeList = nullptr;
+#endif
 		};
 
 		ProcessInteractive::~ProcessInteractive() {
@@ -69,14 +78,7 @@ namespace XYO {
 			this_->returnValue = 0;
 
 			SECURITY_ATTRIBUTES secAttr;
-			STARTUPINFO         sInfo;
-
-			memset(&sInfo, 0, sizeof(STARTUPINFO));
 			memset(&secAttr, 0, sizeof(SECURITY_ATTRIBUTES));
-
-			sInfo.cb = sizeof(sInfo);
-			sInfo.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
-			sInfo.wShowWindow = SW_SHOW;
 
 			secAttr.nLength = sizeof(secAttr);
 			secAttr.bInheritHandle = TRUE;
@@ -106,6 +108,16 @@ namespace XYO {
 				return false;
 			};
 
+
+#ifdef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+
+			STARTUPINFO sInfo;
+			memset(&sInfo, 0, sizeof(STARTUPINFO));
+
+			sInfo.cb = sizeof(sInfo);
+			sInfo.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
+			sInfo.wShowWindow = SW_SHOW;
+
 			sInfo.hStdInput = this_->hStdIn2;
 			sInfo.hStdOutput = this_->hStdOut2;
 			sInfo.hStdError = this_->hStdOut2;
@@ -122,6 +134,67 @@ namespace XYO {
 					&sInfo,
 					&this_->pInfo
 				);
+
+#else
+
+			HRESULT hr = S_OK;
+
+			hr=CreatePseudoConsole(
+			{80, 64},
+			this_->hStdIn2,
+			this_->hStdOut2,
+			0,
+			&this_->hPC);
+
+			if (FAILED(hr)) {
+				close();
+				return false;
+			};
+
+			STARTUPINFOEX sInfo;
+			memset(&sInfo, 0, sizeof(STARTUPINFOEX));
+			sInfo.StartupInfo.cb = sizeof(STARTUPINFOEX);
+
+			size_t threadAttributeListSize=0;
+			InitializeProcThreadAttributeList(NULL, 1, 0, &threadAttributeListSize);
+			sInfo.lpAttributeList = (PPROC_THREAD_ATTRIBUTE_LIST)HeapAlloc(GetProcessHeap(), 0, threadAttributeListSize);
+			if (!sInfo.lpAttributeList) {
+				close();
+				return false;
+			};
+			if (!InitializeProcThreadAttributeList(sInfo.lpAttributeList, 1, 0, &threadAttributeListSize)) {
+				HeapFree(GetProcessHeap(), 0, sInfo.lpAttributeList);
+				close();
+				return false;
+			};
+
+			if (!UpdateProcThreadAttribute(sInfo.lpAttributeList,
+					0,
+					PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE,
+					this_->hPC,
+					sizeof(HPCON),
+					NULL,
+					NULL)) {
+				HeapFree(GetProcessHeap(), 0, sInfo.lpAttributeList);
+				close();
+				return false;
+			};
+
+			this_->threadAttributeList = sInfo.lpAttributeList;
+
+			this_->isOk = CreateProcessA(
+					nullptr,
+					(LPSTR)cmdLine,
+					nullptr,
+					nullptr,
+					TRUE,
+					EXTENDED_STARTUPINFO_PRESENT,
+					nullptr,
+					nullptr,
+					&sInfo.StartupInfo,
+					&this_->pInfo
+				);
+#endif
 
 			return (this_->isOk);
 		};
@@ -202,6 +275,17 @@ namespace XYO {
 				CloseHandle(this_->pInfo.hProcess);
 			};
 
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			if(this_->hPC != INVALID_HANDLE_VALUE) {
+				ClosePseudoConsole(this_->hPC);
+				this_->hPC = INVALID_HANDLE_VALUE;
+			};
+			if(this_->threadAttributeList) {
+				DeleteProcThreadAttributeList(this_->threadAttributeList);
+				HeapFree(GetProcessHeap(), 0, this_->threadAttributeList);
+				this_->threadAttributeList = nullptr;
+			};
+#endif
 			if(this_->hStdIn1 != INVALID_HANDLE_VALUE) {
 				CloseHandle(this_->hStdIn1);
 				this_->hStdIn1 = INVALID_HANDLE_VALUE;
@@ -294,7 +378,10 @@ namespace XYO {
 			memcpy(&this_->pInfo, &processInteractive_.this_->pInfo, sizeof(PROCESS_INFORMATION));
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
-
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			this_->hPC = processInteractive_.this_->hPC;
+			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
+#endif
 
 			processInteractive_.this_->hStdIn1 = INVALID_HANDLE_VALUE;
 			processInteractive_.this_->hStdIn2 = INVALID_HANDLE_VALUE;
@@ -303,6 +390,11 @@ namespace XYO {
 			memset(&processInteractive_.this_->pInfo, 0, sizeof(PROCESS_INFORMATION));
 			processInteractive_.this_->isOk = 0;
 			processInteractive_.this_->returnValue = 0;
+
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			processInteractive_.this_->hPC = INVALID_HANDLE_VALUE;
+			processInteractive_.this_->threadAttributeList = nullptr;
+#endif
 		};
 
 		void ProcessInteractive::linkOwner(ProcessInteractive &processInteractive_) {
@@ -316,6 +408,11 @@ namespace XYO {
 			memcpy(&this_->pInfo, &processInteractive_.this_->pInfo, sizeof(PROCESS_INFORMATION));
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
+
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			this_->hPC = processInteractive_.this_->hPC;
+			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
+#endif
 
 			linkOwner_ = &processInteractive_;
 			processInteractive_.linkOwner_ = this;
@@ -332,6 +429,11 @@ namespace XYO {
 				linkOwner_->this_->isOk = 0;
 				linkOwner_->this_->returnValue = 0;
 
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+				linkOwner_->this_->hPC = INVALID_HANDLE_VALUE;
+				linkOwner_->this_->threadAttributeList = nullptr;
+#endif
+
 				linkOwner_->linkOwner_ = nullptr;
 				linkOwner_ = nullptr;
 			};
@@ -347,6 +449,10 @@ namespace XYO {
 			memcpy(&this_->pInfo, &processInteractive_.this_->pInfo, sizeof(PROCESS_INFORMATION));
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			this_->hPC = processInteractive_.this_->hPC;
+			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
+#endif
 
 			linkOwner_ = processInteractive_.linkOwner_;
 
@@ -357,6 +463,10 @@ namespace XYO {
 			memset(&processInteractive_.this_->pInfo, 0, sizeof(PROCESS_INFORMATION));
 			processInteractive_.this_->isOk = 0;
 			processInteractive_.this_->returnValue = 0;
+#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			processInteractive_.this_->hPC = INVALID_HANDLE_VALUE;
+			processInteractive_.this_->threadAttributeList = nullptr;
+#endif
 
 			processInteractive_.linkOwner_ = nullptr;
 			if(linkOwner_) {

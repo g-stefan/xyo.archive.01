@@ -211,6 +211,9 @@ int main(int cmdN, char *cmdS[]) {
 #ifdef XYO_TMEMORYPOOL_DELETE_MEMORY_INFO
 	configEnable("XYO_TMEMORYPOOL_DELETE_MEMORY_INFO");
 #endif
+#ifdef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+	configEnable("XYO_CONFIG_WINDOWS_DISABLE_CONPTY");
+#endif
 
 	if(!fileReplaceLine(configFileIn, configFileCheck, configMap)) {
 		cout << "xyo - configuration check error\n";

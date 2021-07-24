@@ -37,12 +37,12 @@ elif [ "$(expr substr $(uname -s) 1 10)" = "MSYS_NT" ]; then
 	XYO_PLATFORM="msys"
 elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
 	XYO_PLATFORM="mingw32"
-	XYO_OS="XYO_OS_WINDOWS"
+	XYO_OS="XYO_OS_MINGW"
 	XYO_APPLICATION="XYO_APPLICATION_32BIT"
 	CC_LIB="-luser32 -lws2_32"
 elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW64_NT" ]; then
 	XYO_PLATFORM="mingw64"
-	XYO_OS="XYO_OS_WINDOWS"
+	XYO_OS="XYO_OS_MINGW"
 	CC_LIB="-luser32 -lws2_32"
 fi
 

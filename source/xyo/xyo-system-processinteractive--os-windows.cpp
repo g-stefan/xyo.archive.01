@@ -155,7 +155,7 @@ namespace XYO {
 			memset(&sInfo, 0, sizeof(STARTUPINFOEX));
 			sInfo.StartupInfo.cb = sizeof(STARTUPINFOEX);
 
-			size_t threadAttributeListSize=0;
+			SIZE_T threadAttributeListSize=0;
 			InitializeProcThreadAttributeList(NULL, 1, 0, &threadAttributeListSize);
 			sInfo.lpAttributeList = (PPROC_THREAD_ATTRIBUTE_LIST)HeapAlloc(GetProcessHeap(), 0, threadAttributeListSize);
 			if (!sInfo.lpAttributeList) {

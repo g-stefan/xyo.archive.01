@@ -46,6 +46,12 @@
 #       endif
 #endif
 
+#ifdef XYO_OS_MINGW
+#	ifndef XYO_OS_WINDOWS
+#		define XYO_OS_WINDOWS
+#	endif
+#endif
+
 // -- Checking
 
 #ifndef XYO_COMPILER_MSVC
@@ -84,6 +90,9 @@
 #               include <windows.h>
 #               include "vld.h"
 #       endif
+#	ifdef XYO_OS_MINGW
+#		define XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	endif
 #endif
 
 //

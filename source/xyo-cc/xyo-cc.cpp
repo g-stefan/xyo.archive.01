@@ -194,6 +194,7 @@ namespace Main {
 		bool outputBinPathIsOutput = false;
 		bool updateVersionDependency = false;
 		bool bumpVersionMinorIfVersionDependency = false;
+		bool modeVersionSelected = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -438,6 +439,7 @@ namespace Main {
 						doBumpVersionBuild = true;
 						bumpVersionMinorIfVersionDependency=true;
 						modeIsVersion = true;
+						modeVersionSelected = true;
 						continue;
 					};
 					if (optValue == "version-build") {
@@ -1488,19 +1490,29 @@ namespace Main {
 
 		if(bumpVersionMinorIfVersionDependency) {
 			if(Compiler::versionMinorBumpIfVersionDependencyMismatch(
-				versionFile,
-				projectBase,
-				repositoryPathDependencyLib)) {
-				if(!Compiler::versionProcess(
 					versionFile,
 					projectBase,
-					sourcePath,
-					includePath)) {
+					repositoryPathDependencyLib)) {
+				if(!Compiler::versionProcess(
+						versionFile,
+						projectBase,
+						sourcePath,
+						includePath)) {
 					printf("Error: version update fail\n");
 					return 1;
 				};
+				if(modeVersionSelected) {
+					if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
+						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
+					};
+				};
 			};
-			if(!doBumpVersionBuild){
+
+			if(!modeVersionSelected) {
+				return 0;
+			};
+
+			if(!doBumpVersionBuild) {
 				return 0;
 			};
 		};
@@ -1513,6 +1525,11 @@ namespace Main {
 					includePath)) {
 				printf("Error: version update fail\n");
 				return 1;
+			};
+			if(modeVersionSelected) {
+				if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
+					printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
+				};
 			};
 			return 0;
 		};
@@ -1553,16 +1570,16 @@ namespace Main {
 			return 0;
 		};
 
-		if(updateVersionDependency) {			
+		if(updateVersionDependency) {
 			if(!Compiler::updateVersionDependency(
-				versionFile,
-				projectBase,
-				repositoryPathDependencyLib)){
+					versionFile,
+					projectBase,
+					repositoryPathDependencyLib)) {
 				printf("Error: version dependency update fail\n");
 				return 1;
 			};
 			return 0;
-		};		
+		};
 
 		if(modeIsVersion) {
 			return 0;
@@ -2064,7 +2081,7 @@ namespace Main {
 			};
 		};
 
-		if(doInstall) {			
+		if(doInstall) {
 			if(installFile.length()) {
 				String srcFile;
 				String dstFile;

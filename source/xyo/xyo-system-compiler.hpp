@@ -145,7 +145,7 @@ namespace XYO {
 				int numThreads,
 				bool echoCmd,
 				bool force = false);
-			
+
 			XYO_EXPORT bool versionBuildBump(
 				String versionIni,
 				String projectName);
@@ -334,30 +334,30 @@ namespace XYO {
 			XYO_EXPORT bool loadVersionDependency(
 				const String &versionFile,
 				const String &projectName,
-				TRedBlackTree<String,String> &versionDependency);
+				TRedBlackTree<String, String> &versionDependency);
 
 			XYO_EXPORT bool checkVersionDependencyRecursive(
-				TRedBlackTree<String,bool> &versionDependencyInfo,
-				TRedBlackTree<String,String> &versionDependency,
+				TRedBlackTree<String, bool> &versionDependencyInfo,
+				TRedBlackTree<String, String> &versionDependency,
 				TDynamicArray<String> &repositoryDependencyPath);
 
 			XYO_EXPORT bool checkVersionDependency(
-				TRedBlackTree<String,String> &versionDependency,
+				TRedBlackTree<String, String> &versionDependency,
 				TDynamicArray<String> &repositoryDependencyPath);
 
 			XYO_EXPORT bool setVersionDependency(
-				TRedBlackTree<String,String> &versionDependency,
+				TRedBlackTree<String, String> &versionDependency,
 				TDynamicArray<String> &repositoryDependencyPath);
 
 			XYO_EXPORT bool saveVersionDependency(
 				const String &versionFile,
 				const String &projectName,
-				TRedBlackTree<String,String> &versionDependency);
+				TRedBlackTree<String, String> &versionDependency);
 
 			XYO_EXPORT bool updateVersionDependency(
 				const String &versionFile,
 				const String &projectName,
-				TDynamicArray<String> &repositoryDependencyPath);				
+				TDynamicArray<String> &repositoryDependencyPath);
 
 			XYO_EXPORT bool versionMinorBumpIfVersionDependencyMismatch(
 				const String &versionFile,

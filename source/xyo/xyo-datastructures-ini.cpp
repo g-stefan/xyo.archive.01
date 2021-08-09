@@ -484,7 +484,7 @@ namespace XYO {
 				return false;
 			};
 
-			bool getKeysAndValues(INIFile &iniFile, const char *section, TRedBlackTree<String,String> &keyAndValues){
+			bool getKeysAndValues(INIFile &iniFile, const char *section, TRedBlackTree<String, String> &keyAndValues) {
 				bool found = false;
 				size_t k;
 				String sectionX;
@@ -501,7 +501,7 @@ namespace XYO {
 						continue;
 					};
 					if((iniFile[k].type == INILineType::Value) && inSection) {
-						keyAndValues.set(iniFile[k].key,iniFile[k].value);
+						keyAndValues.set(iniFile[k].key, iniFile[k].value);
 						found = true;
 					};
 				};

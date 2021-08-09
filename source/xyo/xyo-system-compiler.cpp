@@ -311,17 +311,13 @@ namespace XYO {
 				return INIFileX::save(versionIni, versionInfo);
 			};
 
-			bool bumpVersionBuild(
+			bool versionProcess(
 				String versionFile,
 				String projectName,
 				String sourcePath,
 				String includePath,
 				size_t maxLineSize) {
-				if(!versionBuildBump(versionFile, projectName)) {
-					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
-						return false;
-					};
-				};
+				
 				if(!versionProcessTemplate(versionFile,
 						projectName,
 						sourcePath + "/" + projectName + "-version.template.hpp",
@@ -337,6 +333,20 @@ namespace XYO {
 					return false;
 				};
 				return true;
+			};
+
+			bool bumpVersionBuild(
+				String versionFile,
+				String projectName,
+				String sourcePath,
+				String includePath,
+				size_t maxLineSize) {
+				if(!versionBuildBump(versionFile, projectName)) {
+					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+						return false;
+					};
+				};
+				return versionProcess(versionFile, projectName, sourcePath, includePath, maxLineSize);
 			};
 
 			bool bumpVersionPatch(
@@ -349,22 +359,8 @@ namespace XYO {
 					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
 						return false;
 					};
-				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.hpp",
-						includePath + "/" + projectName + "-version.hpp",
-						maxLineSize)) {
-					return false;
-				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.cpp",
-						sourcePath + "/" + projectName + "-version.cpp",
-						maxLineSize)) {
-					return false;
-				};
-				return true;
+				};				
+				return versionProcess(versionFile, projectName, sourcePath, includePath, maxLineSize);
 			};
 
 			bool bumpVersionMinor(
@@ -377,22 +373,8 @@ namespace XYO {
 					if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
 						return false;
 					};
-				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.hpp",
-						includePath + "/" + projectName + "-version.hpp",
-						maxLineSize)) {
-					return false;
-				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.cpp",
-						sourcePath + "/" + projectName + "-version.cpp",
-						maxLineSize)) {
-					return false;
-				};
-				return true;
+				};				
+				return versionProcess(versionFile, projectName, sourcePath, includePath, maxLineSize);
 			};
 
 			bool bumpVersionMajor(
@@ -406,21 +388,7 @@ namespace XYO {
 						return false;
 					};
 				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.hpp",
-						includePath + "/" + projectName + "-version.hpp",
-						maxLineSize)) {
-					return false;
-				};
-				if(!versionProcessTemplate(versionFile,
-						projectName,
-						sourcePath + "/" + projectName + "-version.template.cpp",
-						sourcePath + "/" + projectName + "-version.cpp",
-						maxLineSize)) {
-					return false;
-				};
-				return true;
+				return versionProcess(versionFile, projectName, sourcePath, includePath, maxLineSize);
 			};
 
 			String getVersionHash(
@@ -765,6 +733,164 @@ namespace XYO {
 					pathRelease += "debug";
 				};
 				return pathRelease;
+			};
+
+			bool loadVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TRedBlackTree<String,String> &versionDependency) {
+				INIFile versionInfo;
+
+				versionDependency.empty();
+				
+				if(!INIFileX::load(versionFile, versionInfo)) {
+					return false;
+				};
+
+				INIFileX::getKeysAndValues(versionInfo, projectName+".dependency", versionDependency);
+					
+				return true;
+			};
+
+			bool checkVersionDependencyRecursive(
+				TRedBlackTree<String,bool> &versionDependencyFlag,
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath) {
+				TRedBlackTree<String,String>::Node *scan;
+				String versionFile, version, versionValue;
+				String trimElements = " \t\r\n";
+				int m;				
+
+				for(scan=versionDependency.begin();scan!=nullptr;scan=scan->successor()) {
+					if(versionDependencyFlag.getValue(scan->key,false)) {
+						continue;
+					};
+					versionFile=scan->key+".version.ini";
+					versionValue=String::trimWithElement(scan->value, trimElements);
+
+					for(m = 0; m < repositoryDependencyPath.length(); ++m) {
+						if(Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
+							versionDependencyFlag.set(scan->key,true);
+							version=getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
+							if(version!=versionValue){
+								return false;
+							};
+
+							TRedBlackTree<String,String> versionDependencyScan;
+							if(loadVersionDependency(repositoryDependencyPath[m] + "/" + versionFile,scan->key,versionDependencyScan)) {
+								if(!checkVersionDependencyRecursive(versionDependencyFlag, versionDependencyScan,repositoryDependencyPath)){
+									return false;
+								};
+							};
+							
+							break;
+						};
+					};
+
+				};
+
+				return true;
+			};
+
+			bool checkVersionDependency(
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath) {
+				TRedBlackTree<String,bool> versionDependencyFlag;
+
+				return checkVersionDependencyRecursive(versionDependencyFlag, versionDependency, repositoryDependencyPath);				
+			};
+
+			bool setVersionDependency(
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath) {
+				TRedBlackTree<String,String>::Node *scan;
+				String versionFile;
+				int m;
+
+				for(scan=versionDependency.begin();scan!=nullptr;scan=scan->successor()){
+					versionFile=scan->key+".version.ini";
+
+					for(m = 0; m < repositoryDependencyPath.length(); ++m) {
+						if(Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
+							scan->value=getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
+							break;							
+						};
+					};
+
+				};
+
+				return true;
+			};
+
+			bool saveVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TRedBlackTree<String,String> &versionDependency) {
+				TRedBlackTree<String,String>::Node *scan;
+				INIFile versionInfo;
+				String projectDependency;
+
+				if(!INIFileX::load(versionFile, versionInfo)) {
+					return false;
+				};
+
+				projectDependency=projectName+".dependency";
+
+				for(scan=versionDependency.begin();scan!=nullptr;scan=scan->successor()) {
+					if(!INIFileX::set(versionInfo, projectDependency, scan->key, scan->value)) {
+						return false;
+					};
+				};
+
+				return INIFileX::save(versionFile, versionInfo);
+			};
+
+			bool updateVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TDynamicArray<String> &repositoryDependencyPath) {
+				TRedBlackTree<String,String> versionDependency;
+				
+				if(!loadVersionDependency(versionFile,projectName,versionDependency)) {
+					return false;
+				};
+
+				if(!setVersionDependency(versionDependency,repositoryDependencyPath)) {					
+					return false;
+				};
+
+				if(!saveVersionDependency(versionFile,projectName,versionDependency)) {				
+					return false;
+				};
+
+				return true;
+			};
+
+			XYO_EXPORT bool versionMinorBumpIfVersionDependencyMismatch(
+				const String &versionFile,
+				const String &projectName,
+				TDynamicArray<String> &repositoryDependencyPath) {
+				TRedBlackTree<String,String> versionDependency;
+
+				if(!loadVersionDependency(versionFile,projectName,versionDependency)) {
+					return false;
+				};
+
+				if(!checkVersionDependency(versionDependency,repositoryDependencyPath)) {
+					if(!versionMinorBump(versionFile,projectName)){
+						return false;
+					};
+				};
+
+				if(!setVersionDependency(versionDependency,repositoryDependencyPath)) {
+					return false;
+				};
+
+				if(!saveVersionDependency(versionFile,projectName,versionDependency)) {
+					return false;
+				};
+
+				return true;
 			};
 
 		};

@@ -64,7 +64,7 @@ namespace Main {
 			"        [empty] or make            - build release or debug if XYO_COMPILE_DEBUG is defined in environment\n"
 			"        release                    - build release\n"
 			"        debug                      - build debug\n"
-			"        version                    - bump version build\n"
+			"        version                    - bump version build or version minor on version dependency mismatch\n"
 			"        version-build              - bump version build\n"
 			"        version-patch              - bump version patch\n"
 			"        version-minor              - bump version minor\n"
@@ -75,6 +75,8 @@ namespace Main {
 			"        license-info               - show license dependency\n"
 			"        archive                    - archive source, works only if --source-archive present, ignored otherwise\n"
 			"        extract                    - extract source from archive, works only if --source-extract present, ignored otherwise\n"
+			"        version-dependency-update  - update version dependency\n"
+			"        version-dependency         - bump version minor on version dependency mismatch\n"
 			"\n"
 			"    --workspace-path=path          workspace path to use, default is current folder\n"
 			"    --source-path=path             folder where source files (.hpp/.h/.cpp/.c) are stored, default workspace/source\n"
@@ -148,6 +150,9 @@ namespace Main {
 			"    --source-include-path-source   source include path (relative to source)\n"
 			"    --output-include-path-source   output include path (relative to output/include)\n"
 			"    --output-bin-path-is-output    output bin path becomes output\n"
+			"\n"
+			"    --update-version-dependency                    update version dependency from repository\n"
+			"    --bump-version-minor-if-version-dependency     bump minor version on version dependency change\n"
 		);
 		printf("\n");
 	};
@@ -187,6 +192,8 @@ namespace Main {
 		bool buildInclude = false;
 		bool installIncludeDirect = false;
 		bool outputBinPathIsOutput = false;
+		bool updateVersionDependency = false;
+		bool bumpVersionMinorIfVersionDependency = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -429,6 +436,7 @@ namespace Main {
 					};
 					if (optValue == "version") {
 						doBumpVersionBuild = true;
+						bumpVersionMinorIfVersionDependency=true;
 						modeIsVersion = true;
 						continue;
 					};
@@ -482,6 +490,16 @@ namespace Main {
 					};
 					if (optValue == "extract") {
 						doSourceExtract=true;
+						continue;
+					};
+					if (optValue == "version-dependency-update") {
+						updateVersionDependency=true;
+						modeIsVersion = true;
+						continue;
+					};
+					if (optValue == "version-dependency") {
+						bumpVersionMinorIfVersionDependency=true;
+						modeIsVersion = true;
 						continue;
 					};
 					printf("Error: unknown mode %s\n", optValue.value());
@@ -918,6 +936,16 @@ namespace Main {
 				};
 				if (opt == "output-bin-path-is-output") {
 					outputBinPathIsOutput = true;
+					continue;
+				};
+				if (opt == "update-version-dependency") {
+					updateVersionDependency = true;
+					modeIsVersion = true;
+					continue;
+				};
+				if (opt == "bump-version-minor-if-version-dependency") {
+					bumpVersionMinorIfVersionDependency = true;
+					modeIsVersion = true;
 					continue;
 				};
 				continue;
@@ -1458,6 +1486,25 @@ namespace Main {
 			sourcePath << "/" << sourceCodePathSource;
 		};
 
+		if(bumpVersionMinorIfVersionDependency) {
+			if(Compiler::versionMinorBumpIfVersionDependencyMismatch(
+				versionFile,
+				projectBase,
+				repositoryPathDependencyLib)) {
+				if(!Compiler::versionProcess(
+					versionFile,
+					projectBase,
+					sourcePath,
+					includePath)) {
+					printf("Error: version update fail\n");
+					return 1;
+				};
+			};
+			if(!doBumpVersionBuild){
+				return 0;
+			};
+		};
+
 		if(doBumpVersionBuild) {
 			if(!Compiler::bumpVersionBuild(
 					versionFile,
@@ -1505,6 +1552,17 @@ namespace Main {
 			};
 			return 0;
 		};
+
+		if(updateVersionDependency) {			
+			if(!Compiler::updateVersionDependency(
+				versionFile,
+				projectBase,
+				repositoryPathDependencyLib)){
+				printf("Error: version dependency update fail\n");
+				return 1;
+			};
+			return 0;
+		};		
 
 		if(modeIsVersion) {
 			return 0;
@@ -1775,6 +1833,9 @@ namespace Main {
 				};
 			};
 			if(doInstall) {
+				if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
+					printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
+				};
 				if(!Compiler::copyLibToFolder(outputLibPath + "/" + projectName + ".static", pathInstall + "/lib")) {
 					printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static").value(), (pathInstall + "/lib").value());
 					return 1;
@@ -1893,6 +1954,9 @@ namespace Main {
 				};
 			};
 			if(doInstall) {
+				if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
+					printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
+				};
 				if(noLib) {
 					if(!Compiler::copyDllToFolder(outputBinPath + "/" + projectName, pathInstall + "/bin", libVersion)) {
 						printf("Error: copy dll %s to folder %s\n", (outputBinPath + "/" + projectName).value(), (pathInstall + "/bin").value());
@@ -2000,7 +2064,7 @@ namespace Main {
 			};
 		};
 
-		if(doInstall) {
+		if(doInstall) {			
 			if(installFile.length()) {
 				String srcFile;
 				String dstFile;

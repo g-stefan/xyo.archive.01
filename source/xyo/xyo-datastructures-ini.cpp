@@ -484,6 +484,30 @@ namespace XYO {
 				return false;
 			};
 
+			bool getKeysAndValues(INIFile &iniFile, const char *section, TRedBlackTree<String,String> &keyAndValues){
+				bool found = false;
+				size_t k;
+				String sectionX;
+				bool inSection = false;
+				sectionX << "[" << section << "]";
+				for(k = 0; k < iniFile.length(); ++k) {
+					if(iniFile[k].type == INILineType::Section) {
+						if(inSection) {
+							return false;
+						};
+						if(iniFile[k].value == sectionX) {
+							inSection = true;
+						};
+						continue;
+					};
+					if((iniFile[k].type == INILineType::Value) && inSection) {
+						keyAndValues.set(iniFile[k].key,iniFile[k].value);
+						found = true;
+					};
+				};
+				return found;
+			};
+
 		};
 	};
 };

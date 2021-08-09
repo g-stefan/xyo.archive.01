@@ -18,6 +18,10 @@
 #include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
+#ifndef XYO_DATASTRUCTURES_TREDBLACKTREE_HPP
+#include "xyo-datastructures-tredblacktree.hpp"
+#endif
+
 #ifndef XYO_DATASTRUCTURES_INI_HPP
 #include "xyo-datastructures-ini.hpp"
 #endif
@@ -141,7 +145,7 @@ namespace XYO {
 				int numThreads,
 				bool echoCmd,
 				bool force = false);
-
+			
 			XYO_EXPORT bool versionBuildBump(
 				String versionIni,
 				String projectName);
@@ -169,6 +173,13 @@ namespace XYO {
 				String versionIni,
 				String projectName,
 				String version);
+
+			XYO_EXPORT bool versionProcess(
+				String versionFile,
+				String projectName,
+				String sourcePath,
+				String includePath,
+				size_t maxLineSize = 16384);
 
 			XYO_EXPORT bool bumpVersionBuild(
 				String versionFile,
@@ -319,6 +330,39 @@ namespace XYO {
 				const String &projectName,
 				const String &releaseVersion,
 				bool isRelease);
+
+			XYO_EXPORT bool loadVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TRedBlackTree<String,String> &versionDependency);
+
+			XYO_EXPORT bool checkVersionDependencyRecursive(
+				TRedBlackTree<String,bool> &versionDependencyInfo,
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath);
+
+			XYO_EXPORT bool checkVersionDependency(
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath);
+
+			XYO_EXPORT bool setVersionDependency(
+				TRedBlackTree<String,String> &versionDependency,
+				TDynamicArray<String> &repositoryDependencyPath);
+
+			XYO_EXPORT bool saveVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TRedBlackTree<String,String> &versionDependency);
+
+			XYO_EXPORT bool updateVersionDependency(
+				const String &versionFile,
+				const String &projectName,
+				TDynamicArray<String> &repositoryDependencyPath);				
+
+			XYO_EXPORT bool versionMinorBumpIfVersionDependencyMismatch(
+				const String &versionFile,
+				const String &projectName,
+				TDynamicArray<String> &repositoryDependencyPath);
 		};
 
 	};

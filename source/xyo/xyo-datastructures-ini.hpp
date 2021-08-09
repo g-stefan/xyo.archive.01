@@ -14,6 +14,10 @@
 #include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
+#ifndef XYO_DATASTRUCTURES_TREDBLACKTREE_HPP
+#include "xyo-datastructures-tredblacktree.hpp"
+#endif
+
 #ifndef XYO_ENCODING_STRING_HPP
 #include "xyo-encoding-string.hpp"
 #endif
@@ -102,6 +106,7 @@ namespace XYO {
 			XYO_EXPORT bool renameSection(INIFile &iniFile, const char *sectionOld, const char *sectionNew);
 			XYO_EXPORT size_t countSection(INIFile &iniFile);
 			XYO_EXPORT bool getSection(INIFile &iniFile, size_t index, String &section);
+			XYO_EXPORT bool getKeysAndValues(INIFile &iniFile, const char *section, TRedBlackTree<String,String> &keyAndValues);
 		};
 
 	};

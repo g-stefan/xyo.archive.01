@@ -142,6 +142,8 @@ namespace Main {
 			"    --source-has-archive           source-archive, source-extract and source-is-archived\n"
 			"    --archive-release              archive install-release folder\n"
 			"    --archive-release-sha512       archive install-release folder and append/update sha512 hash to csv\n"
+			"    --has-archived-release         check if archived release exists\n"
+			"    --remove-archived-release      remove archived release\n"
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
@@ -195,6 +197,8 @@ namespace Main {
 		bool updateVersionDependency = false;
 		bool bumpVersionMinorIfVersionDependency = false;
 		bool modeVersionSelected = false;
+		bool hasArchivedRelease = false;
+		bool removeArchivedRelease = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -950,6 +954,15 @@ namespace Main {
 					modeIsVersion = true;
 					continue;
 				};
+				if (opt == "has-archived-release") {
+					hasArchivedRelease = true;
+					continue;
+				};
+				if (opt == "remove-archived-release") {
+					removeArchivedRelease = true;
+					continue;
+				};
+
 				continue;
 			};
 			projectName = cmdLine[i];
@@ -1119,6 +1132,43 @@ namespace Main {
 			return 0;
 		};
 
+		if(hasArchivedRelease) {
+			String originalPath = Shell::getCwd();
+			String releaseName=Shell::getFileName(pathRelease);
+
+			// bin
+			
+			if(Shell::fileExists(pathRelease+"/../"+releaseName+".7z")) {
+				return 1;
+			};
+			
+			// dev
+			if(Shell::fileExists(pathRelease+"/../"+releaseName+"-dev.7z")) {
+				return 1;
+			};			
+
+			return 0;
+		};
+
+		if(removeArchivedRelease) {
+			String originalPath = Shell::getCwd();
+			String releaseName=Shell::getFileName(pathRelease);
+
+			// bin
+			
+			if(Shell::fileExists(pathRelease+"/../"+releaseName+".7z")) {
+				Shell::removeFile(pathRelease+"/../"+releaseName+".7z");
+			};
+			
+			// dev
+			if(Shell::fileExists(pathRelease+"/../"+releaseName+"-dev.7z")) {
+				Shell::removeFile(pathRelease+"/../"+releaseName+"-dev.7z");
+			};			
+
+			return 0;
+		};
+		
+
 		if(archiveRelease) {
 			String originalPath = Shell::getCwd();
 			String releaseName=Shell::getFileName(pathRelease);
@@ -1273,6 +1323,16 @@ namespace Main {
 				if(!INIFileX::save(outputLibPath + "/" + projectName + ".dependency.ini", projectDependency)) {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
+				};
+				if(projectBase!=projectName){
+					if(!INIFileX::save(tempPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
+					if(!INIFileX::save(outputLibPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (outputLibPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
 				};
 			};
 			return 0;
@@ -1505,6 +1565,11 @@ namespace Main {
 					if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
 						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
 					};
+					if(projectBase!=projectName){
+						if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectBase + ".version.ini")) {
+							printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectBase + ".version.ini").value());
+						};
+					};
 				};
 			};
 
@@ -1529,6 +1594,11 @@ namespace Main {
 			if(modeVersionSelected) {
 				if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
 					printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
+				};
+				if(projectBase!=projectName) {
+					if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectBase + ".version.ini")) {
+						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectBase + ".version.ini").value());
+					};
 				};
 			};
 			return 0;
@@ -1815,6 +1885,16 @@ namespace Main {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
+				if(projectBase!=projectName) {
+					if(!INIFileX::save(tempPath + "/" + projectBase + ".static.dependency.ini", projectDependencyStatic)) {
+						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".static.dependency.ini").value());
+						return 1;
+					};
+					if(!INIFileX::save(outputLibPath + "/" + projectBase + ".static.dependency.ini", projectDependencyStatic)) {
+						printf("Error: write dependency %s\n", (outputLibPath + "/" + projectBase + ".static.dependency.ini").value());
+						return 1;
+					};
+				};
 			};
 			if(cppSource.length() > 0) {
 				if(!Compiler::makeCppToLib(
@@ -1848,6 +1928,16 @@ namespace Main {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value());
 					return 1;
 				};
+				if(projectBase!=projectName) {
+					if(!INIFileX::save(tempPath + "/" + projectBase + ".static.dependency.ini", projectDependencyStatic)) {
+						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".static.dependency.ini").value());
+						return 1;
+					};
+					if(!INIFileX::save(outputLibPath + "/" + projectBase + ".static.dependency.ini", projectDependencyStatic)) {
+						printf("Error: write dependency %s\n", (outputLibPath + "/" + projectBase + ".static.dependency.ini").value());
+						return 1;
+					};
+				};
 			};
 			if(doInstall) {
 				if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
@@ -1862,6 +1952,17 @@ namespace Main {
 					printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value(),
 						(pathInstall + "/lib/" + projectName + ".static.dependency.ini").value());
 					return 1;
+				};
+				if(projectBase!=projectName) {
+					if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectBase + ".version.ini")) {
+						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectBase + ".version.ini").value());
+					};
+					if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".static.dependency.ini",
+						pathInstall + "/lib/" + projectBase + ".static.dependency.ini")) {
+						printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value(),
+							(pathInstall + "/lib/" + projectBase + ".static.dependency.ini").value());
+						return 1;
+					};
 				};
 				if(!noInc) {
 					if(outputIncludePath != workspacePath) {
@@ -1929,6 +2030,16 @@ namespace Main {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
+				if(projectBase!=projectName) {
+					if(!INIFileX::save(tempPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
+					if(!INIFileX::save(outputLibPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (outputLibPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
+				};
 			};
 
 			if(cppSource.length() > 0) {
@@ -1963,6 +2074,16 @@ namespace Main {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
+				if(projectBase!=projectName) {
+					if(!INIFileX::save(tempPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
+					if(!INIFileX::save(outputLibPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
+						printf("Error: write dependency %s\n", (outputLibPath + "/" + projectBase + ".dependency.ini").value());
+						return 1;
+					};
+				};
 			};
 			if(doInstallRelease) {
 				if(!Compiler::copyDllToFolder(outputBinPath + "/" + projectName, pathRelease, libVersion)) {
@@ -1992,6 +2113,14 @@ namespace Main {
 						printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value(),
 							(pathInstall + "/lib/" + projectName + ".dependency.ini").value());
 						return 1;
+					};
+					if(projectBase!=projectName) {
+						if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".dependency.ini",
+							pathInstall + "/lib/" + projectBase + ".dependency.ini")) {
+							printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value(),
+								(pathInstall + "/lib/" + projectBase + ".dependency.ini").value());
+							return 1;
+						};
 					};
 					if(outputIncludePath != workspacePath) {
 						if(installIncludeDirect) {

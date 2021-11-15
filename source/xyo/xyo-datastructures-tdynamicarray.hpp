@@ -430,6 +430,13 @@ namespace XYO {
 					value[idx >> dataSize2Pow]->value[idx & dataMask] = value_;
 				};
 
+				inline void copy(const TDynamicArray &value) {
+					size_t k;
+					empty();
+					for(k=0;k<value.length();++k){
+						value.get(k, index(k));
+					};
+				};
 		};
 
 	};

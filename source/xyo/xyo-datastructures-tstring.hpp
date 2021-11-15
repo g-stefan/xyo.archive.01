@@ -410,6 +410,14 @@ namespace XYO {
 					return retV;
 				};
 
+				static inline TString nilAtFirst(const TString &o, const TString &x) {
+					size_t idx;
+					if (TStringCore<T>::indexOf(o, x, idx)) {
+						return TString(o.value(), idx);
+					};
+					return o;
+				};
+
 				static inline TString nilAtFirstFromEnd(const TString &o, const TString &x) {
 					size_t idx;
 					if (TStringCore<T>::indexOfFromEnd(o, x, idx)) {
@@ -461,7 +469,6 @@ namespace XYO {
 					return retV;
 				};
 
-
 				static inline TString toUpperCaseAscii(const TString &value) {
 					TStringReference<T> *retV = TMemory<TStringReference<T> >::newMemory();
 
@@ -485,7 +492,6 @@ namespace XYO {
 					retV->setLength(totalLn);
 					return retV;
 				};
-
 
 				static inline bool matchAscii(const TString &text, const TString &sig) {
 					return TStringCore<T>::matchAscii(text, text.length(), sig, sig.length());

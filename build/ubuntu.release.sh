@@ -15,7 +15,7 @@ cmdX(){
 export XYO_PATH_RELEASE=release
 
 if [ -f "./temp/xyo.cc" ]; then
-	if ./temp/xyo.cc xyo --has-archived-release --version-file=version.ini; then
+	if ! ./temp/xyo.cc xyo --has-archived-release --version-file=version.ini; then
 		exit 0
 	fi
 fi

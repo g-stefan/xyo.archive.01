@@ -1133,41 +1133,34 @@ namespace Main {
 		};
 
 		if(hasArchivedRelease) {
-			String originalPath = Shell::getCwd();
-			String releaseName=Shell::getFileName(pathRelease);
+
+			// dev - has bin also
+			if(Shell::fileExists(pathRelease+"-dev.7z")) {
+				return 1;
+			};
 
 			// bin
-			
-			if(Shell::fileExists(pathRelease+"/../"+releaseName+".7z")) {
+			if(Shell::fileExists(pathRelease+".7z")) {
 				return 1;
 			};
 			
-			// dev
-			if(Shell::fileExists(pathRelease+"/../"+releaseName+"-dev.7z")) {
-				return 1;
-			};			
-
 			return 0;
 		};
 
 		if(removeArchivedRelease) {
-			String originalPath = Shell::getCwd();
-			String releaseName=Shell::getFileName(pathRelease);
 
-			// bin
-			
-			if(Shell::fileExists(pathRelease+"/../"+releaseName+".7z")) {
-				Shell::removeFile(pathRelease+"/../"+releaseName+".7z");
+			// bin			
+			if(Shell::fileExists(pathRelease+".7z")) {
+				Shell::removeFile(pathRelease+".7z");
+			};
+
+			// dev
+			if(Shell::fileExists(pathRelease+"-dev.7z")) {
+				Shell::removeFile(pathRelease+"-dev.7z");
 			};
 			
-			// dev
-			if(Shell::fileExists(pathRelease+"/../"+releaseName+"-dev.7z")) {
-				Shell::removeFile(pathRelease+"/../"+releaseName+"-dev.7z");
-			};			
-
 			return 0;
 		};
-		
 
 		if(archiveRelease) {
 			String originalPath = Shell::getCwd();

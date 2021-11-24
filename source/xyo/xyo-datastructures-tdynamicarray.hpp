@@ -433,7 +433,7 @@ namespace XYO {
 				inline void copy(const TDynamicArray &value) {
 					size_t k;
 					empty();
-					for(k=0;k<value.length();++k){
+					for(k=0; k<value.length(); ++k) {
 						value.get(k, index(k));
 					};
 				};

@@ -10,24 +10,6 @@ fi
 RESTORE_PATH=$PATH
 RESTORE_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 
-if [ "$XYO_PATH_REPOSITORY" = "" ]; then
-	PATH_REPOSITORY=./repository
-	POPD=$PWD
-	[ -d $PATH_REPOSITORY ] || mkdir -p $PATH_REPOSITORY
-	cd $PATH_REPOSITORY
-	XYO_PATH_REPOSITORY=$PWD
-	cd $POPD
-fi
-
-if [ "$XYO_PATH_RELEASE" = "" ]; then
-	PATH_RELEASE=./release
-	POPD=$PWD
-	[ -d $PATH_RELEASE ] || mkdir -p $PATH_RELEASE
-	cd $PATH_RELEASE
-	XYO_PATH_RELEASE=$PWD
-	cd $POPD
-fi
-
 PATH=$XYO_PATH_REPOSITORY/bin:$PATH
 LD_LIBRARY_PATH=$XYO_PATH_REPOSITORY/bin:$LD_LIBRARY_PATH
 
@@ -57,7 +39,7 @@ if [ "$1" = "" ]; then
 	. ./build/ubuntu.make.sh make
 else
 	if [ -f "./build/ubuntu.$1.sh" ]; then
-		. ./build/ubuntu.$1.sh
+		. ./build/ubuntu.$1.sh $1
 	else
 		. ./build/ubuntu.make.sh $1
 	fi

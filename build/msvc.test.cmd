@@ -3,7 +3,7 @@ rem Public domain
 rem http://unlicense.org/
 rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
-echo -^> test xyo
+echo - %BUILD_PROJECT% ^> test
 
 goto cmdXDefined
 :cmdX

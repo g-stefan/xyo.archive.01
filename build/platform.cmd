@@ -3,6 +3,8 @@ rem Public domain
 rem http://unlicense.org/
 rem Created by Grigore Stefan <g_stefan@yahoo.com>
 
+if exist .\build\msvc.config.cmd call .\build\msvc.config.cmd
+
 set ACTION=%1
 if "%1" == "" set ACTION=make
 if not exist build\platform.%ACTION%.cmd goto BuildStepError

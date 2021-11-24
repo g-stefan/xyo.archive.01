@@ -3,8 +3,6 @@
 # http://unlicense.org/
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
-echo "- $BUILD_PROJECT > clean"
+echo "- $BUILD_PROJECT > clean-local-release"
 
-rm -rf output
-rm -rf temp
-
+rm -rf release

@@ -8,7 +8,7 @@ if [ "$ACTION" = "" ]; then
 	ACTION=make
 fi
 
-echo "-> $ACTION xyo"
+echo "- $BUILD_PROJECT > $ACTION"
 
 cmdX(){
 	if ! "$@" ; then
@@ -20,28 +20,14 @@ cmdX(){
 [ -d output ] || mkdir -p output
 [ -d temp ] || mkdir -p temp
 
-XYO_PLATFORM="unknown"
 XYO_APPLICATION="XYO_APPLICATION_64BIT"
 XYO_OS="XYO_OS_UNIX"
 CC_LIB=""
-if [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
-	XYO_PLATFORM="ubuntu"
-	if [ -f "/etc/lsb-release" ]; then
-		RELEASE=`cat /etc/lsb-release | grep DISTRIB_RELEASE| cut -d "=" -f 2`
-		XYO_PLATFORM="ubuntu-$RELEASE"
-	fi
-	if command -v termux-setup-storage >/dev/null; then
-		XYO_PLATFORM="termux"
-	fi
-elif [ "$(expr substr $(uname -s) 1 10)" = "MSYS_NT" ]; then
-	XYO_PLATFORM="msys"
-elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
-	XYO_PLATFORM="mingw32"
+if [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
 	XYO_OS="XYO_OS_MINGW"
 	XYO_APPLICATION="XYO_APPLICATION_32BIT"
 	CC_LIB="-luser32 -lws2_32"
 elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW64_NT" ]; then
-	XYO_PLATFORM="mingw64"
 	XYO_OS="XYO_OS_MINGW"
 	CC_LIB="-luser32 -lws2_32"
 fi
@@ -84,6 +70,4 @@ cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.01 @build/source/xyo.test.compile
 cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.02 @build/source/xyo.test.compile
 cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.03 @build/source/xyo.test.compile
 cmdX temp/xyo.cc --mode=$ACTION --exe xyo.test.04 @build/source/xyo.test.compile
-
 cmdX temp/xyo.cc --mode=$ACTION @build/source/xyo-cc.compile
-

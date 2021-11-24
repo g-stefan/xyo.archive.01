@@ -34,7 +34,7 @@ namespace Main {
 	};
 
 	void Application::showVersion() {
-		printf("xyo-cc - c++ compiler command driver\n");
+		printf("xyo-cc - c++ compiler command driver and project management\n");
 #ifndef XYO_CC_NO_VERSION
 		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
 #endif
@@ -134,7 +134,7 @@ namespace Main {
 			"    --not-platform=match option    if not match platform activate next option\n"
 			"    --for-platform=match           if match platform do build, otherwise do nothing\n"
 			"\n"
-			"Options that require 7zr in your path\n"
+			"Options that require 7z in your path\n"
 			"\n"
 			"    --source-archive               allow archive of source folder\n"
 			"    --source-extract               allow extraction of source folder from archive\n"
@@ -144,6 +144,7 @@ namespace Main {
 			"    --archive-release-sha512       archive install-release folder and append/update sha512 hash to csv\n"
 			"    --has-archived-release         check if archived release exists\n"
 			"    --remove-archived-release      remove archived release\n"
+			"    --copy-local-archived-release  copy local archived release to repository\n"
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
@@ -199,6 +200,7 @@ namespace Main {
 		bool modeVersionSelected = false;
 		bool hasArchivedRelease = false;
 		bool removeArchivedRelease = false;
+		bool copyLocalArchivedRelease = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -207,12 +209,12 @@ namespace Main {
 		String installInc;
 		String libName;
 
-		String p7zipCompress="7zr a -mx9 -mmt4 -r- -sse -w. -y -t7z ";
+		String p7zipCompress="7z a -mx9 -mmt4 -r- -sse -w. -y -t7z ";
 		if(Compiler::matchPlatform("ubuntu*")) {
-			p7zipCompress="7zr a -mx9 -mmt4 -r- -w. -y -t7z ";
+			p7zipCompress="7z a -mx9 -mmt4 -r- -w. -y -t7z ";
 		};
 		if(Compiler::matchPlatform("mingw*")) {
-			p7zipCompress="sh.exe -- 7zr a -mx9 -mmt4 -r- -w. -y -t7z ";
+			p7zipCompress="sh.exe -- 7z a -mx9 -mmt4 -r- -w. -y -t7z ";
 		};
 
 		int numThreads = Processor::getCount();
@@ -962,6 +964,10 @@ namespace Main {
 					removeArchivedRelease = true;
 					continue;
 				};
+				if (opt == "copy-local-archived-release") {
+					copyLocalArchivedRelease = true;
+					continue;
+				};
 
 				continue;
 			};
@@ -1107,7 +1113,7 @@ namespace Main {
 			Shell::chdir(workspacePath);
 
 			if(!Shell::directoryExists("source")) {
-				if(Shell::system(String("7zr x -aoa ") + workspacePath + "/archive/" + projectNameWithVersion + ".7z")) {
+				if(Shell::system(String("7z x -aoa ") + workspacePath + "/archive/" + projectNameWithVersion + ".7z")) {
 					printf("Error: Unable to extract source archive: %s\r\n", projectNameWithVersion.value());
 					Shell::chdir(originalPath);
 					return 1;
@@ -1143,13 +1149,13 @@ namespace Main {
 			if(Shell::fileExists(pathRelease+".7z")) {
 				return 1;
 			};
-			
+
 			return 0;
 		};
 
 		if(removeArchivedRelease) {
 
-			// bin			
+			// bin
 			if(Shell::fileExists(pathRelease+".7z")) {
 				Shell::removeFile(pathRelease+".7z");
 			};
@@ -1158,8 +1164,39 @@ namespace Main {
 			if(Shell::fileExists(pathRelease+"-dev.7z")) {
 				Shell::removeFile(pathRelease+"-dev.7z");
 			};
-			
+
 			return 0;
+		};
+
+		if(copyLocalArchivedRelease) {
+			String localArchivedRelease="release/";
+			localArchivedRelease+=Shell::getFileName(pathRelease);
+			String localArchivedReleaseSHA512="release/";
+			localArchivedReleaseSHA512+=projectNameWithVersion+".sha512.csv";
+
+			// bin
+			if(Shell::fileExists(localArchivedRelease+".7z")) {
+				if(!Shell::copyFile(localArchivedRelease+".7z", pathRelease+".7z")) {
+					printf("Error: Unable to copy \"%s\" to \"%s\"\n", (localArchivedRelease+".7z").value(), (pathRelease+".7z").value());
+				};
+			};
+
+			// dev
+			if(Shell::fileExists(localArchivedRelease+"-dev.7z")) {
+				if(!Shell::copyFile(localArchivedRelease+"-dev.7z", pathRelease+"-dev.7z")) {
+					printf("Error: Unable to copy \"%s\" to \"%s\"\n", (localArchivedRelease+"-dev.7z").value(), (pathRelease+"-dev.7z").value());
+				};
+			};
+
+			// sha512.csv
+			if(Shell::fileExists(localArchivedReleaseSHA512)) {
+				String pathReleaseSHA512=Shell::getFilePathX(pathRelease);
+				pathReleaseSHA512+=projectNameWithVersion+".sha512.csv";
+				if(!Shell::copyFile(localArchivedReleaseSHA512, pathReleaseSHA512)) {
+					printf("Error: Unable to copy \"%s\" to \"%s\"\n", (localArchivedReleaseSHA512).value(), (pathReleaseSHA512).value());
+				};
+			};
+
 		};
 
 		if(archiveRelease) {
@@ -1317,7 +1354,7 @@ namespace Main {
 					printf("Error: write dependency %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value());
 					return 1;
 				};
-				if(projectBase!=projectName){
+				if(projectBase!=projectName) {
 					if(!INIFileX::save(tempPath + "/" + projectBase + ".dependency.ini", projectDependency)) {
 						printf("Error: write dependency %s\n", (tempPath + "/" + projectBase + ".dependency.ini").value());
 						return 1;
@@ -1558,7 +1595,7 @@ namespace Main {
 					if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectName + ".version.ini")) {
 						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectName + ".version.ini").value());
 					};
-					if(projectBase!=projectName){
+					if(projectBase!=projectName) {
 						if(!Shell::copyFileIfExists(versionFile, pathInstall + "/lib/" + projectBase + ".version.ini")) {
 							printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectBase + ".version.ini").value());
 						};
@@ -1951,7 +1988,7 @@ namespace Main {
 						printf("Error: copy file %s to %s\n", (versionFile).value(), (pathInstall + "/lib/" + projectBase + ".version.ini").value());
 					};
 					if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".static.dependency.ini",
-						pathInstall + "/lib/" + projectBase + ".static.dependency.ini")) {
+							pathInstall + "/lib/" + projectBase + ".static.dependency.ini")) {
 						printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".static.dependency.ini").value(),
 							(pathInstall + "/lib/" + projectBase + ".static.dependency.ini").value());
 						return 1;
@@ -2109,7 +2146,7 @@ namespace Main {
 					};
 					if(projectBase!=projectName) {
 						if(!Shell::copyFileIfExists(outputLibPath + "/" + projectName + ".dependency.ini",
-							pathInstall + "/lib/" + projectBase + ".dependency.ini")) {
+								pathInstall + "/lib/" + projectBase + ".dependency.ini")) {
 							printf("Error: copy file %s to %s\n", (outputLibPath + "/" + projectName + ".dependency.ini").value(),
 								(pathInstall + "/lib/" + projectBase + ".dependency.ini").value());
 							return 1;

@@ -3,6 +3,4 @@
 # http://unlicense.org/
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
-echo "-> clean-release xyo"
-
-rm -rf release
+export BUILD_PROJECT=xyo

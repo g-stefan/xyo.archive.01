@@ -13,35 +13,20 @@ if ! [ "$1" = "" ]; then
 		exit 0
 	fi
 fi
-DEFAULT_PLATFORM=
-if [ "$XYO_PLATFORM" = "ubuntu-18" ]; then
-	DEFAULT_PLATFORM=ubuntu
-fi
-if [ "$XYO_PLATFORM" = "ubuntu-20" ]; then
-	DEFAULT_PLATFORM=ubuntu
-fi
-if [ "$XYO_PLATFORM" = "mingw32" ]; then
-	DEFAULT_PLATFORM=mingw32
-fi
-if [ "$XYO_PLATFORM" = "mingw64" ]; then
-	DEFAULT_PLATFORM=mingw64
-fi
-if [ "$DEFAULT_PLATFORM" = "" ]; then
-	if [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
-                DEFAULT_PLATFORM=ubuntu
-        fi
-	if [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
-		DEFAULT_PLATFORM=mingw32
-	fi
-	if [ "$(expr substr $(uname -s) 1 10)" = "MINGW64_NT" ]; then
-		DEFAULT_PLATFORM=mingw64
-	fi
-fi
-if [ "$DEFAULT_PLATFORM" = "" ]; then
+
+. ./build/platform.select.sh
+
+if [ "$XYO_PLATFORM" = "" ]; then
 	echo "build [platform] [mode]"
 	exit 0
-fi	
-. ./build/$DEFAULT_PLATFORM.sh $1
+fi
+
+if ! [ -f "./build/$XYO_PLATFORM.sh" ]; then
+	echo "build [platform] [mode]"
+	exit 0
+fi
+
+. ./build/$XYO_PLATFORM.sh $1
 RETV=$?
 if [ "$RETV" = "1" ]; then
 	exit 1

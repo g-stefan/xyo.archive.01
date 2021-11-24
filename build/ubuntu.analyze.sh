@@ -3,7 +3,7 @@
 # http://unlicense.org/
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
-echo "-> analyze xyo"
+echo "- $BUILD_PROJECT > analyze"
 
 cmdX(){
 	echo "-> $@"

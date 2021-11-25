@@ -8,12 +8,14 @@
 [ -d $WSL_BUILD_PROCESS_PATH/source ] || mkdir -p $WSL_BUILD_PROCESS_PATH/source
 [ -d $WSL_BUILD_PROCESS_PATH/build ] || mkdir -p $WSL_BUILD_PROCESS_PATH/build
 [ -d $WSL_BUILD_PROCESS_PATH/build/source ] || mkdir -p $WSL_BUILD_PROCESS_PATH/build/source
+[ -d $WSL_BUILD_PROCESS_PATH/build/platform ] || mkdir -p $WSL_BUILD_PROCESS_PATH/build/platform
 [ -d $WSL_BUILD_PROCESS_PATH/release ] || mkdir -p $WSL_BUILD_PROCESS_PATH/release
 [ -d $WSL_BUILD_PROCESS_PATH/test ] || mkdir -p $WSL_BUILD_PROCESS_PATH/test
 
 cp -rfu ./build/ubuntu.* $WSL_BUILD_PROCESS_PATH/build/
 [ -d ./source/ ] && cp -rfu ./source/* $WSL_BUILD_PROCESS_PATH/source/
 [ -d ./build/source/ ] && cp -rfu ./build/source/* $WSL_BUILD_PROCESS_PATH/build/source/
+[ -d ./build/platform/ ] && cp -rfu ./build/platform/* $WSL_BUILD_PROCESS_PATH/build/platform/
 [ -d ./release/ ] && cp -rfu ./release/*.csv $WSL_BUILD_PROCESS_PATH/release/
 [ -d ./test/ ] && cp -rfu ./test/* $WSL_BUILD_PROCESS_PATH/test/
 [ -f ./version.ini ] && cp -rfu ./version.ini $WSL_BUILD_PROCESS_PATH/
@@ -23,7 +25,7 @@ cd $WSL_BUILD_PROCESS_PATH
 
 chmod -R -x+X source
 
-/bin/sh -- ./build/ubuntu.sh $1
+/bin/sh -- ./build/platform/ubuntu.sh $1
 RETV=$?
 
 cd $WSL_POPD

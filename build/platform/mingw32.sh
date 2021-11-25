@@ -12,7 +12,7 @@ export PATH=$PATH:/c/msys64/mingw32/bin/../libexec;
 
 export WSL_BUILD_PROCESS_PATH=$HOME/SDK/mingw32/source/$BUILD_PROJECT
 
-/bin/sh -- ./build/wsl.process.sh $1
+/bin/sh -- ./build/platform/wsl.process.sh $1
 RETV=$?
 
 if [ "$RETV" = "1" ]; then

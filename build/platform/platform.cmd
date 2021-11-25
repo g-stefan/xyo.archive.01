@@ -7,8 +7,14 @@ if exist .\build\msvc.config.cmd call .\build\msvc.config.cmd
 
 set ACTION=%1
 if "%1" == "" set ACTION=make
-if not exist build\platform.%ACTION%.cmd goto BuildStepError
-call build\platform.%ACTION%.cmd
+set ACTION_CMD=build\platform.%ACTION%.cmd
+if exist build\platform.%ACTION%.cmd goto BuildActionOk
+set ACTION_CMD=build\platform\platform.%ACTION%.cmd
+if exist build\platform\platform.%ACTION%.cmd goto BuildActionOk
+exit 1
+
+:BuildActionOk
+call %ACTION_CMD%
 if errorlevel 1 goto BuildStepError
 goto :eof
 :BuildStepError

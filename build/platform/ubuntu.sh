@@ -36,12 +36,20 @@ export XYO_PATH_RELEASE
 RETV=0
 
 if [ "$1" = "" ]; then
-	. ./build/ubuntu.make.sh make
+	if [ -f "./build/ubuntu.make.sh" ]; then
+		. ./build/ubuntu.make.sh make
+	else
+		. ./build/platform/ubuntu.make.sh make
+	fi
 else
 	if [ -f "./build/ubuntu.$1.sh" ]; then
 		. ./build/ubuntu.$1.sh $1
-	else
+	elif [ -f "./build/platform/ubuntu.$1.sh" ]; then
+		. ./build/platform/ubuntu.$1.sh $1
+	elif [ -f "./build/ubuntu.make.sh" ]; then
 		. ./build/ubuntu.make.sh $1
+	else
+		. ./build/platform/ubuntu.make.sh $1
 	fi
 fi
 

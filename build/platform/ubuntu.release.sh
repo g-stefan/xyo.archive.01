@@ -15,14 +15,12 @@ cmdX(){
 export XYO_PATH_RELEASE_ORIGINAL=$XYO_PATH_RELEASE
 export XYO_PATH_RELEASE=release
 
-if [ -f "./temp/xyo.cc" ]; then
-	if ! ./temp/xyo.cc $BUILD_PROJECT --has-archived-release --version-file=version.ini; then
-		exit 0
-	fi
+if ! xyo-cc $BUILD_PROJECT --has-archived-release --version-file=version.ini; then
+	exit 0
 fi
 cmdX /bin/sh ./build/platform/ubuntu.sh make
 cmdX /bin/sh ./build/platform/ubuntu.sh install
 cmdX /bin/sh ./build/platform/ubuntu.sh install-release
-cmdX ./temp/xyo.cc $BUILD_PROJECT --archive-release-sha512 --version-file=version.ini
+cmdX xyo-cc $BUILD_PROJECT --archive-release-sha512 --version-file=version.ini
 export XYO_PATH_RELEASE=$XYO_PATH_RELEASE_ORIGINAL
-cmdX ./temp/xyo.cc $BUILD_PROJECT --copy-local-archived-release --version-file=version.ini
+cmdX xyo-cc $BUILD_PROJECT --copy-local-archived-release --version-file=version.ini

@@ -15,6 +15,8 @@ cmdX(){
 export XYO_PATH_RELEASE_ORIGINAL=$XYO_PATH_RELEASE
 export XYO_PATH_RELEASE=release
 
+echo "xyo-cc $BUILD_PROJECT --has-archived-release --version-file=version.ini"
+echo $(xyo-cc $BUILD_PROJECT --has-archived-release --version-file=version.ini)
 if ! xyo-cc $BUILD_PROJECT --has-archived-release --version-file=version.ini; then
 	exit 0
 fi

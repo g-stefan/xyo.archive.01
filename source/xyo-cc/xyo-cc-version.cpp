@@ -1,7 +1,7 @@
 //
 // XYO CC
 //
-// Copyright (c) 2020-2021 Grigore Stefan <g_stefan@yahoo.com>
+// Copyright (c) 2020-2022 Grigore Stefan <g_stefan@yahoo.com>
 // Created by Grigore Stefan <g_stefan@yahoo.com>
 //
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
@@ -13,9 +13,9 @@ namespace XYOCC {
 	namespace Version {
 
 		static const char *version_ = "3.3.0";
-		static const char *build_ = "75";
-		static const char *versionWithBuild_ = "3.3.0.75";
-		static const char *datetime_ = "2021-11-22 02:07:28";
+		static const char *build_ = "76";
+		static const char *versionWithBuild_ = "3.3.0.76";
+		static const char *datetime_ = "2022-01-01 20:08:08";
 
 		const char *version() {
 			return version_;

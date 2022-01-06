@@ -1,0 +1,11 @@
+--lib xyo-cc
+--source-path=source/xyo-cc
+--use-lib=:xyo.static
+--install-project=xyo
+--install-dev
+--install-version-file=version.ini
+--def=XYO_CC_LIBRARY
+--project-base=xyo-cc
+--install-include-direct
+--no-inc
+--install-file=source/xyo-cc/xyo-cc.hpp=include/xyo-cc.hpp

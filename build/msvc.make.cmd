@@ -83,3 +83,4 @@ call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.02 @build/source/xyo.test.
 call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.03 @build/source/xyo.test.compile
 call :cmdX temp\xyo.cc --mode=%ACTION% --exe xyo.test.04 @build/source/xyo.test.compile
 call :cmdX temp\xyo.cc --mode=%ACTION% @build/source/xyo-cc.compile
+call :cmdX temp\xyo.cc --mode=%ACTION% @build/source/xyo-cc.library.compile

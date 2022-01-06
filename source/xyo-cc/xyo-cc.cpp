@@ -8,6 +8,7 @@
 //
 
 #include "xyo.hpp"
+#include "xyo-cc.hpp"
 #include "xyo-cc-copyright.hpp"
 #include "xyo-cc-license.hpp"
 
@@ -15,44 +16,20 @@
 #include "xyo-cc-version.hpp"
 #endif
 
-namespace Main {
+namespace XYOCC {
 
 	using namespace XYO;
 
-	class Application :
-		public virtual IMain {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(Application);
-		public:
-
-			inline Application() {};
-
-			void showVersion();
-			void showUsage();
-			void showLicense();
-
-			int main(int cmdN, char *cmdS[]);
-	};
-
-	void Application::showVersion() {
-		printf("xyo-cc - c++ compiler command driver and project management\n");
-#ifndef XYO_CC_NO_VERSION
-		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
-#endif
-		printf("%s\n\n", XYOCC::Copyright::fullCopyright());
-	};
-
-	void Application::showLicense() {
-		printf("%s", XYOCC::License::content());
-	};
-
 	void Application::showUsage() {
+		printf("xyo-cc - c++ compiler command driver and project management\n");
 		showVersion();
+		printf("%s\n\n", XYOCC::Copyright::fullCopyright());
 
 		printf("%s",
 			"options:\n"
-			"    --version                      show version\n"
-			"    --license                      show license\n"
 			"    --usage                        this info\n"
+			"    --license                      show license\n"
+			"    --version                      show version\n"			
 			"    --debug                        build debug version\n"
 			"    --release                      build release version\n"
 			"    --exe                          build executable (.exe)\n"
@@ -129,6 +106,7 @@ namespace Main {
 			"    --src-hpp=file                 add file as hpp source\n"
 			"    --src-cpp=file                 add file as cpp source\n"
 			"    --src-rc=file                  add file as rc source\n"
+			"    --no-default-include           don't search for include files\n"
 			"    --no-default-source            don't search for source files\n"
 			"    --platform=match option        if match platform activate next option\n"
 			"    --not-platform=match option    if not match platform activate next option\n"
@@ -157,8 +135,19 @@ namespace Main {
 			"    --update-version-dependency                    update version dependency from repository\n"
 			"    --bump-version-minor-if-version-dependency     bump minor version on version dependency change\n"
 		);
-		printf("\n");
+		printf("\n");		
 	};
+
+	void Application::showLicense() {
+		printf("%s", XYOCC::License::content());
+	};
+
+	void Application::showVersion() {		
+#ifndef XYO_CC_NO_VERSION
+		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
+#endif		
+	};	
+
 
 	int Application::main(int cmdN, char *cmdS[]) {
 		int i;
@@ -178,6 +167,7 @@ namespace Main {
 		bool noInc = false;
 		bool dllVersion = false;
 		bool licenseInfo = false;
+		bool noDefaultInclude = false;
 		bool noDefaultSource = false;
 		bool sourceArchive = false;
 		bool sourceExtract = false;
@@ -322,18 +312,18 @@ namespace Main {
 					optValue = String::substring(opt, optIndex + 1);
 					opt = String::substring(opt, 0, optIndex);
 				};
-				if (opt == "version") {
-					showVersion();
+				if (opt == "usage") {
+					showUsage();
 					return 0;
 				};
 				if (opt == "license") {
 					showLicense();
 					return 0;
 				};
-				if (opt == "usage") {
-					showUsage();
+				if (opt == "version") {
+					showVersion();
 					return 0;
-				};
+				};				
 				if (opt == "bump-version") {
 					doBumpVersionBuild = true;
 					continue;
@@ -832,6 +822,10 @@ namespace Main {
 						return 1;
 					};
 					srcRc.push(optValue);
+					continue;
+				};
+				if (opt == "no-default-include") {
+					noDefaultInclude = true;
 					continue;
 				};
 				if (opt == "no-default-source") {
@@ -1500,25 +1494,28 @@ namespace Main {
 					TDynamicArray<String> _copyFiles;
 					TDynamicArray<String> _hFiles;
 					TDynamicArray<String> _hppFiles;
-					Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.h", _hFiles);
-					Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.hpp", _hppFiles);
 
-					TDynamicArray<String> _hFilesExtra;
-					TDynamicArray<String> _hppFilesExtra;
+					if(!noDefaultInclude) {
+						Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.h", _hFiles);
+						Shell::getFileList(sourceIncludePath_ + "/" + projectBase + "*.hpp", _hppFiles);
 
-					if(String::beginWith(projectName, "lib")) {
-						String projectBaseX = String::substring(projectBase, 3);
-						Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.h", _hFilesExtra);
-						Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.hpp", _hppFilesExtra);
-					};
+						TDynamicArray<String> _hFilesExtra;
+						TDynamicArray<String> _hppFilesExtra;
 
-					// add extra
+						if(String::beginWith(projectName, "lib")) {
+							String projectBaseX = String::substring(projectBase, 3);
+							Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.h", _hFilesExtra);
+							Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.hpp", _hppFilesExtra);
+						};		
 
-					for(k = 0; k < _hFilesExtra.length(); ++k) {
-						_hFiles.push(_hFilesExtra[k]);
-					};
-					for(k = 0; k < _hppFilesExtra.length(); ++k) {
-						_hppFiles.push(_hppFilesExtra[k]);
+						// add extra
+
+						for(k = 0; k < _hFilesExtra.length(); ++k) {
+							_hFiles.push(_hFilesExtra[k]);
+						};
+						for(k = 0; k < _hppFilesExtra.length(); ++k) {
+							_hppFiles.push(_hppFilesExtra[k]);
+						};
 					};
 
 					// remove template/amalgam/source
@@ -1549,6 +1546,21 @@ namespace Main {
 							continue;
 						};
 						_copyFiles.push(_hppFiles[k]);
+					};
+
+					int l;
+					for(k = 0; k < srcH.length(); ++k) {
+						Shell::getFileList(srcH[k], _hFiles);
+						for(l = 0; l < _hFiles.length(); ++l) {
+							_copyFiles.push(_hFiles[l]);
+						};
+					};
+
+					for(k = 0; k < srcHpp.length(); ++k) {
+						Shell::getFileList(srcHpp[k], _hppFiles);
+						for(l = 0; l < _hppFiles.length(); ++l) {
+							_copyFiles.push(_hppFiles[l]);
+						};
 					};
 
 					for(k = 0; k < _copyFiles.length(); ++k) {
@@ -1698,9 +1710,13 @@ namespace Main {
 
 		if(!noDefaultSource) {
 
-			Shell::getFileList(includePath + "/" + projectBase + "*.h", hFilesIn);
+			if(!noDefaultInclude) {
+				Shell::getFileList(includePath + "/" + projectBase + "*.h", hFilesIn);
+			};
 			Shell::getFileList(sourcePath + "/" + projectBase + "*.c", cSourceIn);
-			Shell::getFileList(includePath + "/" + projectBase + "*.hpp", hppFilesIn);
+			if(!noDefaultInclude) {
+				Shell::getFileList(includePath + "/" + projectBase + "*.hpp", hppFilesIn);
+			};
 			Shell::getFileList(sourcePath + "/" + projectBase + "*.cpp", cppSourceIn);
 			Shell::getFileList(sourcePath + "/" + projectBase + "*.rc", rcFiles);
 
@@ -1711,9 +1727,13 @@ namespace Main {
 
 			if(String::beginWith(projectName, "lib")) {
 				String projectBaseX = String::substring(projectBase, 3);
-				Shell::getFileList(includePath + "/" + projectBaseX + "*.h", hFilesExtra);
+				if(!noDefaultInclude) {
+					Shell::getFileList(includePath + "/" + projectBaseX + "*.h", hFilesExtra);
+				};
 				Shell::getFileList(sourcePath + "/" + projectBaseX + "*.c", cSourceExtra);
-				Shell::getFileList(includePath + "/" + projectBaseX + "*.hpp", hppFilesExtra);
+				if(!noDefaultInclude) {
+					Shell::getFileList(includePath + "/" + projectBaseX + "*.hpp", hppFilesExtra);
+				};
 				Shell::getFileList(sourcePath + "/" + projectBaseX + "*.cpp", cppSourceExtra);
 			};
 
@@ -2297,4 +2317,7 @@ namespace Main {
 
 };
 
-XYO_APPLICATION_MAIN_STD(Main::Application);
+#ifndef XYO_CC_LIBRARY
+XYO_APPLICATION_MAIN_STD(XYOCC::Application);
+#endif
+

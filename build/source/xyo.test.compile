@@ -2,3 +2,4 @@
 --use-lib=:xyo.static
 --no-version
 --no-install
+--inc=./output/include/xyo

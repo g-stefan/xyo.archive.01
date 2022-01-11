@@ -69,9 +69,6 @@
 #include "xyo-datastructures-ini.cpp"
 #include "xyo-application-version.cpp"
 #include "xyo-system-util.cpp"
-#include "xyo-system-compiler.cpp"
-#include "xyo-system-compiler--compiler-gcc.cpp"
-#include "xyo-system-compiler--compiler-msvc.cpp"
 
 // ---
 

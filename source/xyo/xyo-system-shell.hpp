@@ -96,6 +96,7 @@ namespace XYO {
 			XYO_EXPORT bool mkdirRecursively(const String &dirName);
 			XYO_EXPORT bool removeEmptyDirRecursively(const String &dirName);
 			XYO_EXPORT bool copyDirRecursively(const String &source, const String &target);
+			XYO_EXPORT bool moveDirRecursively(const String &source, const String &target, bool overwrite);
 			XYO_EXPORT bool removeFileRecursively(const String &dirName, const String &fileName);
 			XYO_EXPORT bool copyFilesToDirectory(const String &source, const String &target);
 			XYO_EXPORT bool mkdirRecursivelyIfNotExists(const String &path);

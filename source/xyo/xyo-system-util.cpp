@@ -7,7 +7,6 @@
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
 //
 
-#include "xyo-system-compiler.hpp"
 #include "xyo-system-shell.hpp"
 #include "xyo-system-datetime.hpp"
 #include "xyo-cryptography-md5.hpp"

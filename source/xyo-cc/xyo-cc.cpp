@@ -16,6 +16,8 @@
 #include "xyo-cc-version.hpp"
 #endif
 
+#include "xyo-cc-compiler.hpp"
+
 namespace XYOCC {
 
 	using namespace XYO;
@@ -29,7 +31,7 @@ namespace XYOCC {
 			"options:\n"
 			"    --usage                        this info\n"
 			"    --license                      show license\n"
-			"    --version                      show version\n"			
+			"    --version                      show version\n"
 			"    --debug                        build debug version\n"
 			"    --release                      build release version\n"
 			"    --exe                          build executable (.exe)\n"
@@ -123,6 +125,8 @@ namespace XYOCC {
 			"    --has-archived-release         check if archived release exists\n"
 			"    --remove-archived-release      remove archived release\n"
 			"    --copy-local-archived-release  copy local archived release to repository\n"
+			"    --extract-archived-release     extract archived release\n"
+			"    --install-archived-release     install archived release\n"
 			"\n"
 			"    --install-file=src=dst         install custom file to repository\n"
 			"    --sha512-file=file             generate sha512 of file, as csv line (sha512,file)\n"
@@ -135,18 +139,18 @@ namespace XYOCC {
 			"    --update-version-dependency                    update version dependency from repository\n"
 			"    --bump-version-minor-if-version-dependency     bump minor version on version dependency change\n"
 		);
-		printf("\n");		
+		printf("\n");
 	};
 
 	void Application::showLicense() {
 		printf("%s", XYOCC::License::content());
 	};
 
-	void Application::showVersion() {		
+	void Application::showVersion() {
 #ifndef XYO_CC_NO_VERSION
 		printf("version %s build %s [%s]\n", XYOCC::Version::version(), XYOCC::Version::build(), XYOCC::Version::datetime());
-#endif		
-	};	
+#endif
+	};
 
 
 	int Application::main(int cmdN, char *cmdS[]) {
@@ -191,6 +195,8 @@ namespace XYOCC {
 		bool hasArchivedRelease = false;
 		bool removeArchivedRelease = false;
 		bool copyLocalArchivedRelease = false;
+		bool extractArchivedRelease = false;
+		bool installArchivedRelease = false;
 
 		String workspacePath = Shell::getCwd();
 		String projectName;
@@ -323,7 +329,7 @@ namespace XYOCC {
 				if (opt == "version") {
 					showVersion();
 					return 0;
-				};				
+				};
 				if (opt == "bump-version") {
 					doBumpVersionBuild = true;
 					continue;
@@ -962,7 +968,14 @@ namespace XYOCC {
 					copyLocalArchivedRelease = true;
 					continue;
 				};
-
+				if (opt == "extract-archived-release") {
+					extractArchivedRelease = true;
+					continue;
+				};
+				if (opt == "install-archived-release") {
+					installArchivedRelease = true;
+					continue;
+				};
 				continue;
 			};
 			projectName = cmdLine[i];
@@ -1320,6 +1333,90 @@ namespace XYOCC {
 			return 0;
 		};
 
+		if(extractArchivedRelease) {
+			String localArchivedRelease="release/";
+			localArchivedRelease+=Shell::getFileName(pathRelease);
+
+			// bin
+			String archivedReleaseBin=localArchivedRelease+".7z";
+			if(Shell::fileExists(archivedReleaseBin)) {
+				if(Shell::system(String("7z x -aoa -o") +tempPath+" "+ archivedReleaseBin)) {
+					printf("Error: Unable to extract release archive: %s\r\n", archivedReleaseBin.value());
+					return 1;
+				};
+				if(!Shell::moveDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease), outputBinPath, true)) {
+					printf("Error: Unable to move directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)).value());
+					return 1;
+				};
+				if(!Shell::removeDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease))) {
+					printf("Error: Unable to remove directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)).value());
+					return 1;
+				};
+			};
+
+			// dev
+			String archivedReleaseDev=localArchivedRelease+"-dev.7z";
+			if(Shell::fileExists(localArchivedRelease+"-dev.7z")) {
+				if(Shell::system(String("7z x -aoa -o") +tempPath+" "+ archivedReleaseDev)) {
+					printf("Error: Unable to extract release archive: %s\r\n", archivedReleaseDev.value());
+					return 1;
+				};
+				if(!Shell::moveDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease)+"-dev", outputPath, true)) {
+					printf("Error: Unable to move directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)+"-dev").value());
+					return 1;
+				};
+				if(!Shell::removeDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease)+"-dev")) {
+					printf("Error: Unable to remove directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)+"-dev").value());
+					return 1;
+				};
+			};
+
+			return 0;
+		};
+
+
+		if(installArchivedRelease) {
+			String localArchivedRelease="release/";
+			localArchivedRelease+=Shell::getFileName(pathRelease);
+
+			// bin
+			String archivedReleaseBin=localArchivedRelease+".7z";
+			if(Shell::fileExists(archivedReleaseBin)) {
+				if(Shell::system(String("7z x -aoa -o") +tempPath+" "+ archivedReleaseBin)) {
+					printf("Error: Unable to extract release archive: %s\r\n", archivedReleaseBin.value());
+					return 1;
+				};
+				if(!Shell::moveDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease), pathInstall+"/bin", true)) {
+					printf("Error: Unable to move directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)).value());
+					return 1;
+				};
+				if(!Shell::removeDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease))) {
+					printf("Error: Unable to remove directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)).value());
+					return 1;
+				};
+			};
+
+			// dev
+			String archivedReleaseDev=localArchivedRelease+"-dev.7z";
+			if(Shell::fileExists(archivedReleaseDev)) {
+				if(Shell::system(String("7z x -aoa -o") +tempPath+" "+ archivedReleaseDev)) {
+					printf("Error: Unable to extract release archive: %s\r\n", archivedReleaseDev.value());
+					return 1;
+				};
+				if(!Shell::moveDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease)+"-dev", pathInstall, true)) {
+					printf("Error: Unable to move directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)+"-dev").value());
+					return 1;
+				};
+				if(!Shell::removeDirRecursively(tempPath+"/"+Shell::getFileName(pathRelease)+"-dev")) {
+					printf("Error: Unable to remove directory: %s\r\n", (tempPath+"/"+Shell::getFileName(pathRelease)+"-dev").value());
+					return 1;
+				};
+			};
+
+			return 0;
+		};
+
+
 		// </archive>
 
 		// <dependency>
@@ -1506,7 +1603,7 @@ namespace XYOCC {
 							String projectBaseX = String::substring(projectBase, 3);
 							Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.h", _hFilesExtra);
 							Shell::getFileList(sourceIncludePath_ + "/" + projectBaseX + "*.hpp", _hppFilesExtra);
-						};		
+						};
 
 						// add extra
 
@@ -2018,18 +2115,18 @@ namespace XYOCC {
 					if(outputIncludePath != workspacePath) {
 						if(installIncludeDirect) {
 							if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include")) {
-								printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include").value());
+								printf("Error: copy directory %s to %s\n", (outputIncludePath).value(), (pathInstall + "/include").value());
 								return 1;
 							};
 						} else {
 							if(installInc.length()>0) {
 								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + installInc)) {
-									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + installInc).value());
+									printf("Error: copy directory %s to %s\n", (outputIncludePath).value(), (pathInstall + "/include/" + installInc).value());
 									return 1;
 								};
 							} else {
 								if(!Shell::copyDirRecursively(outputIncludePath, pathInstall + "/include/" + projectName)) {
-									printf("Error: copy directory %s to %s\n", (includePath).value(), (pathInstall + "/include/" + projectName).value());
+									printf("Error: copy directory %s to %s\n", (outputIncludePath).value(), (pathInstall + "/include/" + projectName).value());
 									return 1;
 								};
 							};

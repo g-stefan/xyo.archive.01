@@ -543,7 +543,9 @@ namespace XYO {
 				return rmdir(dirName);
 			};
 
-			bool copyDirRecursively(const String &source, const String &target) {
+			bool copyDirRecursively(const String &source_, const String &target_) {
+				String source=normalize(source_);
+				String target=normalize(target_);
 				TDynamicArray<String> dirList;
 				TDynamicArray<String> fileList;
 				size_t k, m;
@@ -612,10 +614,108 @@ namespace XYO {
 					fileTarget += pathSeparator;
 					fileTarget += fileList[k];
 
-					if(!copy(fileSource, fileTarget)) {
+					if(!copy(fileSource, fileTarget)) {						
+							return false;
+					};
+
+				};
+				return true;
+			};
+
+			bool moveDirRecursively(const String &source, const String &target, bool overwrite) {
+				if(source==target) {
+					return true;
+				};
+				TDynamicArray<String> dirList;
+				TDynamicArray<String> fileList;
+				size_t k, m;
+				ShellFind scan;
+				k = 0;
+				m = 0;
+				String findDir = source;
+				findDir += pathSeparator;
+				findDir += "*";
+				if(scan.find(findDir)) {
+					for(; scan; scan.next()) {
+						if(scan.isDirectory) {
+							if(StringCore::isEqual(scan.name, "..")) {
+								continue;
+							};
+							if(StringCore::isEqual(scan.name, ".")) {
+								continue;
+							};
+
+							dirList[k] = scan.name;
+							++k;
+						} else {
+							fileList[m] = scan.name;
+							++m;
+						};
+					};
+				};
+				//
+				if(!mkdirRecursivelyIfNotExists(target)) {
+					return false;
+				};
+				//
+				for(k = 0; k < dirList.length(); ++k) {
+
+					String path = target;
+					path += pathSeparator;
+					path += dirList[k];
+
+					if(!mkdirRecursivelyIfNotExists(path)) {
 						return false;
 					};
 
+					String pathSource;
+					pathSource = source;
+					pathSource += pathSeparator;
+					pathSource += dirList[k];
+
+					String pathTarget;
+					pathTarget = target;
+					pathTarget += pathSeparator;
+					pathTarget += dirList[k];
+
+					if(!moveDirRecursively(pathSource, pathTarget, overwrite)) {
+						return false;
+					};
+				};
+				//
+				for(k = 0; k < fileList.length(); ++k) {
+					String fileSource;
+					fileSource = source;
+					fileSource += pathSeparator;
+					fileSource += fileList[k];
+
+					String fileTarget;
+					fileTarget = target;
+					fileTarget += pathSeparator;
+					fileTarget += fileList[k];
+
+					if(!rename(fileSource, fileTarget)) {
+						if(!overwrite) {
+							return false;
+						};
+						if(remove(fileTarget)) {
+							if(rename(fileSource, fileTarget)) {
+								continue;
+							};
+						};
+						return false;
+					};
+				};
+
+				for(k = 0; k < dirList.length(); ++k) {
+					String pathSource;
+					pathSource = source;
+					pathSource += pathSeparator;
+					pathSource += dirList[k];
+
+					if(!rmdir(pathSource)) {
+						return false;
+					};
 				};
 				return true;
 			};

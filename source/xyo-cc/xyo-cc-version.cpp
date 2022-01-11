@@ -13,9 +13,9 @@ namespace XYOCC {
 	namespace Version {
 
 		static const char *version_ = "3.4.0";
-		static const char *build_ = "81";
-		static const char *versionWithBuild_ = "3.4.0.81";
-		static const char *datetime_ = "2022-01-04 01:21:23";
+		static const char *build_ = "89";
+		static const char *versionWithBuild_ = "3.4.0.89";
+		static const char *datetime_ = "2022-01-09 01:13:03";
 
 		const char *version() {
 			return version_;

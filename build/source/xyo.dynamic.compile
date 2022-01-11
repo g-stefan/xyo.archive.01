@@ -1,6 +1,8 @@
 --dll xyo
---dependency-set=rc.inc=xyo
 --source-path=source/xyo
+--output-include-path-source=xyo
 --build-include
 --no-version
+--dependency-set=rc.inc=xyo
 --dependency-license=mit
+--install-include-direct

@@ -4,3 +4,5 @@
 --install-project=xyo
 --install-dev
 --install-version-file=version.ini
+--inc=./output/include/xyo
+--rc-inc=./output/include/xyo

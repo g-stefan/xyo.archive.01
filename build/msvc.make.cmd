@@ -6,7 +6,7 @@ rem Created by Grigore Stefan <g_stefan@yahoo.com>
 set ACTION=%1
 if "%1" == "" set ACTION=make
 
-echo - %BUILD_PROJECT% ^> %1
+echo - %BUILD_PROJECT% ^> %ACTION%
 
 goto cmdXDefined
 :cmdX
@@ -73,6 +73,9 @@ set SRC=
 set SRC=%SRC% source\xyo-cc\xyo-cc.cpp
 set SRC=%SRC% source\xyo-cc\xyo-cc-copyright.cpp
 set SRC=%SRC% source\xyo-cc\xyo-cc-license.cpp
+set SRC=%SRC% source\xyo-cc\xyo-cc-compiler.cpp
+set SRC=%SRC% source\xyo-cc\xyo-cc-compiler--compiler-gcc.cpp
+set SRC=%SRC% source\xyo-cc\xyo-cc-compiler--compiler-msvc.cpp
 set SRC=%SRC% source\xyo\xyo.amalgam.cpp
 
 call :cmdX %CXX% /MT /O2 /Ox /Oy /GS- /GL /GA /EHsc- /GR- /TP %DEF% %INC% %SRC% /Fotemp\ /Fetemp/xyo.cc.exe

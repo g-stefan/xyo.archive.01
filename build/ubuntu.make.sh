@@ -61,6 +61,9 @@ SRC=""
 SRC="$SRC source/xyo-cc/xyo-cc.cpp"
 SRC="$SRC source/xyo-cc/xyo-cc-copyright.cpp"
 SRC="$SRC source/xyo-cc/xyo-cc-license.cpp"
+SRC="$SRC source/xyo-cc/xyo-cc-compiler.cpp"
+SRC="$SRC source/xyo-cc/xyo-cc-compiler--compiler-gcc.cpp"
+SRC="$SRC source/xyo-cc/xyo-cc-compiler--compiler-msvc.cpp"
 SRC="$SRC source/xyo/xyo.amalgam.cpp"
 
 cmdX $CXX -o temp/xyo.cc -O1 -std=c++11 -std=gnu++11 $DEF $INC $SRC -lstdc++ -lpthread -lm $CC_LIB

@@ -1,5 +1,7 @@
 --lib xyo
 --source-path=source/xyo
+--output-include-path-source=xyo
 --build-include
 --dependency-set=rc.inc=xyo
 --dependency-license=mit
+--install-include-direct

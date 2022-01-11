@@ -22,7 +22,7 @@ namespace XYOCC {
 		public:
 
 			inline Application() {};
-			
+
 			void showUsage();
 			void showLicense();
 			void showVersion();

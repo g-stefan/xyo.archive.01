@@ -28,6 +28,7 @@ namespace XYO {
 	};
 };
 
+// clang-format off
 #define XYO_APPLICATION_MAIN_STD(T) \
 	static int XYOApplicationMain_(int cmdN, char *cmdS[])\
 	{\
@@ -48,12 +49,15 @@ namespace XYO {
 		return applicationMain(cmdN, cmdS);\
 	}
 
+// clang-format on
+
 #ifdef XYO_OS_WINDOWS
 
 #ifndef XYO_SYSTEM_SHELL_HPP
 #include "xyo-system-shell.hpp"
 #endif
 
+// clang-format off
 #define XYO_APPLICATION_WINMAIN_STD(T) \
 	static int XYOApplicationMain_(int cmdN, char *cmdS[])\
 	{\
@@ -87,6 +91,7 @@ namespace XYO {
 		XYO::Shell::mainArgsDelete(cmdN, cmdS);\
 		return retV;\
 	}
+// clang-format on
 
 #endif
 

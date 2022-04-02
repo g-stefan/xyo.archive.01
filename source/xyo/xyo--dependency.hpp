@@ -126,6 +126,7 @@
 
 //
 
+// clang-format off
 #define XYO_DISALLOW_COPY_ASSIGN_MOVE(T) \
 	private:\
 	T(const T&) = delete;\
@@ -138,5 +139,6 @@
 	T() = default;\
 	~T() = default;\
 	XYO_DISALLOW_COPY_ASSIGN_MOVE(T)
+// clang-format on
 
 #endif

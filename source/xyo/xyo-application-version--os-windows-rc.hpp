@@ -8,7 +8,8 @@
 //
 
 #ifndef XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
-#define XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
+#	define XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
+// clang-format off
 
 #define XYO_RC 1
 
@@ -43,10 +44,11 @@
 		}\
 	}
 
+// clang-format on
 #endif
 
 #ifdef XYO_COMPILE_DYNAMIC_LIBRARY
-#       define XYO_APPLICATION_MANIFEST(fileName) 2 24 fileName
+#	define XYO_APPLICATION_MANIFEST(fileName) 2 24 fileName
 #else
-#       define XYO_APPLICATION_MANIFEST(fileName) 1 24 fileName
+#	define XYO_APPLICATION_MANIFEST(fileName) 1 24 fileName
 #endif

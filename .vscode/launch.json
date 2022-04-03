@@ -8,10 +8,10 @@
 			"name": "(Windows) Launch",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/bin/xyo.test.01.exe",
+			"program": "${workspaceFolder}/output/bin/xyo.test.01.exe",
 			"args": [],
 			"stopAtEntry": false,
-			"cwd": "${workspaceFolder}/bin",
+			"cwd": "${workspaceFolder}/output/bin",
 			"environment": [],
 			"externalConsole": true
 		}

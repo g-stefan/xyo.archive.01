@@ -8,6 +8,7 @@ memory pool.
 - Objects and algorithms.
 
 Tested on:
+- Windows 11 - Visual Studio Community 2022
 - Windows 10 - Visual Studio Community 2019
 - Windows 10 - mingw64
 - Ubuntu 18.04 LTS

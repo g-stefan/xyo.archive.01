@@ -17,7 +17,7 @@ namespace XYO {
 
 		//
 		// Simple Semaphore
-		// Master/Slave mode
+		// Parent/Child mode
 		// No Condition variable
 		//
 

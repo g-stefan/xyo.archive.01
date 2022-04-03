@@ -44,11 +44,11 @@
 		}\
 	}
 
-#endif
-// clang-format on
-
 #ifdef XYO_COMPILE_DYNAMIC_LIBRARY
 #	define XYO_APPLICATION_MANIFEST(fileName) 2 24 fileName
 #else
 #	define XYO_APPLICATION_MANIFEST(fileName) 1 24 fileName
 #endif
+
+#endif
+// clang-format on

@@ -11,7 +11,7 @@
 #define XYO_LICENSE_HPP
 
 #ifndef XYO__EXPORT_HPP
-#include "xyo--export.hpp"
+#	include "xyo--export.hpp"
 #endif
 
 namespace XYO {

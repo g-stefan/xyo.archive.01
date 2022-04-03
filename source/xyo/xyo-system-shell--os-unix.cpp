@@ -8,36 +8,36 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE
-#define _POSIX_C_SOURCE 200809L
-#endif
+#	ifndef _POSIX_SOURCE
+#		define _POSIX_SOURCE
+#		define _POSIX_C_SOURCE 200809L
+#	endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
 
-#include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <spawn.h>
-#include <sys/wait.h>
+#	include <unistd.h>
+#	include <dirent.h>
+#	include <fcntl.h>
+#	include <spawn.h>
+#	include <sys/wait.h>
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#	include <ctype.h>
+#	include <stdio.h>
+#	include <stdlib.h>
+#	include <string.h>
 
-#include <cstdio>
+#	include <cstdio>
 
-#include "xyo-system-shell.hpp"
-#include "xyo-encoding-string.hpp"
+#	include "xyo-system-shell.hpp"
+#	include "xyo-encoding-string.hpp"
 
-#define DT_DIR__ 0x04
+#	define DT_DIR__ 0x04
 
 namespace XYO {
 	namespace System {
@@ -57,7 +57,7 @@ namespace XYO {
 			bool mkdir(const char *path) {
 				int retV;
 				mode_t process_mask = umask(0);
-				retV =::mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+				retV = ::mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
 				umask(process_mask);
 				return (retV == 0);
 			};
@@ -92,7 +92,7 @@ namespace XYO {
 								while (true) {
 									wd = 0;
 									rd = fread(buf, 1, 16384, fIn);
-									if(rd > 0) {
+									if (rd > 0) {
 										wd = fwrite(buf, 1, rd, fOut);
 										if (rd < 16384) {
 											break;
@@ -211,7 +211,7 @@ namespace XYO {
 
 				mainArgsSet(cmd, cmdN, cmdS);
 
-				if(cmdN == 0) {
+				if (cmdN == 0) {
 					mainArgsDelete(cmdN, cmdS);
 					return 0;
 				};
@@ -219,7 +219,7 @@ namespace XYO {
 				status = posix_spawn(&pid, cmdS[0], nullptr, nullptr, cmdS, ::environ);
 				mainArgsDelete(cmdN, cmdS);
 
-				if(status == 0) {
+				if (status == 0) {
 					return (ProcessId)pid;
 				};
 				return 0;
@@ -242,7 +242,7 @@ namespace XYO {
 				int status;
 
 				retV = waitpid(processId, &status, WNOHANG);
-				if(retV == 0) {
+				if (retV == 0) {
 					return false;
 				};
 
@@ -252,9 +252,9 @@ namespace XYO {
 			bool terminateProcess(const ProcessId processId, const uint32_t waitMilliseconds_) {
 				kill(processId, SIGTERM);
 				uint32_t waitMilliseconds = waitMilliseconds_;
-				if(waitMilliseconds > 0) {
-					while(waitMilliseconds) {
-						if(isProcessTerminated(processId)) {
+				if (waitMilliseconds > 0) {
+					while (waitMilliseconds) {
+						if (isProcessTerminated(processId)) {
 							return true;
 						};
 						usleep(1000);
@@ -272,10 +272,8 @@ namespace XYO {
 				return fileOrDirectoryName;
 			};
 
-
 		};
 	};
 };
 
 #endif
-

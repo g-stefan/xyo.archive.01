@@ -15,7 +15,7 @@
 #include "xyo-copyright.hpp"
 #include "xyo-license.hpp"
 #ifndef XYO_NO_VERSION
-#       include "xyo-version.hpp"
+#	include "xyo-version.hpp"
 #endif
 
 // -
@@ -185,4 +185,3 @@ namespace XYO {
 };
 
 #endif
-

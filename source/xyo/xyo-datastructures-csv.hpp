@@ -11,11 +11,11 @@
 #define XYO_DATASTRUCTURES_CSV_HPP
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -39,4 +39,3 @@ namespace XYO {
 };
 
 #endif
-

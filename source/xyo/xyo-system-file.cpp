@@ -154,7 +154,7 @@ namespace XYO {
 		};
 
 		void File::unLinkOwner() {
-			if(linkOwner_ != nullptr) {
+			if (linkOwner_ != nullptr) {
 				linkOwner_->value_->reclaim = false;
 				linkOwner_->value_->hFile = nullptr;
 				linkOwner_->linkOwner_ = nullptr;
@@ -170,11 +170,10 @@ namespace XYO {
 			file_.value_->reclaim = false;
 			file_.value_->hFile = nullptr;
 			file_.linkOwner_ = nullptr;
-			if(linkOwner_) {
+			if (linkOwner_) {
 				linkOwner_->linkOwner_ = this;
 			};
 		};
 
 	};
 };
-

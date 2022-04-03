@@ -11,7 +11,7 @@
 #define XYO_NETWORING_IP6_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -20,8 +20,8 @@ namespace XYO {
 
 		class IP6 : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(IP6);
-			public:
 
+			public:
 				uint8_t ip[16];
 
 				XYO_EXPORT IP6();
@@ -33,4 +33,3 @@ namespace XYO {
 };
 
 #endif
-

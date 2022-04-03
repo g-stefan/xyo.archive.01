@@ -11,7 +11,7 @@
 #define XYO_DATASTRUCTURES_UCONVERT_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
@@ -99,59 +99,59 @@ namespace XYO {
 			};
 
 			inline void u32ToU8(uint32_t in, uint8_t *out) {
-				out[0] = (uint8_t) ((in) & 0x00FF);
+				out[0] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[1] = (uint8_t) ((in) & 0x00FF);
+				out[1] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[2] = (uint8_t) ((in) & 0x00FF);
+				out[2] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[3] = (uint8_t) ((in) & 0x00FF);
+				out[3] = (uint8_t)((in)&0x00FF);
 			};
 
 			inline void u32ToU8Reversed(uint32_t in, uint8_t *out) {
-				out[3] = (uint8_t) ((in) & 0x00FF);
+				out[3] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[2] = (uint8_t) ((in) & 0x00FF);
+				out[2] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[1] = (uint8_t) ((in) & 0x00FF);
+				out[1] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[0] = (uint8_t) ((in) & 0x00FF);
+				out[0] = (uint8_t)((in)&0x00FF);
 			};
 
 			inline void u64ToU8(uint64_t in, uint8_t *out) {
-				out[0] = (uint8_t) ((in) & 0x00FF);
+				out[0] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[1] = (uint8_t) ((in) & 0x00FF);
+				out[1] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[2] = (uint8_t) ((in) & 0x00FF);
+				out[2] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[3] = (uint8_t) ((in) & 0x00FF);
+				out[3] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[4] = (uint8_t) ((in) & 0x00FF);
+				out[4] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[5] = (uint8_t) ((in) & 0x00FF);
+				out[5] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[6] = (uint8_t) ((in) & 0x00FF);
+				out[6] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[7] = (uint8_t) ((in) & 0x00FF);
+				out[7] = (uint8_t)((in)&0x00FF);
 			};
 
 			inline void u64ToU8Reversed(uint64_t in, uint8_t *out) {
-				out[7] = (uint8_t) ((in) & 0x00FF);
+				out[7] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[6] = (uint8_t) ((in) & 0x00FF);
+				out[6] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[5] = (uint8_t) ((in) & 0x00FF);
+				out[5] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[4] = (uint8_t) ((in) & 0x00FF);
+				out[4] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[3] = (uint8_t) ((in) & 0x00FF);
+				out[3] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[2] = (uint8_t) ((in) & 0x00FF);
+				out[2] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[1] = (uint8_t) ((in) & 0x00FF);
+				out[1] = (uint8_t)((in)&0x00FF);
 				in >>= 8;
-				out[0] = (uint8_t) ((in) & 0x00FF);
+				out[0] = (uint8_t)((in)&0x00FF);
 			};
 
 		};

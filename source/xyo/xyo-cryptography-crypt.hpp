@@ -11,7 +11,7 @@
 #define XYO_CRYPTOGRAPHY_CRYPT_HPP
 
 #ifndef XYO_DATASTRUCTURES_BUFFER_HPP
-#include "xyo-datastructures-buffer.hpp"
+#	include "xyo-datastructures-buffer.hpp"
 #endif
 
 namespace XYO {

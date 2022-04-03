@@ -11,7 +11,7 @@
 #define XYO_DATASTRUCTURES_ERROR_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -21,10 +21,9 @@ namespace XYO {
 		class Error {
 			protected:
 				String message;
-			public:
 
-				inline Error() {
-				};
+			public:
+				inline Error(){};
 
 				inline Error(const String &message_) {
 					message = message_;

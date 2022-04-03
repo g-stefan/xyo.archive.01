@@ -8,36 +8,36 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE
-#define _POSIX_C_SOURCE 200809L
-#endif
+#	ifndef _POSIX_SOURCE
+#		define _POSIX_SOURCE
+#		define _POSIX_C_SOURCE 200809L
+#	endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
 
-#include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <spawn.h>
-#include <sys/wait.h>
+#	include <unistd.h>
+#	include <dirent.h>
+#	include <fcntl.h>
+#	include <spawn.h>
+#	include <sys/wait.h>
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#	include <ctype.h>
+#	include <stdio.h>
+#	include <stdlib.h>
+#	include <string.h>
 
-#include <cstdio>
+#	include <cstdio>
 
-#include "xyo-system-shellfind.hpp"
-#include "xyo-encoding-string.hpp"
+#	include "xyo-system-shellfind.hpp"
+#	include "xyo-encoding-string.hpp"
 
-#define DT_DIR__ 0x04
+#	define DT_DIR__ 0x04
 
 namespace XYO {
 	namespace System {
@@ -45,10 +45,10 @@ namespace XYO {
 		using namespace XYO::Encoding;
 
 		struct SShellFind_ {
-			struct dirent *finddata;
-			DIR *hfind;
+				struct dirent *finddata;
+				DIR *hfind;
 
-			String match_;
+				String match_;
 		};
 
 		ShellFind::ShellFind() {
@@ -85,7 +85,6 @@ namespace XYO {
 					};
 				};
 
-
 				isValid_ = true;
 				name = shellFind_->finddata->d_name;
 				isDirectory = (shellFind_->finddata->d_type == DT_DIR__);
@@ -97,7 +96,6 @@ namespace XYO {
 				isReadOnly = (attrib.st_mode & (S_IWUSR == 0));
 				return true;
 			};
-
 
 			close();
 			return false;
@@ -156,6 +154,4 @@ namespace XYO {
 	};
 };
 
-
 #endif
-

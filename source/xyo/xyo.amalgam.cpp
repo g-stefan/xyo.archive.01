@@ -11,7 +11,7 @@
 #include "xyo-copyright.cpp"
 #include "xyo-license.cpp"
 #ifndef XYO_NO_VERSION
-#       include "xyo-version.cpp"
+#	include "xyo-version.cpp"
 #endif
 
 // -
@@ -105,6 +105,6 @@
 // ---
 
 #ifdef XYO_OS_WINDOWS
-#       pragma comment(lib, "user32.lib")
-#       pragma comment(lib, "ws2_32.lib")
+#	pragma comment(lib, "user32.lib")
+#	pragma comment(lib, "ws2_32.lib")
 #endif

@@ -60,14 +60,12 @@ namespace XYO {
 			if (name[k] == 0) {
 				return true;
 			};
-			for ( --k; k >= 0; --k) {
+			for (--k; k >= 0; --k) {
 				push();
 				inputChar = name[k];
 			};
 			return false;
 		};
 
-
 	};
 };
-

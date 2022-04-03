@@ -12,14 +12,14 @@
 
 #ifdef XYO_TMEMORYPOOL_SYSTEM
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
+#		include "xyo-managedmemory-tmemorysystem.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryThread : TMemorySystem<T> {};
 
 	};
@@ -27,14 +27,14 @@ namespace XYO {
 
 #else
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLTHREAD_HPP
-#include "xyo-managedmemory-tmemorypoolthread.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLTHREAD_HPP
+#		include "xyo-managedmemory-tmemorypoolthread.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryThread : TMemoryPoolThread<T> {};
 
 	};

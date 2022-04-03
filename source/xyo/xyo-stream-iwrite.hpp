@@ -11,7 +11,7 @@
 #define XYO_STREAM_IWRITE_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_INTERFACE(IWrite);
 
 			public:
-
 				virtual size_t write(const void *input, size_t length) = 0;
 		};
 
@@ -30,4 +29,3 @@ namespace XYO {
 };
 
 #endif
-

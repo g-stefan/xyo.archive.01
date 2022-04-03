@@ -11,7 +11,7 @@
 #define XYO_CRYPTOGRAPHY_SHA256_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -20,8 +20,8 @@ namespace XYO {
 
 		class SHA256 : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(SHA256);
-			protected:
 
+			protected:
 				XYO_EXPORT static const uint32_t k_[];
 
 				uint32_t h0, h1, h2, h3, h4, h5, h6, h7;
@@ -30,6 +30,7 @@ namespace XYO {
 				uint8_t lastData[4];
 				uint64_t length;
 				size_t stateM;
+
 			public:
 				XYO_EXPORT SHA256();
 				XYO_EXPORT void processInit();

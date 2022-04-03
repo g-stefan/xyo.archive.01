@@ -29,28 +29,28 @@ namespace XYO {
 				iniFile.empty();
 				size_t index = 0;
 				size_t indexValue;
-				if(file.openRead(fileName)) {
-					while(StreamX::readLn(file, line, 16384)) {
+				if (file.openRead(fileName)) {
+					while (StreamX::readLn(file, line, 16384)) {
 						INILine &iniLine = iniFile[index];
 						lineX = String::trimWithElement(line, trimElements);
-						if(lineX.isEmpty()) {
+						if (lineX.isEmpty()) {
 							iniLine.type = INILineType::None;
 							++index;
 							continue;
 						};
-						if(lineX[0] == ';') {
+						if (lineX[0] == ';') {
 							iniLine.type = INILineType::Comment;
 							iniLine.value = lineX;
 							++index;
 							continue;
 						};
-						if(lineX[0] == '[') {
+						if (lineX[0] == '[') {
 							iniLine.type = INILineType::Section;
 							iniLine.value = lineX;
 							++index;
 							continue;
 						};
-						if(String::indexOf(lineX, "=", 0, indexValue)) {
+						if (String::indexOf(lineX, "=", 0, indexValue)) {
 							iniLine.type = INILineType::Value;
 							iniLine.key = String::substring(lineX, 0, indexValue);
 							iniLine.value = String::substring(lineX, indexValue + 1);
@@ -69,30 +69,30 @@ namespace XYO {
 
 			bool save(const char *fileName, INIFile &iniFile) {
 				File file;
-				if(file.openWrite(fileName)) {
+				if (file.openWrite(fileName)) {
 					size_t k;
-					for(k = 0; k < iniFile.length(); ++k) {
-						switch(iniFile[k].type) {
-							case INILineType::Comment:
+					for (k = 0; k < iniFile.length(); ++k) {
+						switch (iniFile[k].type) {
+						case INILineType::Comment:
+							StreamX::write(file, iniFile[k].value);
+							StreamX::write(file, "\r\n");
+							break;
+						case INILineType::Section:
+							StreamX::write(file, iniFile[k].value);
+							StreamX::write(file, "\r\n");
+							break;
+						case INILineType::Value:
+							StreamX::write(file, iniFile[k].key);
+							StreamX::write(file, "=");
+							StreamX::write(file, iniFile[k].value);
+							StreamX::write(file, "\r\n");
+							break;
+						default:
+							if (iniFile[k].value.length() > 0) {
 								StreamX::write(file, iniFile[k].value);
-								StreamX::write(file, "\r\n");
-								break;
-							case INILineType::Section:
-								StreamX::write(file, iniFile[k].value);
-								StreamX::write(file, "\r\n");
-								break;
-							case INILineType::Value:
-								StreamX::write(file, iniFile[k].key);
-								StreamX::write(file, "=");
-								StreamX::write(file, iniFile[k].value);
-								StreamX::write(file, "\r\n");
-								break;
-							default:
-								if(iniFile[k].value.length() > 0) {
-									StreamX::write(file, iniFile[k].value);
-								};
-								StreamX::write(file, "\r\n");
-								break;
+							};
+							StreamX::write(file, "\r\n");
+							break;
 						};
 					};
 					file.close();
@@ -105,9 +105,9 @@ namespace XYO {
 				size_t k;
 				String sectionX;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(iniFile[k].value == sectionX) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (iniFile[k].value == sectionX) {
 							return true;
 						};
 					};
@@ -121,18 +121,18 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return count;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
-						if(iniFile[k].key == key) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
+						if (iniFile[k].key == key) {
 							++count;
 						};
 					};
@@ -145,19 +145,19 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return false;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
-						if(iniFile[k].key == key) {
-							if(index == 0) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
+						if (iniFile[k].key == key) {
+							if (index == 0) {
 								value = iniFile[k].value;
 								return true;
 							};
@@ -173,12 +173,12 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							int lastK = k - 1;
-							for(; k > 0; --k) {
-								if(iniFile[k].type == INILineType::Value) {
+							for (; k > 0; --k) {
+								if (iniFile[k].type == INILineType::Value) {
 									lastK = k + 1;
 								};
 							};
@@ -188,15 +188,15 @@ namespace XYO {
 							iniLine.value = value;
 							return true;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if(inSection) {
-						if(iniFile[k].type == INILineType::Value) {
-							if(iniFile[k].key == key) {
-								if(index == 0) {
+					if (inSection) {
+						if (iniFile[k].type == INILineType::Value) {
+							if (iniFile[k].key == key) {
+								if (index == 0) {
 									iniFile[k].value = value;
 									return true;
 								};
@@ -205,12 +205,12 @@ namespace XYO {
 						};
 					};
 				};
-				if(inSection == false) {
+				if (inSection == false) {
 					iniFile[k].type = INILineType::Section;
 					iniFile[k].value = sectionX;
 					++k;
 				};
-				while(index > 0) {
+				while (index > 0) {
 					iniFile[k].type = INILineType::Value;
 					iniFile[k].key = key;
 					iniFile[k].value = "";
@@ -228,19 +228,19 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return false;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
-						if(iniFile[k].key == key) {
-							if(index > 0) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
+						if (iniFile[k].key == key) {
+							if (index > 0) {
 								--index;
 								continue;
 							};
@@ -256,9 +256,9 @@ namespace XYO {
 				size_t k;
 				String sectionX;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(iniFile[k].value == sectionX) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (iniFile[k].value == sectionX) {
 							return true;
 						};
 					};
@@ -272,17 +272,17 @@ namespace XYO {
 				size_t k;
 				String sectionX;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(iniFile[k].value == sectionX) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (iniFile[k].value == sectionX) {
 							size_t endK = k;
-							for(; endK < iniFile.length(); ++endK) {
-								if(iniFile[endK].type == INILineType::Section) {
+							for (; endK < iniFile.length(); ++endK) {
+								if (iniFile[endK].type == INILineType::Section) {
 									break;
 								};
 							};
 							size_t index = k;
-							for(; k < endK; ++k) {
+							for (; k < endK; ++k) {
 								iniFile.remove(index);
 							};
 							return true;
@@ -296,9 +296,9 @@ namespace XYO {
 				size_t k;
 				String sectionX;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(iniFile[k].value == sectionX) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (iniFile[k].value == sectionX) {
 							index = k;
 							return true;
 						};
@@ -311,11 +311,11 @@ namespace XYO {
 				size_t k;
 				String sectionX;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(iniFile[k].value == sectionX) {
-							for(++k; k < iniFile.length(); ++k) {
-								if(iniFile[k].type == INILineType::Section) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (iniFile[k].value == sectionX) {
+							for (++k; k < iniFile.length(); ++k) {
+								if (iniFile[k].type == INILineType::Section) {
 									--k;
 									break;
 								};
@@ -330,22 +330,22 @@ namespace XYO {
 
 			bool joinSection(INIFile &iniFile, const char *section, INIFile &iniSource, const char *sectionSource) {
 				size_t indexSource;
-				if(sectionIndex(iniSource, sectionSource, indexSource)) {
-					if(!hasSection(iniFile, section)) {
-						if(!addSection(iniFile, section)) {
+				if (sectionIndex(iniSource, sectionSource, indexSource)) {
+					if (!hasSection(iniFile, section)) {
+						if (!addSection(iniFile, section)) {
 							return false;
 						};
 					};
 					size_t indexDestination;
-					if(sectionLastIndex(iniFile, section, indexDestination)) {
-						if(indexDestination < iniFile.length()) {
-							if(iniFile[indexDestination].type == INILineType::None) {
+					if (sectionLastIndex(iniFile, section, indexDestination)) {
+						if (indexDestination < iniFile.length()) {
+							if (iniFile[indexDestination].type == INILineType::None) {
 								--indexDestination;
 							};
 						};
 						++indexSource;
-						for(; indexSource < iniSource.length(); ++indexSource, ++indexDestination) {
-							if(iniSource[indexSource].type == INILineType::Section) {
+						for (; indexSource < iniSource.length(); ++indexSource, ++indexDestination) {
+							if (iniSource[indexSource].type == INILineType::Section) {
 								break;
 							};
 							INILine &iniLine = iniFile.insert(indexDestination);
@@ -364,19 +364,19 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return false;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
-						if(iniFile[k].key == key) {
-							if(iniFile[k].value == value) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
+						if (iniFile[k].key == key) {
+							if (iniFile[k].value == value) {
 								return true;
 							};
 						};
@@ -390,12 +390,12 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							int lastK = k - 1;
-							for(; k > 0; --k) {
-								if(iniFile[k].type == INILineType::Value) {
+							for (; k > 0; --k) {
+								if (iniFile[k].type == INILineType::Value) {
 									lastK = k + 1;
 								};
 							};
@@ -405,13 +405,13 @@ namespace XYO {
 							iniLine.value = value;
 							return true;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
 				};
-				if(inSection == false) {
+				if (inSection == false) {
 					iniFile[k].type = INILineType::Section;
 					iniFile[k].value = sectionX;
 					++k;
@@ -428,18 +428,18 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return false;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
-						if(iniFile[k].key == key) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
+						if (iniFile[k].key == key) {
 							values.push(iniFile[k].value);
 							found = true;
 						};
@@ -450,7 +450,7 @@ namespace XYO {
 
 			bool renameSection(INIFile &iniFile, const char *sectionOld, const char *sectionNew) {
 				size_t index;
-				if(sectionIndex(iniFile, sectionOld, index)) {
+				if (sectionIndex(iniFile, sectionOld, index)) {
 					String sectionX;
 					sectionX << "[" << sectionNew << "]";
 					iniFile[index].value = sectionX;
@@ -462,8 +462,8 @@ namespace XYO {
 			size_t countSection(INIFile &iniFile) {
 				size_t count = 0;
 				size_t k;
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
 						++count;
 					};
 				};
@@ -472,9 +472,9 @@ namespace XYO {
 
 			bool getSection(INIFile &iniFile, size_t index, String &section) {
 				size_t k;
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(index == 0) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (index == 0) {
 							section = String::substring(iniFile[index].value, 1, iniFile[index].value.length() - 2);
 							return true;
 						};
@@ -490,17 +490,17 @@ namespace XYO {
 				String sectionX;
 				bool inSection = false;
 				sectionX << "[" << section << "]";
-				for(k = 0; k < iniFile.length(); ++k) {
-					if(iniFile[k].type == INILineType::Section) {
-						if(inSection) {
+				for (k = 0; k < iniFile.length(); ++k) {
+					if (iniFile[k].type == INILineType::Section) {
+						if (inSection) {
 							return false;
 						};
-						if(iniFile[k].value == sectionX) {
+						if (iniFile[k].value == sectionX) {
 							inSection = true;
 						};
 						continue;
 					};
-					if((iniFile[k].type == INILineType::Value) && inSection) {
+					if ((iniFile[k].type == INILineType::Value) && inSection) {
 						keyAndValues.set(iniFile[k].key, iniFile[k].value);
 						found = true;
 					};
@@ -511,4 +511,3 @@ namespace XYO {
 		};
 	};
 };
-

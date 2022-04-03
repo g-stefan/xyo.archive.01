@@ -11,15 +11,15 @@
 #define XYO_DATASTRUCTURES_TSTRING_HPP
 
 #ifndef XYO_DATASTRUCTURES_TSTRINGREFERENCE_HPP
-#include "xyo-datastructures-tstringreference.hpp"
+#	include "xyo-datastructures-tstringreference.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 #ifndef XYO_ENCODING_THEX_HPP
-#include "xyo-encoding-thex.hpp"
+#	include "xyo-encoding-thex.hpp"
 #endif
 
 namespace XYO {
@@ -27,19 +27,18 @@ namespace XYO {
 		using namespace XYO::ManagedMemory;
 		using namespace XYO::Encoding;
 
-		template<typename T>
+		template <typename T>
 		class TString : public Object {
 			protected:
-				TPointer<TStringReference<T> > value_;
-			public:
+				TPointer<TStringReference<T>> value_;
 
+			public:
 				inline TString() {
 					value_.newMemory();
 					value_->init();
 				};
 
-				inline ~TString() {
-				};
+				inline ~TString(){};
 
 				inline TString(const T *value) {
 					value_.newMemory();
@@ -59,11 +58,11 @@ namespace XYO {
 					value_ = std::move(value.value_);
 				};
 
-				inline TString(const TPointer<TStringReference<T> > &value) {
+				inline TString(const TPointer<TStringReference<T>> &value) {
 					value_ = value;
 				};
 
-				inline TString(TPointer<TStringReference<T> > &&value) {
+				inline TString(TPointer<TStringReference<T>> &&value) {
 					value_ = std::move(value);
 				};
 
@@ -97,12 +96,12 @@ namespace XYO {
 					return *this;
 				};
 
-				inline TString &operator=(const TPointer<TStringReference<T> > &value) {
+				inline TString &operator=(const TPointer<TStringReference<T>> &value) {
 					value_ = value;
 					return *this;
 				};
 
-				inline TString &operator=(TPointer<TStringReference<T> > &&value) {
+				inline TString &operator=(TPointer<TStringReference<T>> &&value) {
 					value_ = std::move(value);
 					return *this;
 				};
@@ -113,10 +112,10 @@ namespace XYO {
 				};
 
 				inline TString &operator+=(const T *value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(value);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, value);
 						value_ = newString;
 					};
@@ -124,10 +123,10 @@ namespace XYO {
 				};
 
 				inline TString &operator+=(const TString &value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(const_cast<TString &>(value).value_.value());
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, const_cast<TString &>(value).value_.value());
 						value_ = newString;
 					};
@@ -135,10 +134,10 @@ namespace XYO {
 				};
 
 				inline TString &operator+=(const T &value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(value);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, value);
 						value_ = newString;
 					};
@@ -146,34 +145,32 @@ namespace XYO {
 				};
 
 				inline TString &operator<<(const TString &value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(const_cast<TString &>(value).value_.value());
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, const_cast<TString &>(value).value_.value());
 						value_ = newString;
 					};
 					return *this;
-
 				};
 
 				inline TString &operator<<(const T *value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(value);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, value);
 						value_ = newString;
 					};
 					return *this;
-
 				};
 
 				inline TString &operator<<(const T &value) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(value);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, value);
 						value_ = newString;
 					};
@@ -196,7 +193,7 @@ namespace XYO {
 					return (value_->value())[x];
 				};
 
-				inline T &operator [](int x) const {
+				inline T &operator[](int x) const {
 					return (value_->value())[x];
 				};
 
@@ -209,91 +206,91 @@ namespace XYO {
 				};
 
 				inline void set(const T *value, size_t length) {
-					TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 					newString->from(value, length);
 					value_ = newString;
 				};
 
 				inline void set(const TString &value, size_t length) {
-					TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 					newString->from(const_cast<TString &>(value), length);
 					value_ = newString;
 				};
 
 				inline void concatenate(const T *value, size_t length) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(value, length);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, value, length);
 						value_ = newString;
 					};
 				};
 
 				inline void concatenate(const TString &value, size_t length) {
-					if(value_->hasOneReference()) {
+					if (value_->hasOneReference()) {
 						value_->concatenateX(const_cast<TString &>(value), length);
 					} else {
-						TStringReference<T> *newString = TMemory<TStringReference<T> >::newMemory();
+						TStringReference<T> *newString = TMemory<TStringReference<T>>::newMemory();
 						newString->concatenate(value_, const_cast<TString &>(value), length);
 						value_ = newString;
 					};
 				};
 
-				inline bool operator ==(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) == 0);
+				inline bool operator==(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) == 0);
 				};
 
-				inline bool operator ==(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) == 0);
+				inline bool operator==(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) == 0);
 				};
 
-				inline bool operator !=(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) != 0);
+				inline bool operator!=(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) != 0);
 				};
 
-				inline bool operator !=(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) != 0);
+				inline bool operator!=(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) != 0);
 				};
 
-				inline bool operator <(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) < 0);
+				inline bool operator<(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) < 0);
 				};
 
-				inline bool operator <(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) < 0);
+				inline bool operator<(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) < 0);
 				};
 
-				inline bool operator <=(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) <= 0);
+				inline bool operator<=(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) <= 0);
 				};
 
-				inline bool operator <=(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) <= 0);
+				inline bool operator<=(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) <= 0);
 				};
 
-				inline bool operator >(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) > 0);
+				inline bool operator>(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) > 0);
 				};
 
-				inline bool operator >(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) > 0);
+				inline bool operator>(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) > 0);
 				};
 
-				inline bool operator >=(const T *x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x) >= 0);
+				inline bool operator>=(const T *x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x) >= 0);
 				};
 
-				inline bool operator >=(const TString &x) const {
-					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x.value()) >= 0);
+				inline bool operator>=(const TString &x) const {
+					return (TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x.value()) >= 0);
 				};
 
 				inline int compare(const T *x) const {
-					return TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), x);
+					return TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), x);
 				};
 
 				inline int compare(const TString &value) const {
-					return TStringCore<T>::compare((const_cast<TPointer<TStringReference<T> > &>(value_))->value(), value.value());
+					return TStringCore<T>::compare((const_cast<TPointer<TStringReference<T>> &>(value_))->value(), value.value());
 				};
 
 				inline void activeDestructor() {
@@ -307,7 +304,7 @@ namespace XYO {
 				};
 
 				static inline void initMemory() {
-					TMemory<TStringReference<T> >::initMemory();
+					TMemory<TStringReference<T>>::initMemory();
 				};
 
 				inline TStringReference<T> *reference() const {
@@ -333,7 +330,7 @@ namespace XYO {
 				};
 
 				inline bool isEmpty() const {
-					return (length()==0);
+					return (length() == 0);
 				}
 
 				// ---
@@ -354,7 +351,6 @@ namespace XYO {
 
 					return TString(x1, x2 - x1 + 1);
 				};
-
 
 				static inline TString trimAscii(const TString &o) {
 					const T *x1;
@@ -384,7 +380,7 @@ namespace XYO {
 						return const_cast<TString &>(o);
 					};
 
-					retV = TMemory<TStringReference<T> >::newMemory();
+					retV = TMemory<TStringReference<T>>::newMemory();
 					retV->init();
 
 					ln = o.length() - xLn;
@@ -447,7 +443,7 @@ namespace XYO {
 				};
 
 				static inline TString toLowerCaseAscii(const TString &value) {
-					TStringReference<T> *retV = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *retV = TMemory<TStringReference<T>>::newMemory();
 
 					retV->init(value.length());
 
@@ -470,7 +466,7 @@ namespace XYO {
 				};
 
 				static inline TString toUpperCaseAscii(const TString &value) {
-					TStringReference<T> *retV = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *retV = TMemory<TStringReference<T>>::newMemory();
 
 					retV->init(value.length());
 
@@ -499,7 +495,7 @@ namespace XYO {
 
 				static inline bool split2(const TString &text, const TString &sig, TString &firstPart, TString &secondPart) {
 					size_t index;
-					if(TStringCore<T>::indexOf(text, text.length(), sig, sig.length(), 0, index)) {
+					if (TStringCore<T>::indexOf(text, text.length(), sig, sig.length(), 0, index)) {
 						firstPart = substring(text, 0, index);
 						secondPart = substring(text, index + sig.length());
 						return true;
@@ -511,7 +507,7 @@ namespace XYO {
 
 				static inline bool split2FromEnd(const TString &text, const TString &sig, TString &firstPart, TString &secondPart) {
 					size_t index;
-					if(TStringCore<T>::indexOfFromEnd(text, text.length(), sig, sig.length(), 0, index)) {
+					if (TStringCore<T>::indexOfFromEnd(text, text.length(), sig, sig.length(), 0, index)) {
 						firstPart = substring(text, 0, index);
 						secondPart = substring(text, index + sig.length());
 						return true;
@@ -525,37 +521,37 @@ namespace XYO {
 					size_t k;
 					const T *scan;
 					scan = in.value();
-					for(k = 0; k < in.length(); ++k, ++scan) {
-						if(*scan == '\\') {
+					for (k = 0; k < in.length(); ++k, ++scan) {
+						if (*scan == '\\') {
 							retV->concatenateX('\\');
 							retV->concatenateX('\\');
 							continue;
 						};
-						if(*scan == '"') {
+						if (*scan == '"') {
 							retV->concatenateX('\\');
 							retV->concatenateX('"');
 							continue;
 						};
-						if(*scan == '\'') {
+						if (*scan == '\'') {
 							retV->concatenateX('\'');
 							continue;
 						};
-						if(*scan == '\n') {
+						if (*scan == '\n') {
 							retV->concatenateX('\\');
 							retV->concatenateX('n');
 							continue;
 						};
-						if(*scan == '\r') {
+						if (*scan == '\r') {
 							retV->concatenateX('\\');
 							retV->concatenateX('r');
 							continue;
 						};
-						if(*scan == '\t') {
+						if (*scan == '\t') {
 							retV->concatenateX('\\');
 							retV->concatenateX('t');
 							continue;
 						};
-						if(*scan >= 0x20 && *scan <= 0x7E) {
+						if (*scan >= 0x20 && *scan <= 0x7E) {
 							retV->concatenateX(*scan);
 							continue;
 						};
@@ -567,7 +563,7 @@ namespace XYO {
 				};
 
 				static inline TString encodeC(const TString &in) {
-					TStringReference<T> *retV = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *retV = TMemory<TStringReference<T>>::newMemory();
 					retV->init();
 					retV->concatenateX('"');
 					encodeC_(retV, in);
@@ -576,7 +572,7 @@ namespace XYO {
 				};
 
 				static inline TString encodeCX(const TString &in) {
-					TStringReference<T> *retV = TMemory<TStringReference<T> >::newMemory();
+					TStringReference<T> *retV = TMemory<TStringReference<T>>::newMemory();
 					retV->init();
 					encodeC_(retV, in);
 					return retV;
@@ -600,7 +596,7 @@ namespace XYO {
 				};
 
 				static inline bool endsWith(const TString &a, const TString &b) {
-					if(b.length() > a.length()) {
+					if (b.length() > a.length()) {
 						return false;
 					};
 					return (TStringCore<T>::compareN(a.index(a.length() - b.length()), b, b.length()) == 0);
@@ -609,18 +605,18 @@ namespace XYO {
 				static inline bool explode(const TString &delimiter, const TString &strToExplode, TDynamicArray<TString> &out) {
 					size_t index = 0;
 					size_t indexNext = 0;
-					if(delimiter.isEmpty()) {
+					if (delimiter.isEmpty()) {
 						return false;
 					};
-					for(;;) {
-						if(indexOf(strToExplode, delimiter, index, indexNext)) {
+					for (;;) {
+						if (indexOf(strToExplode, delimiter, index, indexNext)) {
 							out.push(substring(strToExplode, index, indexNext - index));
 							index = indexNext + delimiter.length();
 							continue;
 						};
 						break;
 					};
-					if(index < strToExplode.length()) {
+					if (index < strToExplode.length()) {
 						out.push(substring(strToExplode, index, strToExplode.length() - index));
 					};
 					return true;
@@ -629,60 +625,58 @@ namespace XYO {
 				static inline TString implode(const TString &delimiter, TDynamicArray<TString> &in) {
 					TString retV;
 					size_t k;
-					if(in.length() < 1) {
+					if (in.length() < 1) {
 						return retV;
 					};
 					retV = in[0];
-					for(k = 1; k < in.length(); ++k) {
+					for (k = 1; k < in.length(); ++k) {
 						retV += delimiter;
 						retV += in[k];
 					};
 					return retV;
 				};
-
 		};
 
-		template<typename U>
-		struct TComparator<TString<U> > {
-			typedef TString<U> T;
+		template <typename U>
+		struct TComparator<TString<U>> {
+				typedef TString<U> T;
 
-			static inline bool isEqual(const T &x, const T &y) {
-				return const_cast<T &>(x) == const_cast<T &>(y);
-			};
+				static inline bool isEqual(const T &x, const T &y) {
+					return const_cast<T &>(x) == const_cast<T &>(y);
+				};
 
-			static inline bool isNotEqual(const T &x, const T &y) {
-				return const_cast<T &>(x) != const_cast<T &>(y);
-			};
+				static inline bool isNotEqual(const T &x, const T &y) {
+					return const_cast<T &>(x) != const_cast<T &>(y);
+				};
 
-			static inline bool isLess(const T &x, const T &y) {
-				return const_cast<T &>(x) < const_cast<T &>(y);
-			};
+				static inline bool isLess(const T &x, const T &y) {
+					return const_cast<T &>(x) < const_cast<T &>(y);
+				};
 
-			static inline bool isGreater(const T &x, const T &y) {
-				return const_cast<T &>(x) > const_cast<T &>(y);
-			};
+				static inline bool isGreater(const T &x, const T &y) {
+					return const_cast<T &>(x) > const_cast<T &>(y);
+				};
 
-			static inline bool isLessOrEqual(const T &x, const T &y) {
-				return const_cast<T &>(x) <= const_cast<T &>(y);
-			};
+				static inline bool isLessOrEqual(const T &x, const T &y) {
+					return const_cast<T &>(x) <= const_cast<T &>(y);
+				};
 
-			static inline bool isGreaterOrEqual(const T &x, const T &y) {
-				return const_cast<T &>(x) >= const_cast<T &>(y);
-			};
+				static inline bool isGreaterOrEqual(const T &x, const T &y) {
+					return const_cast<T &>(x) >= const_cast<T &>(y);
+				};
 
-			static inline int compare(const T &x, const T &y) {
-				return (const_cast<T &>(x)).compare(const_cast<T &>(y));
-			};
+				static inline int compare(const T &x, const T &y) {
+					return (const_cast<T &>(x)).compare(const_cast<T &>(y));
+				};
 		};
 
 	};
 
 	namespace ManagedMemory {
-		template<typename T>
-		struct TMemory<DataStructures::TString<T> > : TMemoryPoolActive<DataStructures::TString<T> > {
+		template <typename T>
+		struct TMemory<DataStructures::TString<T>> : TMemoryPoolActive<DataStructures::TString<T>> {
 		};
 	};
 };
 
 #endif
-

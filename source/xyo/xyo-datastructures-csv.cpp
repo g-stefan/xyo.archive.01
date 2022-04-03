@@ -27,10 +27,10 @@ namespace XYO {
 				String lineX;
 				String trimElements = " \t\r\n";
 				csvFile.empty();
-				if(file.openRead(fileName)) {
-					while(StreamX::readLn(file, line, 16384)) {
+				if (file.openRead(fileName)) {
+					while (StreamX::readLn(file, line, 16384)) {
 						lineX = String::trimWithElement(line, trimElements);
-						if(!decode(lineX, csvFile.push())) {
+						if (!decode(lineX, csvFile.push())) {
 							return false;
 						};
 					};
@@ -43,10 +43,10 @@ namespace XYO {
 			bool save(const char *fileName, CSVFile &csvFile) {
 				File file;
 				String line;
-				if(file.openWrite(fileName)) {
+				if (file.openWrite(fileName)) {
 					size_t k;
-					for(k = 0; k < csvFile.length(); ++k) {
-						if(!encode(line, csvFile[k])) {
+					for (k = 0; k < csvFile.length(); ++k) {
+						if (!encode(line, csvFile[k])) {
 							return false;
 						};
 						StreamX::write(file, line);
@@ -66,19 +66,19 @@ namespace XYO {
 				csvRow.empty();
 				out_ = "";
 				ln = 0;
-				for(k = 0; k < csvLine.length(); ++k) {
-					if(csvLine[k] == ',') {
+				for (k = 0; k < csvLine.length(); ++k) {
+					if (csvLine[k] == ',') {
 						csvRow[ln] = out_;
 						ln++;
 						out_ = "";
 						continue;
 					};
-					if(csvLine[k] == '\"') {
+					if (csvLine[k] == '\"') {
 						++k;
-						for(; k < csvLine.length(); ++k) {
-							if(csvLine[k] == '\"') {
-								if(k + 1 < csvLine.length()) {
-									if(csvLine[k + 1] == '\"') {
+						for (; k < csvLine.length(); ++k) {
+							if (csvLine[k] == '\"') {
+								if (k + 1 < csvLine.length()) {
+									if (csvLine[k + 1] == '\"') {
 										out_ << '\"';
 										++k;
 										continue;
@@ -107,30 +107,30 @@ namespace XYO {
 				size_t sz;
 
 				useComa = false;
-				for(k = 0; k < csvRow.length(); ++k) {
-					if(useComa) {
+				for (k = 0; k < csvRow.length(); ++k) {
+					if (useComa) {
 						csvLine << ',';
 					};
 					useEscape = false;
-					if(String::indexOf(csvRow[k], " ", 0, sz)) {
+					if (String::indexOf(csvRow[k], " ", 0, sz)) {
 						useEscape = true;
 					};
-					if(String::indexOf(csvRow[k], "\t", 0, sz)) {
+					if (String::indexOf(csvRow[k], "\t", 0, sz)) {
 						useEscape = true;
 					};
-					if(String::indexOf(csvRow[k], ",", 0, sz)) {
+					if (String::indexOf(csvRow[k], ",", 0, sz)) {
 						useEscape = true;
 					};
-					if(useEscape) {
+					if (useEscape) {
 						csvLine << '"';
 					};
-					if(String::indexOf(csvRow[k], "\"", 0, sz)) {
+					if (String::indexOf(csvRow[k], "\"", 0, sz)) {
 						useEscape = true;
 						csvLine << String::replace(csvRow[k], "\"", "\"\"");
 					} else {
 						csvLine << csvRow[k];
 					};
-					if(useEscape) {
+					if (useEscape) {
 						csvLine << '"';
 					};
 					useComa = true;
@@ -142,4 +142,3 @@ namespace XYO {
 		};
 	};
 };
-

@@ -10,11 +10,11 @@
 #ifndef XYO_CC_COPYRIGHT_HPP
 #define XYO_CC_COPYRIGHT_HPP
 
-#define XYO_CC_COPYRIGHT            "Copyright (c) Grigore Stefan"
-#define XYO_CC_PUBLISHER            "Grigore Stefan"
-#define XYO_CC_COMPANY              XYO_CC_PUBLISHER
-#define XYO_CC_CONTACT              "g_stefan@yahoo.com"
-#define XYO_CC_FULL_COPYRIGHT       XYO_CC_COPYRIGHT " <" XYO_CC_CONTACT ">"
+#define XYO_CC_COPYRIGHT "Copyright (c) Grigore Stefan"
+#define XYO_CC_PUBLISHER "Grigore Stefan"
+#define XYO_CC_COMPANY XYO_CC_PUBLISHER
+#define XYO_CC_CONTACT "g_stefan@yahoo.com"
+#define XYO_CC_FULL_COPYRIGHT XYO_CC_COPYRIGHT " <" XYO_CC_CONTACT ">"
 
 #ifndef XYO_RC
 

@@ -17,9 +17,9 @@ namespace XYO {
 
 			void finalizeResource(RegistryDataNode *this_) {
 				RegistryDataNode *scan;
-				for(scan=this_; scan; scan=scan->next) {
-					if(scan->resourceThis) {
-						if(scan->finalizeResource) {
+				for (scan = this_; scan; scan = scan->next) {
+					if (scan->resourceThis) {
+						if (scan->finalizeResource) {
 							(*scan->finalizeResource)(scan->resourceThis);
 						};
 					};
@@ -28,9 +28,9 @@ namespace XYO {
 
 			void deleteResource(RegistryDataNode *this_) {
 				RegistryDataNode *scan;
-				for(scan=this_; scan; scan=scan->next) {
-					if(scan->resourceThis) {
-						if(scan->deleteResource) {
+				for (scan = this_; scan; scan = scan->next) {
+					if (scan->resourceThis) {
+						if (scan->deleteResource) {
 							(*scan->deleteResource)(scan->resourceThis);
 						};
 					};
@@ -40,4 +40,3 @@ namespace XYO {
 		};
 	};
 };
-

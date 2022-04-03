@@ -11,7 +11,7 @@
 #define XYO_MANAGEDMEMORY_TIFHASPOINTERLINK_HPP
 
 #ifndef XYO_DATASTRUCTURES_TGETCLASSOFMEMBER_HPP
-#include "xyo-datastructures-tgetclassofmember.hpp"
+#	include "xyo-datastructures-tgetclassofmember.hpp"
 #endif
 
 namespace XYO {
@@ -20,20 +20,21 @@ namespace XYO {
 
 		class Object;
 
-		template<typename T>
+		template <typename T>
 		class THasPointerLink {
 			protected:
-				template <typename U, void (U::*)(Object *)> struct TCheckMember;
+				template <typename U, void (U::*)(Object *)>
+				struct TCheckMember;
 
 				template <typename U>
-				static char TTestMember(TCheckMember<U, &U::pointerLink > *);
+				static char TTestMember(TCheckMember<U, &U::pointerLink> *);
 
 				template <typename U>
 				static int TTestMember(...);
 
-				template<typename U>
+				template <typename U>
 				struct THasMember {
-					static const bool value = sizeof(TTestMember<U>(nullptr)) == sizeof(char);
+						static const bool value = sizeof(TTestMember<U>(nullptr)) == sizeof(char);
 				};
 
 				template <typename U>
@@ -42,55 +43,49 @@ namespace XYO {
 				template <typename U>
 				static int TTestBaseMember(...);
 
-				template<typename U>
+				template <typename U>
 				struct THasBaseMember {
-					static const bool value = sizeof(TTestBaseMember<U>(nullptr)) == sizeof(char);
+						static const bool value = sizeof(TTestBaseMember<U>(nullptr)) == sizeof(char);
 				};
 
-				template<typename U, bool hasBase>
+				template <typename U, bool hasBase>
 				struct TProcessBaseMember {
-					static const bool value = false;
+						static const bool value = false;
 				};
 
-				template<typename U>
+				template <typename U>
 				struct TProcessBaseMember<U, true> {
-					static const bool value = THasMember<decltype(TGetClassOfMember(&U::pointerLink))>::value;
+						static const bool value = THasMember<decltype(TGetClassOfMember(&U::pointerLink))>::value;
 				};
 
 			public:
-
 				static const bool value = THasMember<T>::value | TProcessBaseMember<T, THasBaseMember<T>::value>::value;
 		};
 
-
-		template<typename T, bool hasPointerLink>
+		template <typename T, bool hasPointerLink>
 		struct TIfHasPointerLinkBase {
 
-			static inline void pointerLink(T *this_, Object *link_) {
-			};
+				static inline void pointerLink(T *this_, Object *link_){};
 
-			static inline void pointerLinkArray(T *this_, Object *link_, size_t length) {
-			};
-
+				static inline void pointerLinkArray(T *this_, Object *link_, size_t length){};
 		};
 
-		template<typename T>
-		struct TIfHasPointerLinkBase<T, true > {
+		template <typename T>
+		struct TIfHasPointerLinkBase<T, true> {
 
-			static inline void pointerLink(T *this_, Object *link_) {
-				this_->pointerLink(link_);
-			};
-
-			static inline void pointerLinkArray(T *this_, Object *link_, size_t length) {
-				size_t k;
-				for(k = 0; k < length; ++k) {
-					this_[k].pointerLink(link_);
+				static inline void pointerLink(T *this_, Object *link_) {
+					this_->pointerLink(link_);
 				};
-			};
 
+				static inline void pointerLinkArray(T *this_, Object *link_, size_t length) {
+					size_t k;
+					for (k = 0; k < length; ++k) {
+						this_[k].pointerLink(link_);
+					};
+				};
 		};
 
-		template<typename T>
+		template <typename T>
 		struct TIfHasPointerLink : TIfHasPointerLinkBase<T, THasPointerLink<T>::value> {
 		};
 
@@ -98,4 +93,3 @@ namespace XYO {
 };
 
 #endif
-

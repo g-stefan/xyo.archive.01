@@ -17,22 +17,22 @@ namespace XYOCC {
 
 		int filterOptions(int options) {
 			int retV = 0;
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				retV |= CompilerOptions::Debug;
 			} else {
 				retV |= CompilerOptions::Release;
 			};
-			if(options & CompilerOptions::CRTStatic) {
+			if (options & CompilerOptions::CRTStatic) {
 				retV |= CompilerOptions::CRTStatic;
 			} else {
 				retV |= CompilerOptions::CRTDynamic;
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				retV |= CompilerOptions::StaticLibrary;
 			} else {
 				retV |= CompilerOptions::DynamicLibrary;
 			};
-			if(options & CompilerOptions::DynamicLibraryXStatic) {
+			if (options & CompilerOptions::DynamicLibraryXStatic) {
 				retV &= ~CompilerOptions::CRTDynamic;
 				retV &= ~CompilerOptions::StaticLibrary;
 				retV |= CompilerOptions::DynamicLibraryXStatic;
@@ -43,31 +43,31 @@ namespace XYOCC {
 		};
 
 		bool versionBuildBump(
-			String versionIni,
-			String projectName) {
+		    String versionIni,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
 			int versionBuild;
 			char buf[32];
 			DateTime now;
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "build", value)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "build", value)) {
 					value = "0";
 				};
-				if(sscanf(value.value(), "%d", &versionBuild)!=1) {
-					versionBuild=0;
+				if (sscanf(value.value(), "%d", &versionBuild) != 1) {
+					versionBuild = 0;
 				}
 				++versionBuild;
 				sprintf(buf, "%d", versionBuild);
-				if(!INIFileX::set(versionInfo, projectName, "build", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "build", buf)) {
 					return false;
 				};
 				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
 				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};
 				return INIFileX::save(versionIni, versionInfo);
@@ -76,8 +76,8 @@ namespace XYOCC {
 		};
 
 		bool versionPatchBump(
-			String versionIni,
-			String projectName) {
+		    String versionIni,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
 			int versionPatch;
@@ -85,26 +85,26 @@ namespace XYOCC {
 			int versionMajor;
 			char buf[32];
 			DateTime now;
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "version", value)) {
 					value = "0.0.0";
 				};
-				if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
-					versionMajor=0;
-					versionMinor=0;
-					versionPatch=0;
+				if (sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch) != 3) {
+					versionMajor = 0;
+					versionMinor = 0;
+					versionPatch = 0;
 				};
 				++versionPatch;
 				sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
-				if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "version", buf)) {
 					return false;
 				};
 				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
 				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};
 				return INIFileX::save(versionIni, versionInfo);
@@ -113,8 +113,8 @@ namespace XYOCC {
 		};
 
 		bool versionMinorBump(
-			String versionIni,
-			String projectName) {
+		    String versionIni,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
 			int versionPatch;
@@ -122,27 +122,27 @@ namespace XYOCC {
 			int versionMajor;
 			char buf[32];
 			DateTime now;
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "version", value)) {
 					value = "0.0.0";
 				};
-				if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
-					versionMajor=0;
-					versionMinor=0;
-					versionPatch=0;
+				if (sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch) != 3) {
+					versionMajor = 0;
+					versionMinor = 0;
+					versionPatch = 0;
 				};
 				versionPatch = 0;
 				++versionMinor;
 				sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
-				if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "version", buf)) {
 					return false;
 				};
 				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
 				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};
 				return INIFileX::save(versionIni, versionInfo);
@@ -151,8 +151,8 @@ namespace XYOCC {
 		};
 
 		bool versionMajorBump(
-			String versionIni,
-			String projectName) {
+		    String versionIni,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
 			int versionPatch;
@@ -160,28 +160,28 @@ namespace XYOCC {
 			int versionMajor;
 			char buf[32];
 			DateTime now;
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "version", value)) {
 					value = "0.0.0";
 				};
-				if(sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch)!=3) {
-					versionMajor=0;
-					versionMinor=0;
-					versionPatch=0;
+				if (sscanf(value.value(), "%d.%d.%d", &versionMajor, &versionMinor, &versionPatch) != 3) {
+					versionMajor = 0;
+					versionMinor = 0;
+					versionPatch = 0;
 				};
 				versionPatch = 0;
 				versionMinor = 0;
 				++versionMajor;
 				sprintf(buf, "%d.%d.%d", versionMajor, versionMinor, versionPatch);
-				if(!INIFileX::set(versionInfo, projectName, "version", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "version", buf)) {
 					return false;
 				};
 				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
 				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};
 				return INIFileX::save(versionIni, versionInfo);
@@ -190,13 +190,13 @@ namespace XYOCC {
 		};
 
 		bool versionProcessTemplate(
-			String versionIni,
-			String projectName,
-			String templateIn,
-			String fileOut,
-			size_t maxLineSize) {
+		    String versionIni,
+		    String projectName,
+		    String templateIn,
+		    String fileOut,
+		    size_t maxLineSize) {
 			INIFile versionInfo;
-			TDynamicArray<TDynamicArray<String> > replace;
+			TDynamicArray<TDynamicArray<String>> replace;
 			String value;
 			String datetime;
 			char buf[64];
@@ -217,123 +217,123 @@ namespace XYOCC {
 			d = 0;
 
 			sprintf(buf, "%04u-%02u-%02u %02u:%02u:%02u",
-				now.getYear(), now.getMonth(), now.getDay(),
-				now.getHour(), now.getMinute(), now.getSecond());
+			        now.getYear(), now.getMonth(), now.getDay(),
+			        now.getHour(), now.getMinute(), now.getSecond());
 			replace[3][1] = buf;
 
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (INIFileX::get(versionInfo, projectName, "version", value)) {
 					replace[1][1] = value;
-					if(sscanf(value.value(), "%d.%d.%d", &a, &b, &c)!=3) {
-						a=0;
-						b=0;
-						c=0;
+					if (sscanf(value.value(), "%d.%d.%d", &a, &b, &c) != 3) {
+						a = 0;
+						b = 0;
+						c = 0;
 					};
 				};
-				if(INIFileX::get(versionInfo, projectName, "build", value)) {
+				if (INIFileX::get(versionInfo, projectName, "build", value)) {
 					replace[2][1] = value;
-					if(sscanf(value.value(), "%d", &d)!=1) {
-						d=0;
+					if (sscanf(value.value(), "%d", &d) != 1) {
+						d = 0;
 					};
 				};
 
 				sprintf(buf, "%d,%d,%d,%d", a, b, c, d);
 				replace[0][1] = buf;
 
-				if(!INIFileX::get(versionInfo, projectName, "date", value)) {
+				if (!INIFileX::get(versionInfo, projectName, "date", value)) {
 					sprintf(buf, "%04u-%02u-%02u",
-						now.getYear(), now.getMonth(), now.getDay());
+					        now.getYear(), now.getMonth(), now.getDay());
 					value = buf;
 				};
 				datetime = value;
 				datetime += " ";
-				if(!INIFileX::get(versionInfo, projectName, "time", value)) {
+				if (!INIFileX::get(versionInfo, projectName, "time", value)) {
 					sprintf(buf, "%02u:%02u:%02u",
-						now.getHour(), now.getMinute(), now.getSecond());
+					        now.getHour(), now.getMinute(), now.getSecond());
 					value = buf;
 				};
 				datetime += value;
 				replace[3][1] = datetime;
 				return Shell::fileReplaceText(
-						templateIn,
-						fileOut,
-						replace,
-						maxLineSize);
+				    templateIn,
+				    fileOut,
+				    replace,
+				    maxLineSize);
 			};
 			return false;
 		};
 
 		bool versionSetVersion(
-			String versionIni,
-			String projectName,
-			String version) {
+		    String versionIni,
+		    String projectName,
+		    String version) {
 			INIFile versionInfo;
 			char buf[32];
 			DateTime now;
-			if(INIFileX::load(versionIni, versionInfo)) {
-				if(!INIFileX::set(versionInfo, projectName, "version", version)) {
+			if (INIFileX::load(versionIni, versionInfo)) {
+				if (!INIFileX::set(versionInfo, projectName, "version", version)) {
 					return false;
 				};
 				sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-				if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 					return false;
 				};
 				sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-				if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+				if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 					return false;
 				};
 				return INIFileX::save(versionIni, versionInfo);
 			};
 			versionInfo.empty();
-			if(!INIFileX::set(versionInfo, projectName, "version", version)) {
+			if (!INIFileX::set(versionInfo, projectName, "version", version)) {
 				return false;
 			};
-			if(!INIFileX::set(versionInfo, projectName, "build", "0")) {
+			if (!INIFileX::set(versionInfo, projectName, "build", "0")) {
 				return false;
 			};
 			sprintf(buf, "%04u-%02u-%02u", now.getYear(), now.getMonth(), now.getDay());
-			if(!INIFileX::set(versionInfo, projectName, "date", buf)) {
+			if (!INIFileX::set(versionInfo, projectName, "date", buf)) {
 				return false;
 			};
 			sprintf(buf, "%02u:%02u:%02u", now.getHour(), now.getMinute(), now.getSecond());
-			if(!INIFileX::set(versionInfo, projectName, "time", buf)) {
+			if (!INIFileX::set(versionInfo, projectName, "time", buf)) {
 				return false;
 			};
 			return INIFileX::save(versionIni, versionInfo);
 		};
 
 		bool versionProcess(
-			String versionFile,
-			String projectName,
-			String sourcePath,
-			String includePath,
-			size_t maxLineSize) {
+		    String versionFile,
+		    String projectName,
+		    String sourcePath,
+		    String includePath,
+		    size_t maxLineSize) {
 
-			if(!versionProcessTemplate(versionFile,
-					projectName,
-					sourcePath + "/" + projectName + "-version.template.hpp",
-					includePath + "/" + projectName + "-version.hpp",
-					maxLineSize)) {
+			if (!versionProcessTemplate(versionFile,
+			                            projectName,
+			                            sourcePath + "/" + projectName + "-version.template.hpp",
+			                            includePath + "/" + projectName + "-version.hpp",
+			                            maxLineSize)) {
 				return false;
 			};
-			if(!versionProcessTemplate(versionFile,
-					projectName,
-					sourcePath + "/" + projectName + "-version.template.cpp",
-					sourcePath + "/" + projectName + "-version.cpp",
-					maxLineSize)) {
+			if (!versionProcessTemplate(versionFile,
+			                            projectName,
+			                            sourcePath + "/" + projectName + "-version.template.cpp",
+			                            sourcePath + "/" + projectName + "-version.cpp",
+			                            maxLineSize)) {
 				return false;
 			};
 			return true;
 		};
 
 		bool bumpVersionBuild(
-			String versionFile,
-			String projectName,
-			String sourcePath,
-			String includePath,
-			size_t maxLineSize) {
-			if(!versionBuildBump(versionFile, projectName)) {
-				if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+		    String versionFile,
+		    String projectName,
+		    String sourcePath,
+		    String includePath,
+		    size_t maxLineSize) {
+			if (!versionBuildBump(versionFile, projectName)) {
+				if (!versionSetVersion(versionFile, projectName, "0.0.0")) {
 					return false;
 				};
 			};
@@ -341,13 +341,13 @@ namespace XYOCC {
 		};
 
 		bool bumpVersionPatch(
-			String versionFile,
-			String projectName,
-			String sourcePath,
-			String includePath,
-			size_t maxLineSize) {
-			if(!versionPatchBump(versionFile, projectName)) {
-				if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+		    String versionFile,
+		    String projectName,
+		    String sourcePath,
+		    String includePath,
+		    size_t maxLineSize) {
+			if (!versionPatchBump(versionFile, projectName)) {
+				if (!versionSetVersion(versionFile, projectName, "0.0.0")) {
 					return false;
 				};
 			};
@@ -355,13 +355,13 @@ namespace XYOCC {
 		};
 
 		bool bumpVersionMinor(
-			String versionFile,
-			String projectName,
-			String sourcePath,
-			String includePath,
-			size_t maxLineSize) {
-			if(!versionMinorBump(versionFile, projectName)) {
-				if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+		    String versionFile,
+		    String projectName,
+		    String sourcePath,
+		    String includePath,
+		    size_t maxLineSize) {
+			if (!versionMinorBump(versionFile, projectName)) {
+				if (!versionSetVersion(versionFile, projectName, "0.0.0")) {
 					return false;
 				};
 			};
@@ -369,13 +369,13 @@ namespace XYOCC {
 		};
 
 		bool bumpVersionMajor(
-			String versionFile,
-			String projectName,
-			String sourcePath,
-			String includePath,
-			size_t maxLineSize) {
-			if(!versionMajorBump(versionFile, projectName)) {
-				if(!versionSetVersion(versionFile, projectName, "0.0.0")) {
+		    String versionFile,
+		    String projectName,
+		    String sourcePath,
+		    String includePath,
+		    size_t maxLineSize) {
+			if (!versionMajorBump(versionFile, projectName)) {
+				if (!versionSetVersion(versionFile, projectName, "0.0.0")) {
 					return false;
 				};
 			};
@@ -383,43 +383,45 @@ namespace XYOCC {
 		};
 
 		String getVersionHash(
-			String versionFile,
-			String projectName) {
+		    String versionFile,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
 			String hash;
-			if(INIFileX::load(versionFile, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionFile, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "version", value)) {
 					value = "0.0.0";
 				};
 				hash = value;
-				if(!INIFileX::get(versionInfo, projectName, "build", value)) {
+				if (!INIFileX::get(versionInfo, projectName, "build", value)) {
 					value = "0";
 				};
 				hash << "." << value;
-				if(!INIFileX::get(versionInfo, projectName, "date", value)) {
+				if (!INIFileX::get(versionInfo, projectName, "date", value)) {
 					value = "date-unknown";
 				};
 				hash << "." << value;
-				if(!INIFileX::get(versionInfo, projectName, "time", value)) {
+				if (!INIFileX::get(versionInfo, projectName, "time", value)) {
 					value = "time-unknown";
 				};
 				hash << "." << value;
 				return MD5::getHashString(hash);
 			};
 			hash = "0.0.0.0";
-			hash << "." << "date-unknown";
-			hash << "." << "time-unknown";
+			hash << "."
+			     << "date-unknown";
+			hash << "."
+			     << "time-unknown";
 			return MD5::getHashString(hash);
 		};
 
 		String getVersion(
-			String versionFile,
-			String projectName) {
+		    String versionFile,
+		    String projectName) {
 			INIFile versionInfo;
 			String value;
-			if(INIFileX::load(versionFile, versionInfo)) {
-				if(!INIFileX::get(versionInfo, projectName, "version", value)) {
+			if (INIFileX::load(versionFile, versionInfo)) {
+				if (!INIFileX::get(versionInfo, projectName, "version", value)) {
 					value = "0.0.0";
 				};
 				return value;
@@ -430,9 +432,9 @@ namespace XYOCC {
 		bool matchPlatform(const String &platform) {
 
 #ifdef XYO_PLATFORM_DEF
-#define XYO_PLATFORM_STR_B(X) #X
-#define XYO_PLATFORM_STR_A(X) XYO_PLATFORM_STR_B(X)
-#define XYO_PLATFORM XYO_PLATFORM_STR_A(XYO_PLATFORM_DEF)
+#	define XYO_PLATFORM_STR_B(X) #        X
+#	define XYO_PLATFORM_STR_A(X) XYO_PLATFORM_STR_B(X)
+#	define XYO_PLATFORM XYO_PLATFORM_STR_A(XYO_PLATFORM_DEF)
 #endif
 
 #ifdef XYO_PLATFORM
@@ -440,7 +442,6 @@ namespace XYOCC {
 #else
 			return false;
 #endif
-
 		};
 
 		String getPlatform() {
@@ -452,49 +453,49 @@ namespace XYOCC {
 		};
 
 		bool loadDependency(
-			INIFile &dependencyInfo,
-			const String &projectName,
-			const String &localDependencyPath,
-			TDynamicArray<String> &repositoryDependencyPath,
-			bool isLoaded) {
-			if((INIFileX::hasSection(dependencyInfo, projectName)) && (!isLoaded)) {
+		    INIFile &dependencyInfo,
+		    const String &projectName,
+		    const String &localDependencyPath,
+		    TDynamicArray<String> &repositoryDependencyPath,
+		    bool isLoaded) {
+			if ((INIFileX::hasSection(dependencyInfo, projectName)) && (!isLoaded)) {
 				return true;
 			};
 			INIFile projectDependency;
-			if(isLoaded) {
-				if(!INIFileX::joinSection(projectDependency, projectName, dependencyInfo, projectName)) {
+			if (isLoaded) {
+				if (!INIFileX::joinSection(projectDependency, projectName, dependencyInfo, projectName)) {
 					return false;
 				};
 			} else {
 				String fileName;
 				fileName = localDependencyPath;
 				fileName << "/" << projectName << ".dependency.ini";
-				if(!INIFileX::load(fileName, projectDependency)) {
+				if (!INIFileX::load(fileName, projectDependency)) {
 					projectDependency.empty();
 					size_t k;
-					for(k = 0; k < repositoryDependencyPath.length(); ++k) {
+					for (k = 0; k < repositoryDependencyPath.length(); ++k) {
 						fileName = repositoryDependencyPath[k];
 						fileName << "/" << projectName << ".dependency.ini";
-						if(INIFileX::load(fileName, projectDependency)) {
+						if (INIFileX::load(fileName, projectDependency)) {
 							break;
 						};
 					};
-					if(k == repositoryDependencyPath.length()) {
+					if (k == repositoryDependencyPath.length()) {
 						return true;
 					};
 				};
-				if(!INIFileX::joinSection(dependencyInfo, projectName, projectDependency, projectName)) {
+				if (!INIFileX::joinSection(dependencyInfo, projectName, projectDependency, projectName)) {
 					return false;
 				};
 			};
 			size_t items = INIFileX::count(projectDependency, projectName, "project");
 			size_t k;
 			String nextDependency;
-			for(k = 0; k < items; ++k) {
-				if(!INIFileX::get(projectDependency, projectName, "project", nextDependency, k)) {
+			for (k = 0; k < items; ++k) {
+				if (!INIFileX::get(projectDependency, projectName, "project", nextDependency, k)) {
 					return false;
 				};
-				if(!loadDependency(dependencyInfo, nextDependency, localDependencyPath, repositoryDependencyPath, false)) {
+				if (!loadDependency(dependencyInfo, nextDependency, localDependencyPath, repositoryDependencyPath, false)) {
 					return false;
 				};
 			};
@@ -502,9 +503,9 @@ namespace XYOCC {
 		};
 
 		bool saveDependency(
-			INIFile &dependencyInfo,
-			const String &projectName,
-			const String &dependencyPath) {
+		    INIFile &dependencyInfo,
+		    const String &projectName,
+		    const String &dependencyPath) {
 			String fileName = dependencyPath;
 			fileName << "/" << projectName << ".dependency.ini";
 			INIFile projectDependency;
@@ -513,11 +514,11 @@ namespace XYOCC {
 		};
 
 		bool joinDependency(
-			INIFile &dependencyInfo,
-			const String &projectName,
-			INIFile &dependencyInfoSource,
-			const String &projectNameSource) {
-			if(INIFileX::hasKeyWithValue(dependencyInfo, projectName, "project.loaded", projectNameSource)) {
+		    INIFile &dependencyInfo,
+		    const String &projectName,
+		    INIFile &dependencyInfoSource,
+		    const String &projectNameSource) {
+			if (INIFileX::hasKeyWithValue(dependencyInfo, projectName, "project.loaded", projectNameSource)) {
 				return true;
 			};
 			size_t items;
@@ -527,11 +528,11 @@ namespace XYOCC {
 			items = INIFileX::count(dependencyInfoSource, projectNameSource, "project");
 			size_t k;
 			String nextDependency;
-			for(k = 0; k < items; ++k) {
-				if(!INIFileX::get(dependencyInfoSource, projectNameSource, "project", nextDependency, k)) {
+			for (k = 0; k < items; ++k) {
+				if (!INIFileX::get(dependencyInfoSource, projectNameSource, "project", nextDependency, k)) {
 					return false;
 				};
-				if(!joinDependency(dependencyInfo, projectName, dependencyInfoSource, nextDependency)) {
+				if (!joinDependency(dependencyInfo, projectName, dependencyInfoSource, nextDependency)) {
 					return false;
 				};
 			};
@@ -539,40 +540,40 @@ namespace XYOCC {
 		};
 
 		bool getDependency(
-			INIFile &dependencyInfo,
-			const String &projectName,
-			const String &localDependencyPath,
-			TDynamicArray<String> &repositoryDependencyPath,
-			bool isLoaded) {
+		    INIFile &dependencyInfo,
+		    const String &projectName,
+		    const String &localDependencyPath,
+		    TDynamicArray<String> &repositoryDependencyPath,
+		    bool isLoaded) {
 			INIFile dependency;
 			INIFile dependencyScan;
-			if(isLoaded) {
-				if(!INIFileX::joinSection(dependency, projectName, dependencyInfo, projectName)) {
+			if (isLoaded) {
+				if (!INIFileX::joinSection(dependency, projectName, dependencyInfo, projectName)) {
 					return false;
 				};
 			};
-			if(!loadDependency(dependency, projectName, localDependencyPath, repositoryDependencyPath, isLoaded)) {
+			if (!loadDependency(dependency, projectName, localDependencyPath, repositoryDependencyPath, isLoaded)) {
 				return false;
 			};
-			if(!joinDependency(
-					dependencyScan,
-					projectName,
-					dependency,
-					projectName)) {
+			if (!joinDependency(
+			        dependencyScan,
+			        projectName,
+			        dependency,
+			        projectName)) {
 				return false;
 			};
-			for(;;) {
-				if(!INIFileX::removeKey(dependencyScan, projectName, "project.loaded", 0)) {
+			for (;;) {
+				if (!INIFileX::removeKey(dependencyScan, projectName, "project.loaded", 0)) {
 					break;
 				};
 			};
 			size_t index;
-			if(!INIFileX::sectionIndex(dependencyScan, projectName, index)) {
+			if (!INIFileX::sectionIndex(dependencyScan, projectName, index)) {
 				return false;
 			};
-			for(++index; index < dependencyScan.length(); ++index) {
-				if(dependencyScan[index].type == INILineType::Value) {
-					if(!INIFileX::hasKeyWithValue(dependencyInfo, projectName, dependencyScan[index].key, dependencyScan[index].value)) {
+			for (++index; index < dependencyScan.length(); ++index) {
+				if (dependencyScan[index].type == INILineType::Value) {
+					if (!INIFileX::hasKeyWithValue(dependencyInfo, projectName, dependencyScan[index].key, dependencyScan[index].value)) {
 						INIFileX::insert(dependencyInfo, projectName, dependencyScan[index].key, dependencyScan[index].value);
 					};
 				};
@@ -581,23 +582,23 @@ namespace XYOCC {
 		};
 
 		bool checkDependencyVersion(
-			INIFile &projectDependency,
-			const String &projectName,
-			const String &localDependencyPath,
-			TDynamicArray<String> &repositoryDependencyPath,
-			bool &forceMake) {
+		    INIFile &projectDependency,
+		    const String &projectName,
+		    const String &localDependencyPath,
+		    TDynamicArray<String> &repositoryDependencyPath,
+		    bool &forceMake) {
 			INIFile localDependency;
 			INIFile localDependencyScan;
-			if(!INIFileX::joinSection(localDependency, projectName, projectDependency, projectName)) {
+			if (!INIFileX::joinSection(localDependency, projectName, projectDependency, projectName)) {
 				return false;
 			};
-			if(!loadDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, true)) {
+			if (!loadDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 				return false;
 			};
-			if(!INIFileX::joinSection(localDependencyScan, projectName, projectDependency, projectName)) {
+			if (!INIFileX::joinSection(localDependencyScan, projectName, projectDependency, projectName)) {
 				return false;
 			};
-			if(!getDependency(localDependencyScan, projectName, localDependencyPath, repositoryDependencyPath, true)) {
+			if (!getDependency(localDependencyScan, projectName, localDependencyPath, repositoryDependencyPath, true)) {
 				return false;
 			};
 			forceMake = false;
@@ -607,33 +608,33 @@ namespace XYOCC {
 			size_t k, m;
 			String project;
 			String version;
-			for(k = 0; k < items; ++k) {
-				if(!INIFileX::get(localDependencyScan, projectName, "project", project, k)) {
+			for (k = 0; k < items; ++k) {
+				if (!INIFileX::get(localDependencyScan, projectName, "project", project, k)) {
 					return false;
 				};
-				if(!Shell::fileExists(localDependencyPath + "/" + project + ".dependency.ini")) {
-					for(m = 0; m < repositoryDependencyPath.length(); ++m) {
-						if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
-							if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
-									localDependencyPath + "/" + project + ".dependency.ini")) {
+				if (!Shell::fileExists(localDependencyPath + "/" + project + ".dependency.ini")) {
+					for (m = 0; m < repositoryDependencyPath.length(); ++m) {
+						if (Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
+							if (!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
+							                     localDependencyPath + "/" + project + ".dependency.ini")) {
 								return false;
 							};
 							break;
 						};
 					};
 				};
-				for(m = 0; m < repositoryDependencyPath.length(); ++m) {
+				for (m = 0; m < repositoryDependencyPath.length(); ++m) {
 					repositoryDependency.empty();
-					if(INIFileX::load(repositoryDependencyPath[m] + "/" + project + ".dependency.ini", repositoryDependency)) {
+					if (INIFileX::load(repositoryDependencyPath[m] + "/" + project + ".dependency.ini", repositoryDependency)) {
 						String versionA;
 						String versionB;
-						if(!INIFileX::get(localDependency, project, "version.hash", versionA, 0)) {
+						if (!INIFileX::get(localDependency, project, "version.hash", versionA, 0)) {
 							return false;
 						};
-						if(!INIFileX::get(repositoryDependency, project, "version.hash", versionB, 0)) {
+						if (!INIFileX::get(repositoryDependency, project, "version.hash", versionB, 0)) {
 							return false;
 						};
-						if(versionA != versionB) {
+						if (versionA != versionB) {
 							forceMake = true;
 						};
 						break;
@@ -644,26 +645,26 @@ namespace XYOCC {
 		};
 
 		bool copyDependency(
-			const String &projectName,
-			const String &localDependencyPath,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    const String &projectName,
+		    const String &localDependencyPath,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			INIFile localDependency;
 			INIFile repositoryDependency;
-			if(!getDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, false)) {
+			if (!getDependency(localDependency, projectName, localDependencyPath, repositoryDependencyPath, false)) {
 				return false;
 			};
 			size_t items;
 			items = INIFileX::count(localDependency, projectName, "project");
 			size_t k, m;
 			String project;
-			for(k = 0; k < items; ++k) {
-				if(!INIFileX::get(localDependency, projectName, "project", project, k)) {
+			for (k = 0; k < items; ++k) {
+				if (!INIFileX::get(localDependency, projectName, "project", project, k)) {
 					return false;
 				};
-				for(m = 0; m < repositoryDependencyPath.length(); ++m) {
-					if(Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
-						if(!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
-								localDependencyPath + "/" + project + ".dependency.ini")) {
+				for (m = 0; m < repositoryDependencyPath.length(); ++m) {
+					if (Shell::fileExists(repositoryDependencyPath[m] + "/" + project + ".dependency.ini")) {
+						if (!Shell::copyFile(repositoryDependencyPath[m] + "/" + project + ".dependency.ini",
+						                     localDependencyPath + "/" + project + ".dependency.ini")) {
 							return false;
 						};
 						break;
@@ -675,18 +676,18 @@ namespace XYOCC {
 
 		String getPathRepository() {
 			String pathRepository = Shell::getEnv("XYO_PATH_REPOSITORY");
-			if(pathRepository.isEmpty()) {
+			if (pathRepository.isEmpty()) {
 				pathRepository = "./repository";
 			};
 			return pathRepository;
 		};
 
 		String getPathRelease(
-			const String &projectName,
-			const String &versionFile,
-			bool isRelease) {
+		    const String &projectName,
+		    const String &versionFile,
+		    bool isRelease) {
 			String pathRelease = Shell::getEnv("XYO_PATH_RELEASE");
-			if(pathRelease.isEmpty()) {
+			if (pathRelease.isEmpty()) {
 				pathRelease = "./release";
 			};
 			String releaseVersion = getVersion(versionFile, projectName);
@@ -697,7 +698,7 @@ namespace XYOCC {
 			String releasePlatform = getPlatform();
 			pathRelease += "-";
 			pathRelease += releasePlatform;
-			if(!isRelease) {
+			if (!isRelease) {
 				pathRelease += "-";
 				pathRelease += "debug";
 			};
@@ -705,11 +706,11 @@ namespace XYOCC {
 		};
 
 		String getPathReleaseVersion(
-			const String &projectName,
-			const String &releaseVersion,
-			bool isRelease) {
+		    const String &projectName,
+		    const String &releaseVersion,
+		    bool isRelease) {
 			String pathRelease = Shell::getEnv("XYO_PATH_RELEASE");
-			if(pathRelease.isEmpty()) {
+			if (pathRelease.isEmpty()) {
 				pathRelease = "./release";
 			};
 			pathRelease += "/";
@@ -719,7 +720,7 @@ namespace XYOCC {
 			String releasePlatform = getPlatform();
 			pathRelease += "-";
 			pathRelease += releasePlatform;
-			if(!isRelease) {
+			if (!isRelease) {
 				pathRelease += "-";
 				pathRelease += "debug";
 			};
@@ -727,49 +728,49 @@ namespace XYOCC {
 		};
 
 		bool loadVersionDependency(
-			const String &versionFile,
-			const String &projectName,
-			TRedBlackTree<String, String> &versionDependency) {
+		    const String &versionFile,
+		    const String &projectName,
+		    TRedBlackTree<String, String> &versionDependency) {
 			INIFile versionInfo;
 
 			versionDependency.empty();
 
-			if(!INIFileX::load(versionFile, versionInfo)) {
+			if (!INIFileX::load(versionFile, versionInfo)) {
 				return false;
 			};
 
-			INIFileX::getKeysAndValues(versionInfo, projectName+".dependency", versionDependency);
+			INIFileX::getKeysAndValues(versionInfo, projectName + ".dependency", versionDependency);
 
 			return true;
 		};
 
 		bool checkVersionDependencyRecursive(
-			TRedBlackTree<String, bool> &versionDependencyFlag,
-			TRedBlackTree<String, String> &versionDependency,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    TRedBlackTree<String, bool> &versionDependencyFlag,
+		    TRedBlackTree<String, String> &versionDependency,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			TRedBlackTree<String, String>::Node *scan;
 			String versionFile, version, versionValue;
 			String trimElements = " \t\r\n";
 			int m;
 
-			for(scan=versionDependency.begin(); scan!=nullptr; scan=scan->successor()) {
-				if(versionDependencyFlag.getValue(scan->key, false)) {
+			for (scan = versionDependency.begin(); scan != nullptr; scan = scan->successor()) {
+				if (versionDependencyFlag.getValue(scan->key, false)) {
 					continue;
 				};
-				versionFile=scan->key+".version.ini";
-				versionValue=String::trimWithElement(scan->value, trimElements);
+				versionFile = scan->key + ".version.ini";
+				versionValue = String::trimWithElement(scan->value, trimElements);
 
-				for(m = 0; m < repositoryDependencyPath.length(); ++m) {
-					if(Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
+				for (m = 0; m < repositoryDependencyPath.length(); ++m) {
+					if (Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
 						versionDependencyFlag.set(scan->key, true);
-						version=getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
-						if(version!=versionValue) {
+						version = getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
+						if (version != versionValue) {
 							return false;
 						};
 
 						TRedBlackTree<String, String> versionDependencyScan;
-						if(loadVersionDependency(repositoryDependencyPath[m] + "/" + versionFile, scan->key, versionDependencyScan)) {
-							if(!checkVersionDependencyRecursive(versionDependencyFlag, versionDependencyScan, repositoryDependencyPath)) {
+						if (loadVersionDependency(repositoryDependencyPath[m] + "/" + versionFile, scan->key, versionDependencyScan)) {
+							if (!checkVersionDependencyRecursive(versionDependencyFlag, versionDependencyScan, repositoryDependencyPath)) {
 								return false;
 							};
 						};
@@ -777,58 +778,56 @@ namespace XYOCC {
 						break;
 					};
 				};
-
 			};
 
 			return true;
 		};
 
 		bool checkVersionDependency(
-			TRedBlackTree<String, String> &versionDependency,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    TRedBlackTree<String, String> &versionDependency,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			TRedBlackTree<String, bool> versionDependencyFlag;
 
 			return checkVersionDependencyRecursive(versionDependencyFlag, versionDependency, repositoryDependencyPath);
 		};
 
 		bool setVersionDependency(
-			TRedBlackTree<String, String> &versionDependency,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    TRedBlackTree<String, String> &versionDependency,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			TRedBlackTree<String, String>::Node *scan;
 			String versionFile;
 			int m;
 
-			for(scan=versionDependency.begin(); scan!=nullptr; scan=scan->successor()) {
-				versionFile=scan->key+".version.ini";
+			for (scan = versionDependency.begin(); scan != nullptr; scan = scan->successor()) {
+				versionFile = scan->key + ".version.ini";
 
-				for(m = 0; m < repositoryDependencyPath.length(); ++m) {
-					if(Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
-						scan->value=getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
+				for (m = 0; m < repositoryDependencyPath.length(); ++m) {
+					if (Shell::fileExists(repositoryDependencyPath[m] + "/" + versionFile)) {
+						scan->value = getVersion(repositoryDependencyPath[m] + "/" + versionFile, scan->key);
 						break;
 					};
 				};
-
 			};
 
 			return true;
 		};
 
 		bool saveVersionDependency(
-			const String &versionFile,
-			const String &projectName,
-			TRedBlackTree<String, String> &versionDependency) {
+		    const String &versionFile,
+		    const String &projectName,
+		    TRedBlackTree<String, String> &versionDependency) {
 			TRedBlackTree<String, String>::Node *scan;
 			INIFile versionInfo;
 			String projectDependency;
 
-			if(!INIFileX::load(versionFile, versionInfo)) {
+			if (!INIFileX::load(versionFile, versionInfo)) {
 				return false;
 			};
 
-			projectDependency=projectName+".dependency";
+			projectDependency = projectName + ".dependency";
 
-			for(scan=versionDependency.begin(); scan!=nullptr; scan=scan->successor()) {
-				if(!INIFileX::set(versionInfo, projectDependency, scan->key, scan->value)) {
+			for (scan = versionDependency.begin(); scan != nullptr; scan = scan->successor()) {
+				if (!INIFileX::set(versionInfo, projectDependency, scan->key, scan->value)) {
 					return false;
 				};
 			};
@@ -837,20 +836,20 @@ namespace XYOCC {
 		};
 
 		bool updateVersionDependency(
-			const String &versionFile,
-			const String &projectName,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    const String &versionFile,
+		    const String &projectName,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			TRedBlackTree<String, String> versionDependency;
 
-			if(!loadVersionDependency(versionFile, projectName, versionDependency)) {
+			if (!loadVersionDependency(versionFile, projectName, versionDependency)) {
 				return false;
 			};
 
-			if(!setVersionDependency(versionDependency, repositoryDependencyPath)) {
+			if (!setVersionDependency(versionDependency, repositoryDependencyPath)) {
 				return false;
 			};
 
-			if(!saveVersionDependency(versionFile, projectName, versionDependency)) {
+			if (!saveVersionDependency(versionFile, projectName, versionDependency)) {
 				return false;
 			};
 
@@ -858,28 +857,28 @@ namespace XYOCC {
 		};
 
 		bool versionMinorBumpIfVersionDependencyMismatch(
-			const String &versionFile,
-			const String &projectName,
-			TDynamicArray<String> &repositoryDependencyPath) {
+		    const String &versionFile,
+		    const String &projectName,
+		    TDynamicArray<String> &repositoryDependencyPath) {
 			TRedBlackTree<String, String> versionDependency;
 
-			if(!loadVersionDependency(versionFile, projectName, versionDependency)) {
+			if (!loadVersionDependency(versionFile, projectName, versionDependency)) {
 				return false;
 			};
 
-			if(checkVersionDependency(versionDependency, repositoryDependencyPath)) {
+			if (checkVersionDependency(versionDependency, repositoryDependencyPath)) {
 				return false;
 			};
 
-			if(!versionMinorBump(versionFile, projectName)) {
+			if (!versionMinorBump(versionFile, projectName)) {
 				return false;
 			};
 
-			if(!setVersionDependency(versionDependency, repositoryDependencyPath)) {
+			if (!setVersionDependency(versionDependency, repositoryDependencyPath)) {
 				return false;
 			};
 
-			if(!saveVersionDependency(versionFile, projectName, versionDependency)) {
+			if (!saveVersionDependency(versionFile, projectName, versionDependency)) {
 				return false;
 			};
 
@@ -888,5 +887,3 @@ namespace XYOCC {
 
 	};
 };
-
-

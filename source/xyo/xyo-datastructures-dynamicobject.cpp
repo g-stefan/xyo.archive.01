@@ -29,7 +29,7 @@ namespace XYO {
 			DynamicTypeList::destructor(objectType_);
 		};
 
-		struct TypeRegistryNode: TXRedBlackTreeNode<TypeRegistryNode, const char *> {
+		struct TypeRegistryNode : TXRedBlackTreeNode<TypeRegistryNode, const char *> {
 		};
 
 		class TypeRegistry {
@@ -54,7 +54,7 @@ namespace XYO {
 		};
 
 		void DynamicObject::registerType(const void *&type, const char *key) {
-			if(type != nullptr) {
+			if (type != nullptr) {
 				return;
 			};
 
@@ -64,7 +64,7 @@ namespace XYO {
 			typeRegistry->criticalSection.enter();
 #endif
 			this_ = TypeRegistry::RBTree::find(typeRegistry->root, key);
-			if(this_ == nullptr) {
+			if (this_ == nullptr) {
 				this_ = TypeRegistry::RBTree::newNode();
 				this_->key = key;
 				TypeRegistry::RBTree::insertNode(typeRegistry->root, this_);
@@ -94,8 +94,8 @@ namespace XYO {
 
 		bool DynamicObject::objectTypeSearchNext(const void *type) {
 			DynamicTypeNode *node = objectType_->next;
-			for(; node != nullptr; node = node->next) {
-				if(node->type == type) {
+			for (; node != nullptr; node = node->next) {
+				if (node->type == type) {
 					return true;
 				};
 			};
@@ -108,5 +108,3 @@ namespace XYO {
 
 	};
 };
-
-

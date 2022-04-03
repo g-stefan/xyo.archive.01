@@ -11,31 +11,31 @@
 #define XYO_MANAGEDMEMORY_TPOINTER_HPP
 
 #ifndef XYO_MANAGEDMEMORY_OBJECT_HPP
-#include "xyo-managedmemory-object.hpp"
+#	include "xyo-managedmemory-object.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TTRANSFER_HPP
-#include "xyo-datastructures-ttransfer.hpp"
+#	include "xyo-datastructures-ttransfer.hpp"
 #endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemory;
 
-		template<typename T>
+		template <typename T>
 		class TPointerX;
 
 		//
 		// Executive link - part of return/function parameter/function variable
 		//
-		template<typename T>
+		template <typename T>
 		class TPointer {
 			protected:
 				T *object;
-			public:
 
+			public:
 				inline TPointer() {
 					object = nullptr;
 				};
@@ -202,23 +202,21 @@ namespace XYO {
 				inline void activeDestructor() {
 					deleteMemory();
 				};
-
 		};
 
 	};
 };
 
 #ifndef XYO_MANAGEDMEMORY_TPOINTER_X_TCOMPARATOR_HPP
-#include "xyo-managedmemory-tpointer-x-tcomparator.hpp"
+#	include "xyo-managedmemory-tpointer-x-tcomparator.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TPOINTERTYPE_HPP
-#include "xyo-managedmemory-tpointertype.hpp"
+#	include "xyo-managedmemory-tpointertype.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TPOINTERTYPEEXCLUDE_HPP
-#include "xyo-managedmemory-tpointertypeexclude.hpp"
+#	include "xyo-managedmemory-tpointertypeexclude.hpp"
 #endif
 
 #endif
-

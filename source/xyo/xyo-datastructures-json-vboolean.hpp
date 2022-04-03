@@ -11,11 +11,11 @@
 #define XYO_DATASTRUCTURES_JSON_VBOOLEAN_HPP
 
 #ifndef XYO_DATASTRUCTURES_JSON_VALUE_HPP
-#include "xyo-datastructures-json-value.hpp"
+#	include "xyo-datastructures-json-value.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -27,7 +27,7 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<>
+		template <>
 		struct TMemory<DataStructures::JSON::VBoolean> : TMemoryPoolActive<DataStructures::JSON::VBoolean> {};
 	};
 
@@ -44,7 +44,6 @@ namespace XYO {
 					XYO_DYNAMIC_TYPE_DEFINE(XYO_EXPORT, VBoolean);
 
 				public:
-
 					BooleanT value;
 
 					XYO_EXPORT VBoolean();

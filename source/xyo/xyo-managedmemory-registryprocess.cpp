@@ -58,13 +58,12 @@ namespace XYO {
 				List::destructor(data[RegistryLevel::System]);
 
 				RegistryKey::processEnd();
-
 			};
 
 			bool checkAndRegisterKey(const char *registryKey, void *&registryLink, const std::function<bool()> &valueIsNullptr, const std::function<void(void *)> &setValue) {
 				Registry::registryInit();
 
-				if(RegistryKey::checkAndRegisterKey(registryKey, reinterpret_cast<RegistryKeyNode *&>(registryLink))) {
+				if (RegistryKey::checkAndRegisterKey(registryKey, reinterpret_cast<RegistryKeyNode *&>(registryLink))) {
 					return true;
 				};
 
@@ -72,7 +71,7 @@ namespace XYO {
 
 #ifdef XYO_MULTI_THREAD
 
-				while(valueIsNullptr()) {
+				while (valueIsNullptr()) {
 					Thread::sleep(1);
 					setValue(reinterpret_cast<RegistryKeyNode *&>(registryLink)->processValue.get());
 				};
@@ -96,7 +95,7 @@ namespace XYO {
 
 			void *getKey(const char *registryKey) {
 				RegistryKeyNode *node = RegistryKey::getKey(registryKey);
-				if(node) {
+				if (node) {
 					return node->processValue;
 				};
 				return nullptr;
@@ -105,5 +104,3 @@ namespace XYO {
 		};
 	};
 };
-
-

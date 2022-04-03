@@ -8,20 +8,20 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 
-#include "xyo-system-processinteractive.hpp"
-#include "xyo-system-shell.hpp"
+#	include "xyo-system-processinteractive.hpp"
+#	include "xyo-system-shell.hpp"
 
 namespace XYO {
 	namespace System {
@@ -30,21 +30,20 @@ namespace XYO {
 
 		class ProcessInteractive_ {
 			public:
-
-				HANDLE  hStdIn1;
-				HANDLE  hStdIn2;
-				HANDLE  hStdOut1;
-				HANDLE  hStdOut2;
+				HANDLE hStdIn1;
+				HANDLE hStdIn2;
+				HANDLE hStdOut1;
+				HANDLE hStdOut2;
 
 				PROCESS_INFORMATION pInfo;
 
 				BOOL isOk;
 				DWORD returnValue;
 
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 				HPCON hPC;
 				LPPROC_THREAD_ATTRIBUTE_LIST threadAttributeList;
-#endif
+#	endif
 		};
 
 		ProcessInteractive::ProcessInteractive() {
@@ -57,10 +56,10 @@ namespace XYO {
 			this_->isOk = FALSE;
 			this_->returnValue = 0;
 			linkOwner_ = nullptr;
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			this_->hPC = INVALID_HANDLE_VALUE;
 			this_->threadAttributeList = nullptr;
-#endif
+#	endif
 		};
 
 		ProcessInteractive::~ProcessInteractive() {
@@ -84,32 +83,31 @@ namespace XYO {
 			secAttr.bInheritHandle = TRUE;
 			secAttr.lpSecurityDescriptor = nullptr;
 
-			if(!CreatePipe(&this_->hStdIn2, &this_->hStdIn1, &secAttr, 16384)) {
+			if (!CreatePipe(&this_->hStdIn2, &this_->hStdIn1, &secAttr, 16384)) {
 				this_->hStdIn1 = INVALID_HANDLE_VALUE;
 				this_->hStdIn2 = INVALID_HANDLE_VALUE;
 				close();
 				return false;
 			};
 
-			if(!SetHandleInformation(this_->hStdIn1, HANDLE_FLAG_INHERIT, 0)) {
+			if (!SetHandleInformation(this_->hStdIn1, HANDLE_FLAG_INHERIT, 0)) {
 				close();
 				return false;
 			};
 
-			if(!CreatePipe(&this_->hStdOut1, &this_->hStdOut2, &secAttr, 16384)) {
+			if (!CreatePipe(&this_->hStdOut1, &this_->hStdOut2, &secAttr, 16384)) {
 				this_->hStdOut1 = INVALID_HANDLE_VALUE;
 				this_->hStdOut2 = INVALID_HANDLE_VALUE;
 				close();
 				return false;
 			};
 
-			if(!SetHandleInformation(this_->hStdOut1, HANDLE_FLAG_INHERIT, 0)) {
+			if (!SetHandleInformation(this_->hStdOut1, HANDLE_FLAG_INHERIT, 0)) {
 				close();
 				return false;
 			};
 
-
-#ifdef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifdef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 
 			STARTUPINFO sInfo;
 			memset(&sInfo, 0, sizeof(STARTUPINFO));
@@ -123,28 +121,27 @@ namespace XYO {
 			sInfo.hStdError = this_->hStdOut2;
 
 			this_->isOk = CreateProcessA(
-					nullptr,
-					(LPSTR)cmdLine,
-					nullptr,
-					nullptr,
-					TRUE,
-					0,
-					nullptr,
-					nullptr,
-					&sInfo,
-					&this_->pInfo
-				);
+			    nullptr,
+			    (LPSTR)cmdLine,
+			    nullptr,
+			    nullptr,
+			    TRUE,
+			    0,
+			    nullptr,
+			    nullptr,
+			    &sInfo,
+			    &this_->pInfo);
 
-#else
+#	else
 
 			HRESULT hr = S_OK;
 
-			hr=CreatePseudoConsole(
-			{80, 64},
-			this_->hStdIn2,
-			this_->hStdOut2,
-			0,
-			&this_->hPC);
+			hr = CreatePseudoConsole(
+			    {80, 64},
+			    this_->hStdIn2,
+			    this_->hStdOut2,
+			    0,
+			    &this_->hPC);
 
 			if (FAILED(hr)) {
 				close();
@@ -155,7 +152,7 @@ namespace XYO {
 			memset(&sInfo, 0, sizeof(STARTUPINFOEX));
 			sInfo.StartupInfo.cb = sizeof(STARTUPINFOEX);
 
-			SIZE_T threadAttributeListSize=0;
+			SIZE_T threadAttributeListSize = 0;
 			InitializeProcThreadAttributeList(NULL, 1, 0, &threadAttributeListSize);
 			sInfo.lpAttributeList = (PPROC_THREAD_ATTRIBUTE_LIST)HeapAlloc(GetProcessHeap(), 0, threadAttributeListSize);
 			if (!sInfo.lpAttributeList) {
@@ -169,12 +166,12 @@ namespace XYO {
 			};
 
 			if (!UpdateProcThreadAttribute(sInfo.lpAttributeList,
-					0,
-					PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE,
-					this_->hPC,
-					sizeof(HPCON),
-					NULL,
-					NULL)) {
+			                               0,
+			                               PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE,
+			                               this_->hPC,
+			                               sizeof(HPCON),
+			                               NULL,
+			                               NULL)) {
 				HeapFree(GetProcessHeap(), 0, sInfo.lpAttributeList);
 				close();
 				return false;
@@ -183,64 +180,63 @@ namespace XYO {
 			this_->threadAttributeList = sInfo.lpAttributeList;
 
 			this_->isOk = CreateProcessA(
-					nullptr,
-					(LPSTR)cmdLine,
-					nullptr,
-					nullptr,
-					TRUE,
-					EXTENDED_STARTUPINFO_PRESENT,
-					nullptr,
-					nullptr,
-					&sInfo.StartupInfo,
-					&this_->pInfo
-				);
-#endif
+			    nullptr,
+			    (LPSTR)cmdLine,
+			    nullptr,
+			    nullptr,
+			    TRUE,
+			    EXTENDED_STARTUPINFO_PRESENT,
+			    nullptr,
+			    nullptr,
+			    &sInfo.StartupInfo,
+			    &this_->pInfo);
+#	endif
 
 			return (this_->isOk);
 		};
 
 		void ProcessInteractive::join() {
-			if(this_->isOk) {
+			if (this_->isOk) {
 
-				BYTE  buffer[16384];
+				BYTE buffer[16384];
 				DWORD bufferLn;
 				DWORD totalBufferLn;
 
 				bool isActive;
 
-				for(;;) {
+				for (;;) {
 
-					if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
-						if(totalBufferLn > 0) {
-							while(totalBufferLn > 16384) {
+					if (PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
+						if (totalBufferLn > 0) {
+							while (totalBufferLn > 16384) {
 								bufferLn = 16384;
-								if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+								if (!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
 									totalBufferLn = 0;
 									break;
 								};
 								totalBufferLn -= 16384;
 							};
-							if(totalBufferLn > 0) {
+							if (totalBufferLn > 0) {
 								bufferLn = totalBufferLn;
-								if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+								if (!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
 									continue;
 								};
 							};
 							continue;
 						};
-						if(WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
-							if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
-								while(totalBufferLn > 16384) {
+						if (WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
+							if (PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &totalBufferLn, nullptr)) {
+								while (totalBufferLn > 16384) {
 									bufferLn = 16384;
-									if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+									if (!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
 										totalBufferLn = 0;
 										break;
 									};
 									totalBufferLn -= 16384;
 								};
-								if(totalBufferLn > 0) {
+								if (totalBufferLn > 0) {
 									bufferLn = totalBufferLn;
-									if(!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
+									if (!ReadFile(this_->hStdOut1, buffer, bufferLn, &bufferLn, nullptr)) {
 										break;
 									};
 								};
@@ -250,10 +246,9 @@ namespace XYO {
 						continue;
 					};
 
-					if(WAIT_OBJECT_0 == WaitForSingleObject(this_->pInfo.hThread, 1)) {
+					if (WAIT_OBJECT_0 == WaitForSingleObject(this_->pInfo.hThread, 1)) {
 						break;
 					};
-
 				};
 			};
 		};
@@ -269,36 +264,36 @@ namespace XYO {
 
 			join();
 
-			if(this_->isOk) {
+			if (this_->isOk) {
 				GetExitCodeProcess(this_->pInfo.hProcess, &this_->returnValue);
 				CloseHandle(this_->pInfo.hThread);
 				CloseHandle(this_->pInfo.hProcess);
 			};
 
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
-			if(this_->hPC != INVALID_HANDLE_VALUE) {
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+			if (this_->hPC != INVALID_HANDLE_VALUE) {
 				ClosePseudoConsole(this_->hPC);
 				this_->hPC = INVALID_HANDLE_VALUE;
 			};
-			if(this_->threadAttributeList) {
+			if (this_->threadAttributeList) {
 				DeleteProcThreadAttributeList(this_->threadAttributeList);
 				HeapFree(GetProcessHeap(), 0, this_->threadAttributeList);
 				this_->threadAttributeList = nullptr;
 			};
-#endif
-			if(this_->hStdIn1 != INVALID_HANDLE_VALUE) {
+#	endif
+			if (this_->hStdIn1 != INVALID_HANDLE_VALUE) {
 				CloseHandle(this_->hStdIn1);
 				this_->hStdIn1 = INVALID_HANDLE_VALUE;
 			};
-			if(this_->hStdIn2 != INVALID_HANDLE_VALUE) {
+			if (this_->hStdIn2 != INVALID_HANDLE_VALUE) {
 				CloseHandle(this_->hStdIn2);
 				this_->hStdIn2 = INVALID_HANDLE_VALUE;
 			};
-			if(this_->hStdOut1 != INVALID_HANDLE_VALUE) {
+			if (this_->hStdOut1 != INVALID_HANDLE_VALUE) {
 				CloseHandle(this_->hStdOut1);
 				this_->hStdOut1 = INVALID_HANDLE_VALUE;
 			};
-			if(this_->hStdOut2 != INVALID_HANDLE_VALUE) {
+			if (this_->hStdOut2 != INVALID_HANDLE_VALUE) {
 				CloseHandle(this_->hStdOut2);
 				this_->hStdOut2 = INVALID_HANDLE_VALUE;
 			};
@@ -320,28 +315,27 @@ namespace XYO {
 		};
 
 		size_t ProcessInteractive::read(void *output, size_t ln_) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				DWORD ln;
 
-				if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &ln, nullptr)) {
-					if(ln > 0) {
-						if(ln > ln_) {
+				if (PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &ln, nullptr)) {
+					if (ln > 0) {
+						if (ln > ln_) {
 							ln = ln_;
 						};
-						if(ReadFile(this_->hStdOut1, output, ln, &ln, nullptr)) {
+						if (ReadFile(this_->hStdOut1, output, ln, &ln, nullptr)) {
 							return ln;
 						};
 					};
 				};
-
 			};
 			return 0;
 		};
 
 		size_t ProcessInteractive::write(const void *input, size_t ln_) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				DWORD ln = ln_;
-				if(WriteFile(this_->hStdIn1, input, ln, &ln, nullptr)) {
+				if (WriteFile(this_->hStdIn1, input, ln, &ln, nullptr)) {
 					return ln;
 				};
 			};
@@ -349,16 +343,16 @@ namespace XYO {
 		};
 
 		int ProcessInteractive::waitToRead(uint32_t microSeconds) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				DWORD ln;
 
-				for(; microSeconds > 0; --microSeconds) {
-					if(PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &ln, nullptr)) {
-						if(ln > 0) {
+				for (; microSeconds > 0; --microSeconds) {
+					if (PeekNamedPipe(this_->hStdOut1, nullptr, 0, nullptr, &ln, nullptr)) {
+						if (ln > 0) {
 							return 1;
 						};
 					};
-					if(WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
+					if (WAIT_TIMEOUT != WaitForSingleObject(this_->pInfo.hProcess, 1)) {
 						return -1;
 					};
 				};
@@ -378,10 +372,10 @@ namespace XYO {
 			memcpy(&this_->pInfo, &processInteractive_.this_->pInfo, sizeof(PROCESS_INFORMATION));
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			this_->hPC = processInteractive_.this_->hPC;
 			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
-#endif
+#	endif
 
 			processInteractive_.this_->hStdIn1 = INVALID_HANDLE_VALUE;
 			processInteractive_.this_->hStdIn2 = INVALID_HANDLE_VALUE;
@@ -391,10 +385,10 @@ namespace XYO {
 			processInteractive_.this_->isOk = 0;
 			processInteractive_.this_->returnValue = 0;
 
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			processInteractive_.this_->hPC = INVALID_HANDLE_VALUE;
 			processInteractive_.this_->threadAttributeList = nullptr;
-#endif
+#	endif
 		};
 
 		void ProcessInteractive::linkOwner(ProcessInteractive &processInteractive_) {
@@ -409,17 +403,17 @@ namespace XYO {
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
 
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			this_->hPC = processInteractive_.this_->hPC;
 			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
-#endif
+#	endif
 
 			linkOwner_ = &processInteractive_;
 			processInteractive_.linkOwner_ = this;
 		};
 
 		void ProcessInteractive::unLinkOwner() {
-			if(linkOwner_ != nullptr) {
+			if (linkOwner_ != nullptr) {
 
 				linkOwner_->this_->hStdIn1 = INVALID_HANDLE_VALUE;
 				linkOwner_->this_->hStdIn2 = INVALID_HANDLE_VALUE;
@@ -429,10 +423,10 @@ namespace XYO {
 				linkOwner_->this_->isOk = 0;
 				linkOwner_->this_->returnValue = 0;
 
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 				linkOwner_->this_->hPC = INVALID_HANDLE_VALUE;
 				linkOwner_->this_->threadAttributeList = nullptr;
-#endif
+#	endif
 
 				linkOwner_->linkOwner_ = nullptr;
 				linkOwner_ = nullptr;
@@ -449,10 +443,10 @@ namespace XYO {
 			memcpy(&this_->pInfo, &processInteractive_.this_->pInfo, sizeof(PROCESS_INFORMATION));
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			this_->hPC = processInteractive_.this_->hPC;
 			this_->threadAttributeList = processInteractive_.this_->threadAttributeList;
-#endif
+#	endif
 
 			linkOwner_ = processInteractive_.linkOwner_;
 
@@ -463,13 +457,13 @@ namespace XYO {
 			memset(&processInteractive_.this_->pInfo, 0, sizeof(PROCESS_INFORMATION));
 			processInteractive_.this_->isOk = 0;
 			processInteractive_.this_->returnValue = 0;
-#ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
+#	ifndef XYO_CONFIG_WINDOWS_DISABLE_CONPTY
 			processInteractive_.this_->hPC = INVALID_HANDLE_VALUE;
 			processInteractive_.this_->threadAttributeList = nullptr;
-#endif
+#	endif
 
 			processInteractive_.linkOwner_ = nullptr;
-			if(linkOwner_) {
+			if (linkOwner_) {
 				linkOwner_->linkOwner_ = this;
 			};
 		};

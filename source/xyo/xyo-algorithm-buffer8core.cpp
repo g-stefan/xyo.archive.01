@@ -14,7 +14,7 @@ namespace XYO {
 		namespace Buffer8Core {
 
 			void xorOperation(uint8_t *inOut, size_t inOutLn, const uint8_t *key, size_t keyLn) {
-				while((inOutLn > 0) && (keyLn > 0)) {
+				while ((inOutLn > 0) && (keyLn > 0)) {
 					*inOut ^= *key;
 					--inOutLn;
 					--keyLn;
@@ -24,11 +24,11 @@ namespace XYO {
 			};
 
 			void xorAvalancheEncode(uint8_t *data, size_t dataLn) {
-				if(dataLn == 0) {
+				if (dataLn == 0) {
 					return;
 				};
-				while(dataLn > 0) {
-					if(dataLn - 1 > 0) {
+				while (dataLn > 0) {
+					if (dataLn - 1 > 0) {
 						*(data + 1) ^= *data;
 					};
 					--dataLn;
@@ -37,13 +37,13 @@ namespace XYO {
 			};
 
 			void xorAvalancheDecode(uint8_t *data, size_t dataLn) {
-				if(dataLn == 0) {
+				if (dataLn == 0) {
 					return;
 				};
 				uint8_t last_ = *data;
 				uint8_t next_;
-				while(dataLn > 0) {
-					if(dataLn - 1 > 0) {
+				while (dataLn > 0) {
+					if (dataLn - 1 > 0) {
 						next_ = *(data + 1);
 						*(data + 1) ^= last_;
 						last_ = next_;
@@ -56,4 +56,3 @@ namespace XYO {
 		};
 	};
 };
-

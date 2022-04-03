@@ -8,12 +8,12 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include "xyo-networking-network.hpp"
+#	include "xyo-networking-network.hpp"
 
 namespace XYO {
 	namespace Networking {
@@ -28,4 +28,3 @@ namespace XYO {
 };
 
 #endif
-

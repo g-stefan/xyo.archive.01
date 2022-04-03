@@ -11,7 +11,7 @@
 #define XYO_NETWORKING_URL_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -32,4 +32,3 @@ namespace XYO {
 };
 
 #endif
-

@@ -11,7 +11,7 @@
 #define XYO_PARSER_INPUT_HPP
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Input);
 
 			public:
-
 				TPointerX<IRead> iRead;
 
 				char *iStack;
@@ -38,7 +37,7 @@ namespace XYO {
 				XYO_EXPORT void close();
 
 				inline bool push() {
-					if(iStackIndex == iStackSize) {
+					if (iStackIndex == iStackSize) {
 						return false;
 					};
 					iStack[iStackIndex] = inputChar;
@@ -47,7 +46,7 @@ namespace XYO {
 				};
 
 				inline bool pop() {
-					if(iStackIndex == 0) {
+					if (iStackIndex == 0) {
 						return false;
 					};
 					--iStackIndex;

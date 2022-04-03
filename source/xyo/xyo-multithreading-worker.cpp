@@ -63,8 +63,8 @@ namespace XYO {
 			transfer.link(&worker->transfer);
 			TPointer<Object> parameter;
 			worker->startedOk.set(true);
-			while(!worker->requestToTerminateSuper.get()) {
-				if(transfer.hasValue()) {
+			while (!worker->requestToTerminateSuper.get()) {
+				if (transfer.hasValue()) {
 					worker->workEnd.set(false);
 					parameter = transfer.get(worker->transferParameter);
 					transfer.set((*worker->workerProcedure)(parameter, worker->requestToTerminateWorker));
@@ -77,8 +77,8 @@ namespace XYO {
 		};
 
 		bool Worker::beginWork() {
-			if(worker->thread.start(workerThreadProcedure, worker)) {
-				while(!worker->startedOk.get()) {
+			if (worker->thread.start(workerThreadProcedure, worker)) {
+				while (!worker->startedOk.get()) {
 					Thread::sleep(1);
 				};
 				return true;
@@ -102,8 +102,8 @@ namespace XYO {
 		};
 
 		bool Worker::start(Object *parameter) {
-			if(!worker->thread.isRunning()) {
-				if(!beginWork()) {
+			if (!worker->thread.isRunning()) {
+				if (!beginWork()) {
 					return false;
 				};
 			};
@@ -114,13 +114,13 @@ namespace XYO {
 		};
 
 		void Worker::join() {
-			while(isRunning()) {
+			while (isRunning()) {
 				Thread::sleep(1);
 			};
 		};
 
 		bool Worker::isRunning() {
-			if(worker->transfer.hasValue()) {
+			if (worker->transfer.hasValue()) {
 				worker->returnValue = worker->transfer.get(worker->transferReturnValue);
 			};
 			return (!worker->workEnd.get());
@@ -131,10 +131,10 @@ namespace XYO {
 		};
 
 		TPointer<Object> Worker::getReturnValue() {
-			if(worker->transfer.hasValue()) {
+			if (worker->transfer.hasValue()) {
 				worker->returnValue = worker->transfer.get(worker->transferReturnValue);
 			};
-			return  worker->returnValue;
+			return worker->returnValue;
 		};
 
 	};

@@ -17,29 +17,29 @@ namespace XYOCC {
 		using namespace XYO;
 
 		String objFilename(
-			const String &project,
-			const String &fileName,
-			const String &tmpPath,
-			int options) {
+		    const String &project,
+		    const String &fileName,
+		    const String &tmpPath,
+		    int options) {
 			options = filterOptions(options);
 
 			String md5;
-			if(options & CompilerOptions::Release) {
+			if (options & CompilerOptions::Release) {
 				md5 += "Release.";
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				md5 += "Debug.";
 			};
-			if(options & CompilerOptions::CRTStatic) {
+			if (options & CompilerOptions::CRTStatic) {
 				md5 += "CRTStatic.";
 			};
-			if(options & CompilerOptions::CRTDynamic) {
+			if (options & CompilerOptions::CRTDynamic) {
 				md5 += "CRTDynamic.";
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				md5 += "StaticLibrary.";
 			};
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				md5 += "DynamicLibrary.";
 			};
 			md5 += project;
@@ -55,18 +55,18 @@ namespace XYOCC {
 		};
 
 		bool cppToObj(
-			int options,
-			String cppFile,
-			String objFile,
-			TDynamicArray<String> &cppDefine,
-			TDynamicArray<String> &incPath,
-			bool echoCmd) {
+		    int options,
+		    String cppFile,
+		    String objFile,
+		    TDynamicArray<String> &cppDefine,
+		    TDynamicArray<String> &incPath,
+		    bool echoCmd) {
 			String cmd;
 			String content;
 
 			int k;
 			options = filterOptions(options);
-			if(!Shell::mkdirFilePath(objFile)) {
+			if (!Shell::mkdirFilePath(objFile)) {
 				return false;
 			};
 
@@ -74,60 +74,60 @@ namespace XYOCC {
 			objFile = String::replace(objFile, "/", "\\");
 
 			String cxx = Shell::getEnv("CXX");
-			if(cxx.length()==0) {
-				cxx="cl.exe";
+			if (cxx.length() == 0) {
+				cxx = "cl.exe";
 			};
 
 			cmd = cxx;
 			content = " /nologo";
 
-			if(options & CompilerOptions::Release) {
+			if (options & CompilerOptions::Release) {
 				content += " /DXYO_COMPILE_RELEASE";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /MD";
 					content += " /DXYO_COMPILE_CRT_DYNAMIC";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /MT";
 					content += " /DXYO_COMPILE_CRT_STATIC";
 				};
 				content += " /O2 /Oi /Oy /Gy /Gd /EHsc /GR /TP /c";
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				content += " /DXYO_COMPILE_DEBUG";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /MDd";
 					content += " /DXYO_COMPILE_CRT_DYNAMIC";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /MTd";
 					content += " /DXYO_COMPILE_CRT_STATIC";
 				};
 				content += " /Zi /EHsc /GR /TP /c";
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				content += " /DXYO_COMPILE_STATIC_LIBRARY";
 			};
-			if(options & CompilerOptions::DynamicLibrary) {
-				if(options & CompilerOptions::DynamicLibraryXStatic) {
+			if (options & CompilerOptions::DynamicLibrary) {
+				if (options & CompilerOptions::DynamicLibraryXStatic) {
 					content += " /DXYO_COMPILE_STATIC_LIBRARY";
 				} else {
 					content += " /DXYO_COMPILE_DYNAMIC_LIBRARY";
 				};
 			};
 
-			for(k = 0; k < incPath.length(); ++k) {
+			for (k = 0; k < incPath.length(); ++k) {
 				content << " /I\"" << String::replace(incPath[k], "/", "\\") << "\"";
 			};
-			for(k = 0; k < cppDefine.length(); ++k) {
+			for (k = 0; k < cppDefine.length(); ++k) {
 				content << " /D\"" << cppDefine[k] << "\"";
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				content << " /Fd\"" << String::replace(objFile, ".obj", ".pdb") << "\"";
 			};
-#ifdef XYO_APPLICATION_32BIT
+#	ifdef XYO_APPLICATION_32BIT
 			content << " /arch:SSE2";
-#endif
+#	endif
 			content << " /Fo\"" << objFile << "\"";
 			content << " \"" << cppFile << "\"";
 
@@ -135,25 +135,25 @@ namespace XYOCC {
 			Shell::filePutContents(cmdFile, content);
 			cmd << " @" << cmdFile;
 
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
 		};
 
 		bool makeObjToLib(
-			String libName,
-			String binPath,
-			String libPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &objFiles,
-			String defFile,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			String version,
-			bool echoCmd,
-			bool force) {
+		    String libName,
+		    String binPath,
+		    String libPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &objFiles,
+		    String defFile,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    String version,
+		    bool echoCmd,
+		    bool force) {
 			options = filterOptions(options);
 
 			String cmd;
@@ -162,101 +162,99 @@ namespace XYOCC {
 			bool toMakeObjToLib;
 			String libNameOut;
 
-			if(objFiles.isEmpty()) {
+			if (objFiles.isEmpty()) {
 				return false;
 			};
 
-			if(!Shell::mkdirRecursivelyIfNotExists(binPath)) {
+			if (!Shell::mkdirRecursivelyIfNotExists(binPath)) {
 				return false;
 			};
-			if(!Shell::mkdirRecursivelyIfNotExists(libPath)) {
+			if (!Shell::mkdirRecursivelyIfNotExists(libPath)) {
 				return false;
 			};
-			if(!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
+			if (!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
 				return false;
 			};
-
 
 			binPath = String::replace(binPath, "/", "\\");
 			libPath = String::replace(libPath, "/", "\\");
 			tmpPath = String::replace(tmpPath, "/", "\\");
 
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				libNameOut = libPath << "\\" << libName << ".lib";
-				if(!force) {
-					if(!Shell::isChanged(libNameOut, objFiles)) {
+				if (!force) {
+					if (!Shell::isChanged(libNameOut, objFiles)) {
 						return true;
 					};
 				};
 
-#ifdef XYO_APPLICATION_64BIT
+#	ifdef XYO_APPLICATION_64BIT
 				content << "/NOLOGO /OUT:\"" << libNameOut << "\" /MACHINE:X64";
-#endif
-#ifdef XYO_APPLICATION_32BIT
+#	endif
+#	ifdef XYO_APPLICATION_32BIT
 				content << "/NOLOGO /OUT:\"" << libNameOut << "\" /MACHINE:X86";
-#endif
+#	endif
 
-				for(k = 0; k < objFiles.length(); ++k) {
+				for (k = 0; k < objFiles.length(); ++k) {
 					content << " \"" << String::replace(objFiles[k], "/", "\\") << "\"";
 				};
 
 				Shell::filePutContents(tmpPath + "\\" + libName + ".obj2lib", content);
 				cmd = "lib.exe @";
 				cmd << tmpPath + "\\" + libName + ".obj2lib";
-
 			};
 
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				libNameOut = binPath << "\\" << libName;
-				if(!version.isEmpty()) {
+				if (!version.isEmpty()) {
 					libNameOut << "-" << version;
 				};
 				libNameOut << ".dll";
-				if(!force) {
-					if(!Shell::isChanged(libNameOut, objFiles)) {
+				if (!force) {
+					if (!Shell::isChanged(libNameOut, objFiles)) {
 						return true;
 					};
 				};
 
-#ifdef XYO_APPLICATION_64BIT
+#	ifdef XYO_APPLICATION_64BIT
 				content << "/NOLOGO /OUT:\"" << libNameOut << "\" /MACHINE:X64";
 				content << " /ENTRY:_DllMainCRTStartup";
-#endif
-#ifdef XYO_APPLICATION_32BIT
+#	endif
+#	ifdef XYO_APPLICATION_32BIT
 				content << "/NOLOGO /OUT:\"" << libNameOut << "\" /MACHINE:X86";
 				content << " /ENTRY:_DllMainCRTStartup@12";
-#endif
+#	endif
 				content << " /DLL /INCREMENTAL:NO /OPT:REF /OPT:ICF";
-				if(options & CompilerOptions::Release) {
+				if (options & CompilerOptions::Release) {
 					content << " /RELEASE";
-					if(options & CompilerOptions::CRTDynamic) {
+					if (options & CompilerOptions::CRTDynamic) {
 						content += " /nodefaultlib:libcmt /defaultlib:msvcrt";
 					};
-					if(options & CompilerOptions::CRTStatic) {
+					if (options & CompilerOptions::CRTStatic) {
 						content += " /nodefaultlib:msvcrt /defaultlib:libcmt";
 					};
 				};
-				if(options & CompilerOptions::Debug) {
+				if (options & CompilerOptions::Debug) {
 					content << " /DEBUG";
-					if(options & CompilerOptions::CRTDynamic) {
+					if (options & CompilerOptions::CRTDynamic) {
 						content += " /nodefaultlib:libcmtd /defaultlib:msvcrtd";
 					};
-					if(options & CompilerOptions::CRTStatic) {
+					if (options & CompilerOptions::CRTStatic) {
 						content += " /nodefaultlib:msvcrtd /defaultlib:libcmtd";
 					};
 				};
-				if(!defFile.isEmpty()) {
+				if (!defFile.isEmpty()) {
 					content << " /DEF:\"" << defFile << "\"";
 				};
 				content << " /implib:\"" << libPath << "\\" << libName << ".lib\"";
-				for(k = 0; k < objFiles.length(); ++k) {
+				for (k = 0; k < objFiles.length(); ++k) {
 					content << " \"" << String::replace(objFiles[k], "/", "\\") << "\"";
 				};
-				for(k = 0; k < libDependencyPath.length(); ++k) {
+				for (k = 0; k < libDependencyPath.length(); ++k) {
 					content << " /LIBPATH:\"" << libDependencyPath[k] << "\"";
 				};
-				for(k = 0; k < libDependency.length(); ++k) {
-					if(libDependency[k][0] == ':') {
+				for (k = 0; k < libDependency.length(); ++k) {
+					if (libDependency[k][0] == ':') {
 						content << " " << String::substring(libDependency[k], 1) << ".lib";
 						continue;
 					};
@@ -277,24 +275,23 @@ namespace XYOCC {
 				Shell::filePutContents(tmpPath + "\\" + libName + ".obj2dll", content);
 				cmd = "link.exe @";
 				cmd << tmpPath + "\\" + libName + ".obj2dll";
-
 			};
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
 		};
 
 		bool makeObjToExe(
-			String exeName,
-			String binPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &objFiles,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			bool echoCmd,
-			bool force) {
+		    String exeName,
+		    String binPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &objFiles,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    bool echoCmd,
+		    bool force) {
 			options = filterOptions(options);
 
 			String cmd;
@@ -302,14 +299,14 @@ namespace XYOCC {
 			String content;
 			String exeNameOut;
 
-			if(objFiles.isEmpty()) {
+			if (objFiles.isEmpty()) {
 				return false;
 			};
 
-			if(!Shell::mkdirRecursivelyIfNotExists(binPath)) {
+			if (!Shell::mkdirRecursivelyIfNotExists(binPath)) {
 				return false;
 			};
-			if(!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
+			if (!Shell::mkdirRecursivelyIfNotExists(tmpPath)) {
 				return false;
 			};
 
@@ -317,45 +314,45 @@ namespace XYOCC {
 			tmpPath = String::replace(tmpPath, "/", "\\");
 
 			exeNameOut = binPath << "\\" << exeName << ".exe";
-			if(!force) {
-				if(!Shell::isChanged(exeNameOut, objFiles)) {
+			if (!force) {
+				if (!Shell::isChanged(exeNameOut, objFiles)) {
 					return true;
 				};
 			};
 
-#ifdef XYO_APPLICATION_64BIT
+#	ifdef XYO_APPLICATION_64BIT
 			content << "/NOLOGO /OUT:\"" << exeNameOut << "\" /MACHINE:X64";
-#endif
-#ifdef XYO_APPLICATION_32BIT
+#	endif
+#	ifdef XYO_APPLICATION_32BIT
 			content << "/NOLOGO /OUT:\"" << exeNameOut << "\" /MACHINE:X86";
-#endif
+#	endif
 			content << " /INCREMENTAL:NO /OPT:REF /OPT:ICF";
-			if(options & CompilerOptions::Release) {
+			if (options & CompilerOptions::Release) {
 				content << " /RELEASE";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /nodefaultlib:libcmt /defaultlib:msvcrt";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /nodefaultlib:msvcrt /defaultlib:libcmt";
 				};
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				content << " /DEBUG";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /nodefaultlib:libcmtd /defaultlib:msvcrtd";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /nodefaultlib:msvcrtd /defaultlib:libcmtd";
 				};
 			};
-			for(k = 0; k < objFiles.length(); ++k) {
+			for (k = 0; k < objFiles.length(); ++k) {
 				content << " \"" << String::replace(objFiles[k], "/", "\\") << "\"";
 			};
-			for(k = 0; k < libDependencyPath.length(); ++k) {
+			for (k = 0; k < libDependencyPath.length(); ++k) {
 				content << " /LIBPATH:\"" << libDependencyPath[k] << "\"";
 			};
-			for(k = 0; k < libDependency.length(); ++k) {
-				if(libDependency[k][0] == ':') {
+			for (k = 0; k < libDependency.length(); ++k) {
+				if (libDependency[k][0] == ':') {
 					content << " " << String::substring(libDependency[k], 1) << ".lib";
 					continue;
 				};
@@ -377,48 +374,48 @@ namespace XYOCC {
 			cmd = "link.exe @";
 			cmd << tmpPath + "\\" + exeName + ".obj2exe";
 
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
 		};
 
 		bool rcToRes(
-			String rcFile,
-			String resFile,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPath,
-			bool echoCmd) {
+		    String rcFile,
+		    String resFile,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPath,
+		    bool echoCmd) {
 			String cmd;
 			int k;
-			if(!Shell::mkdirFilePath(resFile)) {
+			if (!Shell::mkdirFilePath(resFile)) {
 				return false;
 			};
 
 			rcFile = String::replace(rcFile, "/", "\\");
 			resFile = String::replace(resFile, "/", "\\");
 			cmd = "rc.exe /nologo";
-			for(k = 0; k < incPath.length(); ++k) {
+			for (k = 0; k < incPath.length(); ++k) {
 				cmd << " /i \"" << String::replace(incPath[k], "/", "\\") << "\"";
 			};
-			for(k = 0; k < rcDefine.length(); ++k) {
+			for (k = 0; k < rcDefine.length(); ++k) {
 				cmd << " /d \"" << rcDefine[k] << "\"";
 			};
 			cmd << " /l 409 /z \"MS Sans Serif,Helv/MS Shell Dlg\" /r /fo \"" << resFile << "\"";
 			cmd << " \"" << rcFile << "\"";
 
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
 		};
 
 		bool resToObj(
-			String resFile,
-			String objFile,
-			bool echoCmd) {
+		    String resFile,
+		    String objFile,
+		    bool echoCmd) {
 			String cmd;
-			if(!Shell::mkdirFilePath(objFile)) {
+			if (!Shell::mkdirFilePath(objFile)) {
 				return false;
 			};
 
@@ -427,56 +424,56 @@ namespace XYOCC {
 
 			cmd = "cvtres.exe /NOLOGO";
 
-#ifdef XYO_APPLICATION_64BIT
+#	ifdef XYO_APPLICATION_64BIT
 			cmd << " /MACHINE:X64";
-#endif
-#ifdef XYO_APPLICATION_32BIT
+#	endif
+#	ifdef XYO_APPLICATION_32BIT
 			cmd << " /MACHINE:X86";
-#endif
+#	endif
 			cmd << " /OUT:\"" << objFile << "\" \"" << resFile << "\"";
 
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
 		};
 
 		bool makeRcToObj(
-			String rcFile,
-			String objFile,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPath,
-			bool echoCmd,
-			bool force) {
+		    String rcFile,
+		    String objFile,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPath,
+		    bool echoCmd,
+		    bool force) {
 			bool toMake;
 
 			String resFile = String::replace(objFile, ".obj", ".res");
 			toMake = false;
-			if(!Shell::fileExists(resFile)) {
+			if (!Shell::fileExists(resFile)) {
 				toMake = true;
 			} else {
-				if(Shell::compareLastWriteTime(resFile, rcFile) < 0) {
+				if (Shell::compareLastWriteTime(resFile, rcFile) < 0) {
 					toMake = true;
 				};
 			};
 
-			if(toMake || force) {
-				if(!rcToRes(rcFile, resFile, rcDefine, incPath, echoCmd)) {
+			if (toMake || force) {
+				if (!rcToRes(rcFile, resFile, rcDefine, incPath, echoCmd)) {
 					return false;
 				};
 			};
 
 			toMake = false;
-			if(!Shell::fileExists(objFile)) {
+			if (!Shell::fileExists(objFile)) {
 				toMake = true;
 			} else {
-				if(Shell::compareLastWriteTime(objFile, resFile) < 0) {
+				if (Shell::compareLastWriteTime(objFile, resFile) < 0) {
 					toMake = true;
 				};
 			};
 
-			if(toMake || force) {
-				if(!resToObj(resFile, objFile, echoCmd)) {
+			if (toMake || force) {
+				if (!resToObj(resFile, objFile, echoCmd)) {
 					return false;
 				};
 			};
@@ -484,8 +481,7 @@ namespace XYOCC {
 			return true;
 		};
 
-		class CompilerWorkerBool:
-			public Object {
+		class CompilerWorkerBool : public Object {
 			public:
 				bool value;
 		};
@@ -497,8 +493,7 @@ namespace XYOCC {
 			return retV;
 		};
 
-		class CompilerWorkerCppToObj:
-			public Object {
+		class CompilerWorkerCppToObj : public Object {
 			public:
 				String cppFile;
 				String objFile;
@@ -520,13 +515,13 @@ namespace XYOCC {
 
 			source = &value.incPath;
 			target = &retV->incPath;
-			for(k = 0; k < source->length(); ++k) {
+			for (k = 0; k < source->length(); ++k) {
 				(target->index(k)) = (source->index(k)).value();
 			};
 
 			source = &value.cppDefine;
 			target = &retV->cppDefine;
-			for(k = 0; k < source->length(); ++k) {
+			for (k = 0; k < source->length(); ++k) {
 				(target->index(k)) = (source->index(k)).value();
 			};
 
@@ -537,39 +532,38 @@ namespace XYOCC {
 		TPointer<CompilerWorkerBool> compilerWorkerProcedureCppToObj(CompilerWorkerCppToObj *parameter, TAtomic<bool> &requestToTerminate) {
 			TPointer<CompilerWorkerBool> retV;
 			retV.newMemory();
-			if(parameter) {
+			if (parameter) {
 				retV->value = cppToObj(
-						parameter->options,
-						parameter->cppFile,
-						parameter->objFile,
-						parameter->cppDefine,
-						parameter->incPath,
-						parameter->echoCmd
-					);
+				    parameter->options,
+				    parameter->cppFile,
+				    parameter->objFile,
+				    parameter->cppDefine,
+				    parameter->incPath,
+				    parameter->echoCmd);
 			};
 			return retV;
 		};
 
 		bool makeCppToLib(
-			String libName,
-			String binPath,
-			String libPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &cppDefine,
-			TDynamicArray<String> &incPath,
-			TDynamicArray<String> &incFiles,
-			TDynamicArray<String> &cppFiles,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPathRC,
-			TDynamicArray<String> &rcFiles,
-			String defFile,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			String version,
-			int numThreads,
-			bool echoCmd,
-			bool force) {
+		    String libName,
+		    String binPath,
+		    String libPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &cppDefine,
+		    TDynamicArray<String> &incPath,
+		    TDynamicArray<String> &incFiles,
+		    TDynamicArray<String> &cppFiles,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPathRC,
+		    TDynamicArray<String> &rcFiles,
+		    String defFile,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    String version,
+		    int numThreads,
+		    bool echoCmd,
+		    bool force) {
 			options = filterOptions(options);
 
 			size_t k, m;
@@ -581,11 +575,10 @@ namespace XYOCC {
 			String projectName = libName;
 			bool toMakeCppToObj;
 
-
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				projectName << ".dll";
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				projectName << ".lib";
 			};
 
@@ -593,32 +586,32 @@ namespace XYOCC {
 			TDynamicArray<FileTime> incFilesTime;
 			TDynamicArray<FileTime> objFilesTime;
 
-			for(k = 0; k < incFiles.length(); ++k) {
+			for (k = 0; k < incFiles.length(); ++k) {
 				incFilesTime[k].getLastWriteTime(incFiles[k]);
 			};
 
-			for(k = 0; k < cppFiles.length(); ++k) {
+			for (k = 0; k < cppFiles.length(); ++k) {
 				objFiles[k] = objFilename(projectName, cppFiles[k], tmpPath, options);
 				cppFilesTime[k].getLastWriteTime(cppFiles[k]);
 				objFilesTime[k].getLastWriteTime(objFiles[k]);
 			};
 
-			for(k = 0; k < cppFiles.length(); ++k) {
+			for (k = 0; k < cppFiles.length(); ++k) {
 				toMakeCppToObj = false;
-				if(cppFilesTime[k].isChanged(incFilesTime)) {
+				if (cppFilesTime[k].isChanged(incFilesTime)) {
 					Shell::touchIfExists(cppFiles[k]);
 					toMakeCppToObj = true;
 				};
-				if(!Shell::fileExists(objFiles[k])) {
+				if (!Shell::fileExists(objFiles[k])) {
 					toMakeCppToObj = true;
 				} else {
-					if(objFilesTime[k].compare(cppFilesTime[k]) < 0) {
+					if (objFilesTime[k].compare(cppFilesTime[k]) < 0) {
 						toMakeCppToObj = true;
 					};
 				};
 
-				if(!force) {
-					if(!toMakeCppToObj) {
+				if (!force) {
+					if (!toMakeCppToObj) {
 						continue;
 					};
 				};
@@ -627,28 +620,28 @@ namespace XYOCC {
 				parameter->cppFile = cppFiles[k];
 				parameter->objFile = objFiles[k];
 				parameter->options = options;
-				for(m = 0; m < incPath.length(); ++m) {
+				for (m = 0; m < incPath.length(); ++m) {
 					parameter->incPath[m] = incPath[m];
 				};
-				for(m = 0; m < cppDefine.length(); ++m) {
+				for (m = 0; m < cppDefine.length(); ++m) {
 					parameter->cppDefine[m] = cppDefine[m];
 				};
 				parameter->echoCmd = echoCmd;
 				TWorkerQueue<CompilerWorkerBool,
-					     CompilerWorkerCppToObj,
-					     compilerTransferWorkerBool,
-					     compilerTransferWorkerCppToObj,
-					     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
+				             CompilerWorkerCppToObj,
+				             compilerTransferWorkerBool,
+				             compilerTransferWorkerCppToObj,
+				             compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 			};
 
-			if(!compileCppToObj.isEmpty()) {
-				if(!compileCppToObj.process()) {
+			if (!compileCppToObj.isEmpty()) {
+				if (!compileCppToObj.process()) {
 					return false;
 				};
-				for(k = 0; k < compileCppToObj.length(); ++k) {
+				for (k = 0; k < compileCppToObj.length(); ++k) {
 					retVCppToObj = TStaticCast<CompilerWorkerBool *>(compileCppToObj.getReturnValue(k));
-					if(retVCppToObj) {
-						if(!retVCppToObj->value) {
+					if (retVCppToObj) {
+						if (!retVCppToObj->value) {
 							return false;
 						};
 						continue;
@@ -657,23 +650,23 @@ namespace XYOCC {
 				};
 			};
 
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				String resObj;
-				for(k = 0; k < rcFiles.length(); ++k) {
+				for (k = 0; k < rcFiles.length(); ++k) {
 
-					if(Shell::isChanged(rcFiles[k], incFiles)) {
+					if (Shell::isChanged(rcFiles[k], incFiles)) {
 						Shell::touchIfExists(rcFiles[k]);
 					};
 
 					resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
-					if(!makeRcToObj(
-							rcFiles[k],
-							resObj,
-							rcDefine,
-							incPathRC,
-							echoCmd,
-							force)) {
+					if (!makeRcToObj(
+					        rcFiles[k],
+					        resObj,
+					        rcDefine,
+					        incPathRC,
+					        echoCmd,
+					        force)) {
 						return false;
 					};
 
@@ -682,41 +675,41 @@ namespace XYOCC {
 			};
 
 			return makeObjToLib(
-					libName,
-					binPath,
-					libPath,
-					tmpPath,
-					options,
-					objFiles,
-					defFile,
-					libDependencyPath,
-					libDependency,
-					version,
-					echoCmd,
-					force);
+			    libName,
+			    binPath,
+			    libPath,
+			    tmpPath,
+			    options,
+			    objFiles,
+			    defFile,
+			    libDependencyPath,
+			    libDependency,
+			    version,
+			    echoCmd,
+			    force);
 		};
 
 		bool makeCppToExe(
-			String exeName,
-			String binPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &cppDefine,
-			TDynamicArray<String> &incPath,
-			TDynamicArray<String> &incFiles,
-			TDynamicArray<String> &cppFiles,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPathRC,
-			TDynamicArray<String> &rcFiles,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			int numThreads,
-			bool echoCmd,
-			bool force) {
-			if(options & CompilerOptions::CRTStatic) {
+		    String exeName,
+		    String binPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &cppDefine,
+		    TDynamicArray<String> &incPath,
+		    TDynamicArray<String> &incFiles,
+		    TDynamicArray<String> &cppFiles,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPathRC,
+		    TDynamicArray<String> &rcFiles,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    int numThreads,
+		    bool echoCmd,
+		    bool force) {
+			if (options & CompilerOptions::CRTStatic) {
 				options |= CompilerOptions::StaticLibrary;
 			};
-			if(options & CompilerOptions::CRTDynamic) {
+			if (options & CompilerOptions::CRTDynamic) {
 				options |= CompilerOptions::DynamicLibrary;
 			};
 			options = filterOptions(options);
@@ -736,32 +729,32 @@ namespace XYOCC {
 			TDynamicArray<FileTime> incFilesTime;
 			TDynamicArray<FileTime> objFilesTime;
 
-			for(k = 0; k < incFiles.length(); ++k) {
+			for (k = 0; k < incFiles.length(); ++k) {
 				incFilesTime[k].getLastWriteTime(incFiles[k]);
 			};
 
-			for(k = 0; k < cppFiles.length(); ++k) {
+			for (k = 0; k < cppFiles.length(); ++k) {
 				objFiles[k] = objFilename(projectName, cppFiles[k], tmpPath, options);
 				cppFilesTime[k].getLastWriteTime(cppFiles[k]);
 				objFilesTime[k].getLastWriteTime(objFiles[k]);
 			};
 
-			for(k = 0; k < cppFiles.length(); ++k) {
+			for (k = 0; k < cppFiles.length(); ++k) {
 				toMakeCppToObj = false;
-				if(cppFilesTime[k].isChanged(incFilesTime)) {
+				if (cppFilesTime[k].isChanged(incFilesTime)) {
 					Shell::touchIfExists(cppFiles[k]);
 					toMakeCppToObj = true;
 				};
-				if(!Shell::fileExists(objFiles[k])) {
+				if (!Shell::fileExists(objFiles[k])) {
 					toMakeCppToObj = true;
 				} else {
-					if(objFilesTime[k].compare(cppFilesTime[k]) < 0) {
+					if (objFilesTime[k].compare(cppFilesTime[k]) < 0) {
 						toMakeCppToObj = true;
 					};
 				};
 
-				if(!force) {
-					if(!toMakeCppToObj) {
+				if (!force) {
+					if (!toMakeCppToObj) {
 						continue;
 					};
 				};
@@ -770,28 +763,28 @@ namespace XYOCC {
 				parameter->cppFile = cppFiles[k];
 				parameter->objFile = objFiles[k];
 				parameter->options = options;
-				for(m = 0; m < incPath.length(); ++m) {
+				for (m = 0; m < incPath.length(); ++m) {
 					parameter->incPath[m] = incPath[m];
 				};
-				for(m = 0; m < cppDefine.length(); ++m) {
+				for (m = 0; m < cppDefine.length(); ++m) {
 					parameter->cppDefine[m] = cppDefine[m];
 				};
 				parameter->echoCmd = echoCmd;
 				TWorkerQueue<CompilerWorkerBool,
-					     CompilerWorkerCppToObj,
-					     compilerTransferWorkerBool,
-					     compilerTransferWorkerCppToObj,
-					     compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
+				             CompilerWorkerCppToObj,
+				             compilerTransferWorkerBool,
+				             compilerTransferWorkerCppToObj,
+				             compilerWorkerProcedureCppToObj>::add(compileCppToObj, parameter);
 			};
 
-			if(!compileCppToObj.isEmpty()) {
-				if(!compileCppToObj.process()) {
+			if (!compileCppToObj.isEmpty()) {
+				if (!compileCppToObj.process()) {
 					return false;
 				};
-				for(k = 0; k < compileCppToObj.length(); ++k) {
+				for (k = 0; k < compileCppToObj.length(); ++k) {
 					retVCppToObj = TStaticCast<CompilerWorkerBool *>(compileCppToObj.getReturnValue(k));
-					if(retVCppToObj) {
-						if(!retVCppToObj->value) {
+					if (retVCppToObj) {
+						if (!retVCppToObj->value) {
 							return false;
 						};
 						continue;
@@ -801,21 +794,21 @@ namespace XYOCC {
 			};
 
 			String resObj;
-			for(k = 0; k < rcFiles.length(); ++k) {
+			for (k = 0; k < rcFiles.length(); ++k) {
 
-				if(Shell::isChanged(rcFiles[k], incFiles)) {
+				if (Shell::isChanged(rcFiles[k], incFiles)) {
 					Shell::touchIfExists(rcFiles[k]);
 				};
 
 				resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
-				if(!makeRcToObj(
-						rcFiles[k],
-						resObj,
-						rcDefine,
-						incPathRC,
-						echoCmd,
-						force)) {
+				if (!makeRcToObj(
+				        rcFiles[k],
+				        resObj,
+				        rcDefine,
+				        incPathRC,
+				        echoCmd,
+				        force)) {
 					return false;
 				};
 
@@ -823,31 +816,30 @@ namespace XYOCC {
 			};
 
 			return makeObjToExe(
-					exeName,
-					binPath,
-					tmpPath,
-					options,
-					objFiles,
-					libDependencyPath,
-					libDependency,
-					echoCmd,
-					force);
-
+			    exeName,
+			    binPath,
+			    tmpPath,
+			    options,
+			    objFiles,
+			    libDependencyPath,
+			    libDependency,
+			    echoCmd,
+			    force);
 		};
 
 		bool cToObj(
-			String cFile,
-			String objFile,
-			int options,
-			TDynamicArray<String> &cDefine,
-			TDynamicArray<String> &incPath,
-			bool echoCmd) {
+		    String cFile,
+		    String objFile,
+		    int options,
+		    TDynamicArray<String> &cDefine,
+		    TDynamicArray<String> &incPath,
+		    bool echoCmd) {
 			String cmd;
 			String content;
 
 			int k;
 			options = filterOptions(options);
-			if(!Shell::mkdirFilePath(objFile)) {
+			if (!Shell::mkdirFilePath(objFile)) {
 				return false;
 			};
 
@@ -855,60 +847,60 @@ namespace XYOCC {
 			objFile = String::replace(objFile, "/", "\\");
 
 			String cc = Shell::getEnv("CC");
-			if(cc.length()==0) {
-				cc="cl.exe";
+			if (cc.length() == 0) {
+				cc = "cl.exe";
 			};
 
 			cmd = cc;
 			content = " /nologo";
 
-			if(options & CompilerOptions::Release) {
+			if (options & CompilerOptions::Release) {
 				content += " /DXYO_COMPILE_RELEASE";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /MD";
 					content += " /DXYO_COMPILE_CRT_DYNAMIC";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /MT";
 					content += " /DXYO_COMPILE_CRT_STATIC";
 				};
 				content += " /O2 /Oi /Oy /Gy /Gd /EHsc /GR /TC /c";
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				content += " /DXYO_COMPILE_DEBUG";
-				if(options & CompilerOptions::CRTDynamic) {
+				if (options & CompilerOptions::CRTDynamic) {
 					content += " /MDd";
 					content += " /DXYO_COMPILE_CRT_DYNAMIC";
 				};
-				if(options & CompilerOptions::CRTStatic) {
+				if (options & CompilerOptions::CRTStatic) {
 					content += " /MTd";
 					content += " /DXYO_COMPILE_CRT_STATIC";
 				};
 				content += " /Zi /EHsc /GR /TC /c";
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				content += " /DXYO_COMPILE_STATIC_LIBRARY";
 			};
-			if(options & CompilerOptions::DynamicLibrary) {
-				if(options & CompilerOptions::DynamicLibraryXStatic) {
+			if (options & CompilerOptions::DynamicLibrary) {
+				if (options & CompilerOptions::DynamicLibraryXStatic) {
 					content += " /DXYO_COMPILE_STATIC_LIBRARY";
 				} else {
 					content += " /DXYO_COMPILE_DYNAMIC_LIBRARY";
 				};
 			};
 
-			for(k = 0; k < incPath.length(); ++k) {
+			for (k = 0; k < incPath.length(); ++k) {
 				content << " /I\"" << String::replace(incPath[k], "/", "\\") << "\"";
 			};
-			for(k = 0; k < cDefine.length(); ++k) {
+			for (k = 0; k < cDefine.length(); ++k) {
 				content << " /D\"" << cDefine[k] << "\"";
 			};
-			if(options & CompilerOptions::Debug) {
+			if (options & CompilerOptions::Debug) {
 				content << " /Fd\"" << String::replace(objFile, ".obj", ".pdb") << "\"";
 			};
-#ifdef XYO_APPLICATION_32BIT
+#	ifdef XYO_APPLICATION_32BIT
 			content << " /arch:SSE2";
-#endif
+#	endif
 			content << " /Fo\"" << objFile << "\"";
 			content << " \"" << cFile << "\"";
 
@@ -916,7 +908,7 @@ namespace XYOCC {
 			Shell::filePutContents(cmdFile, content);
 			cmd << " @" << cmdFile;
 
-			if(echoCmd) {
+			if (echoCmd) {
 				printf("%s\n", cmd.value());
 			};
 			return (Shell::system(cmd) == 0);
@@ -925,39 +917,38 @@ namespace XYOCC {
 		TPointer<CompilerWorkerBool> compilerWorkerProcedureCToObj(CompilerWorkerCppToObj *parameter, TAtomic<bool> &requestToTerminate) {
 			TPointer<CompilerWorkerBool> retV;
 			retV.newMemory();
-			if(parameter) {
+			if (parameter) {
 				retV->value = cToObj(
-						parameter->cppFile,
-						parameter->objFile,
-						parameter->options,
-						parameter->cppDefine,
-						parameter->incPath,
-						parameter->echoCmd
-					);
+				    parameter->cppFile,
+				    parameter->objFile,
+				    parameter->options,
+				    parameter->cppDefine,
+				    parameter->incPath,
+				    parameter->echoCmd);
 			};
 			return retV;
 		};
 
 		bool makeCToLib(
-			String libName,
-			String binPath,
-			String libPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &cDefine,
-			TDynamicArray<String> &incPath,
-			TDynamicArray<String> &incFiles,
-			TDynamicArray<String> &cFiles,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPathRC,
-			TDynamicArray<String> &rcFiles,
-			String defFile,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			String version,
-			int numThreads,
-			bool echoCmd,
-			bool force) {
+		    String libName,
+		    String binPath,
+		    String libPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &cDefine,
+		    TDynamicArray<String> &incPath,
+		    TDynamicArray<String> &incFiles,
+		    TDynamicArray<String> &cFiles,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPathRC,
+		    TDynamicArray<String> &rcFiles,
+		    String defFile,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    String version,
+		    int numThreads,
+		    bool echoCmd,
+		    bool force) {
 			options = filterOptions(options);
 
 			size_t k, m;
@@ -969,10 +960,10 @@ namespace XYOCC {
 			String projectName = libName;
 			bool toMakeCToObj;
 
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				projectName << ".dll";
 			};
-			if(options & CompilerOptions::StaticLibrary) {
+			if (options & CompilerOptions::StaticLibrary) {
 				projectName << ".lib";
 			};
 
@@ -980,32 +971,32 @@ namespace XYOCC {
 			TDynamicArray<FileTime> incFilesTime;
 			TDynamicArray<FileTime> objFilesTime;
 
-			for(k = 0; k < incFiles.length(); ++k) {
+			for (k = 0; k < incFiles.length(); ++k) {
 				incFilesTime[k].getLastWriteTime(incFiles[k]);
 			};
 
-			for(k = 0; k < cFiles.length(); ++k) {
+			for (k = 0; k < cFiles.length(); ++k) {
 				objFiles[k] = objFilename(projectName, cFiles[k], tmpPath, options);
 				cFilesTime[k].getLastWriteTime(cFiles[k]);
 				objFilesTime[k].getLastWriteTime(objFiles[k]);
 			};
 
-			for(k = 0; k < cFiles.length(); ++k) {
+			for (k = 0; k < cFiles.length(); ++k) {
 				toMakeCToObj = false;
-				if(cFilesTime[k].isChanged(incFilesTime)) {
+				if (cFilesTime[k].isChanged(incFilesTime)) {
 					Shell::touchIfExists(cFiles[k]);
 					toMakeCToObj = true;
 				};
-				if(!Shell::fileExists(objFiles[k])) {
+				if (!Shell::fileExists(objFiles[k])) {
 					toMakeCToObj = true;
 				} else {
-					if(objFilesTime[k].compare(cFilesTime[k]) < 0) {
+					if (objFilesTime[k].compare(cFilesTime[k]) < 0) {
 						toMakeCToObj = true;
 					};
 				};
 
-				if(!force) {
-					if(!toMakeCToObj) {
+				if (!force) {
+					if (!toMakeCToObj) {
 						continue;
 					};
 				};
@@ -1014,28 +1005,28 @@ namespace XYOCC {
 				parameter->cppFile = cFiles[k];
 				parameter->objFile = objFiles[k];
 				parameter->options = options;
-				for(m = 0; m < incPath.length(); ++m) {
+				for (m = 0; m < incPath.length(); ++m) {
 					parameter->incPath[m] = incPath[m];
 				};
-				for(m = 0; m < cDefine.length(); ++m) {
+				for (m = 0; m < cDefine.length(); ++m) {
 					parameter->cppDefine[m] = cDefine[m];
 				};
 				parameter->echoCmd = echoCmd;
 				TWorkerQueue<CompilerWorkerBool,
-					     CompilerWorkerCppToObj,
-					     compilerTransferWorkerBool,
-					     compilerTransferWorkerCppToObj,
-					     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
+				             CompilerWorkerCppToObj,
+				             compilerTransferWorkerBool,
+				             compilerTransferWorkerCppToObj,
+				             compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 			};
 
-			if(!compileCToObj.isEmpty()) {
-				if(!compileCToObj.process()) {
+			if (!compileCToObj.isEmpty()) {
+				if (!compileCToObj.process()) {
 					return false;
 				};
-				for(k = 0; k < compileCToObj.length(); ++k) {
+				for (k = 0; k < compileCToObj.length(); ++k) {
 					retVCToObj = TStaticCast<CompilerWorkerBool *>(compileCToObj.getReturnValue(k));
-					if(retVCToObj) {
-						if(!retVCToObj->value) {
+					if (retVCToObj) {
+						if (!retVCToObj->value) {
 							return false;
 						};
 						continue;
@@ -1044,23 +1035,23 @@ namespace XYOCC {
 				};
 			};
 
-			if(options & CompilerOptions::DynamicLibrary) {
+			if (options & CompilerOptions::DynamicLibrary) {
 				String resObj;
-				for(k = 0; k < rcFiles.length(); ++k) {
+				for (k = 0; k < rcFiles.length(); ++k) {
 
-					if(Shell::isChanged(rcFiles[k], incFiles)) {
+					if (Shell::isChanged(rcFiles[k], incFiles)) {
 						Shell::touchIfExists(rcFiles[k]);
 					};
 
 					resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
-					if(!makeRcToObj(
-							rcFiles[k],
-							resObj,
-							rcDefine,
-							incPathRC,
-							echoCmd,
-							force)) {
+					if (!makeRcToObj(
+					        rcFiles[k],
+					        resObj,
+					        rcDefine,
+					        incPathRC,
+					        echoCmd,
+					        force)) {
 						return false;
 					};
 
@@ -1069,42 +1060,41 @@ namespace XYOCC {
 			};
 
 			return makeObjToLib(
-					libName,
-					binPath,
-					libPath,
-					tmpPath,
-					options,
-					objFiles,
-					defFile,
-					libDependencyPath,
-					libDependency,
-					version,
-					echoCmd,
-					force);
-
+			    libName,
+			    binPath,
+			    libPath,
+			    tmpPath,
+			    options,
+			    objFiles,
+			    defFile,
+			    libDependencyPath,
+			    libDependency,
+			    version,
+			    echoCmd,
+			    force);
 		};
 
 		bool makeCToExe(
-			String exeName,
-			String binPath,
-			String tmpPath,
-			int options,
-			TDynamicArray<String> &cDefine,
-			TDynamicArray<String> &incPath,
-			TDynamicArray<String> &incFiles,
-			TDynamicArray<String> &cFiles,
-			TDynamicArray<String> &rcDefine,
-			TDynamicArray<String> &incPathRC,
-			TDynamicArray<String> &rcFiles,
-			TDynamicArray<String> &libDependencyPath,
-			TDynamicArray<String> &libDependency,
-			int numThreads,
-			bool echoCmd,
-			bool force) {
-			if(options & CompilerOptions::CRTStatic) {
+		    String exeName,
+		    String binPath,
+		    String tmpPath,
+		    int options,
+		    TDynamicArray<String> &cDefine,
+		    TDynamicArray<String> &incPath,
+		    TDynamicArray<String> &incFiles,
+		    TDynamicArray<String> &cFiles,
+		    TDynamicArray<String> &rcDefine,
+		    TDynamicArray<String> &incPathRC,
+		    TDynamicArray<String> &rcFiles,
+		    TDynamicArray<String> &libDependencyPath,
+		    TDynamicArray<String> &libDependency,
+		    int numThreads,
+		    bool echoCmd,
+		    bool force) {
+			if (options & CompilerOptions::CRTStatic) {
 				options |= CompilerOptions::StaticLibrary;
 			};
-			if(options & CompilerOptions::CRTDynamic) {
+			if (options & CompilerOptions::CRTDynamic) {
 				options |= CompilerOptions::DynamicLibrary;
 			};
 			options = filterOptions(options);
@@ -1124,32 +1114,32 @@ namespace XYOCC {
 			TDynamicArray<FileTime> incFilesTime;
 			TDynamicArray<FileTime> objFilesTime;
 
-			for(k = 0; k < incFiles.length(); ++k) {
+			for (k = 0; k < incFiles.length(); ++k) {
 				incFilesTime[k].getLastWriteTime(incFiles[k]);
 			};
 
-			for(k = 0; k < cFiles.length(); ++k) {
+			for (k = 0; k < cFiles.length(); ++k) {
 				objFiles[k] = objFilename(projectName, cFiles[k], tmpPath, options);
 				cFilesTime[k].getLastWriteTime(cFiles[k]);
 				objFilesTime[k].getLastWriteTime(objFiles[k]);
 			};
 
-			for(k = 0; k < cFiles.length(); ++k) {
+			for (k = 0; k < cFiles.length(); ++k) {
 				toMakeCToObj = false;
-				if(cFilesTime[k].isChanged(incFilesTime)) {
+				if (cFilesTime[k].isChanged(incFilesTime)) {
 					Shell::touchIfExists(cFiles[k]);
 					toMakeCToObj = true;
 				};
-				if(!Shell::fileExists(objFiles[k])) {
+				if (!Shell::fileExists(objFiles[k])) {
 					toMakeCToObj = true;
 				} else {
-					if(objFilesTime[k].compare(cFilesTime[k]) < 0) {
+					if (objFilesTime[k].compare(cFilesTime[k]) < 0) {
 						toMakeCToObj = true;
 					};
 				};
 
-				if(!force) {
-					if(!toMakeCToObj) {
+				if (!force) {
+					if (!toMakeCToObj) {
 						continue;
 					};
 				};
@@ -1158,28 +1148,28 @@ namespace XYOCC {
 				parameter->cppFile = cFiles[k];
 				parameter->objFile = objFiles[k];
 				parameter->options = options;
-				for(m = 0; m < incPath.length(); ++m) {
+				for (m = 0; m < incPath.length(); ++m) {
 					parameter->incPath[m] = incPath[m];
 				};
-				for(m = 0; m < cDefine.length(); ++m) {
+				for (m = 0; m < cDefine.length(); ++m) {
 					parameter->cppDefine[m] = cDefine[m];
 				};
 				parameter->echoCmd = echoCmd;
 				TWorkerQueue<CompilerWorkerBool,
-					     CompilerWorkerCppToObj,
-					     compilerTransferWorkerBool,
-					     compilerTransferWorkerCppToObj,
-					     compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
+				             CompilerWorkerCppToObj,
+				             compilerTransferWorkerBool,
+				             compilerTransferWorkerCppToObj,
+				             compilerWorkerProcedureCToObj>::add(compileCToObj, parameter);
 			};
 
-			if(!compileCToObj.isEmpty()) {
-				if(!compileCToObj.process()) {
+			if (!compileCToObj.isEmpty()) {
+				if (!compileCToObj.process()) {
 					return false;
 				};
-				for(k = 0; k < compileCToObj.length(); ++k) {
+				for (k = 0; k < compileCToObj.length(); ++k) {
 					retVCToObj = TStaticCast<CompilerWorkerBool *>(compileCToObj.getReturnValue(k));
-					if(retVCToObj) {
-						if(!retVCToObj->value) {
+					if (retVCToObj) {
+						if (!retVCToObj->value) {
 							return false;
 						};
 						continue;
@@ -1189,21 +1179,21 @@ namespace XYOCC {
 			};
 
 			String resObj;
-			for(k = 0; k < rcFiles.length(); ++k) {
+			for (k = 0; k < rcFiles.length(); ++k) {
 
-				if(Shell::isChanged(rcFiles[k], incFiles)) {
+				if (Shell::isChanged(rcFiles[k], incFiles)) {
 					Shell::touchIfExists(rcFiles[k]);
 				};
 
 				resObj = objFilename(projectName, rcFiles[k], tmpPath, options);
 
-				if(!makeRcToObj(
-						rcFiles[k],
-						resObj,
-						rcDefine,
-						incPathRC,
-						echoCmd,
-						force)) {
+				if (!makeRcToObj(
+				        rcFiles[k],
+				        resObj,
+				        rcDefine,
+				        incPathRC,
+				        echoCmd,
+				        force)) {
 					return false;
 				};
 
@@ -1211,46 +1201,43 @@ namespace XYOCC {
 			};
 
 			return makeObjToExe(
-					exeName,
-					binPath,
-					tmpPath,
-					options,
-					objFiles,
-					libDependencyPath,
-					libDependency,
-					echoCmd,
-					force);
-
+			    exeName,
+			    binPath,
+			    tmpPath,
+			    options,
+			    objFiles,
+			    libDependencyPath,
+			    libDependency,
+			    echoCmd,
+			    force);
 		};
 
 		bool getFileNameLib(const String &fileName, String &out) {
-			if(String::endsWith(fileName, ".lib")) {
+			if (String::endsWith(fileName, ".lib")) {
 				out = fileName;
 				return true;
 			};
 			out = fileName;
 			out += ".lib";
 			return true;
-
 		};
 
 		bool getFileNameDll(const String &fileName, String &out, const String &version) {
-			if(String::endsWith(fileName, ".dll")) {
+			if (String::endsWith(fileName, ".dll")) {
 				out = fileName;
 				return true;
 			};
 			out = fileName;
-			if(!version.isEmpty()) {
+			if (!version.isEmpty()) {
 				out += "-";
 				out += version;
 			};
 			out += ".dll";
 			return true;
-
 		};
 
 		bool getFileNameExe(const String &fileName, String &out) {
-			if(String::endsWith(fileName, ".exe")) {
+			if (String::endsWith(fileName, ".exe")) {
 				out = fileName;
 				return true;
 			};
@@ -1262,13 +1249,13 @@ namespace XYOCC {
 		bool copyLib(const String &fileName, const String &file) {
 			String fileNameLib;
 			String fileLib;
-			if(getFileNameLib(fileName, fileNameLib)) {
-				if(getFileNameLib(file, fileLib)) {
-					if(Shell::copyFile(fileNameLib, fileLib)) {
+			if (getFileNameLib(fileName, fileNameLib)) {
+				if (getFileNameLib(file, fileLib)) {
+					if (Shell::copyFile(fileNameLib, fileLib)) {
 						String fileNameExp = Shell::getFileBasename(fileNameLib) + ".exp";
-						if(Shell::fileExists(fileNameExp)) {
+						if (Shell::fileExists(fileNameExp)) {
 							String fileExp = Shell::getFileBasename(fileLib) + ".exp";
-							if(!Shell::copyFile(fileNameExp, fileExp)) {
+							if (!Shell::copyFile(fileNameExp, fileExp)) {
 								return false;
 							};
 						};
@@ -1282,13 +1269,13 @@ namespace XYOCC {
 		bool copyDll(const String &fileName, const String &file, const String &version, const String &fileVersion) {
 			String fileNameDll;
 			String fileDll;
-			if(getFileNameDll(fileName, fileNameDll, version)) {
-				if(getFileNameDll(file, fileDll, fileVersion)) {
-					if(Shell::copyFile(fileNameDll, fileDll)) {
+			if (getFileNameDll(fileName, fileNameDll, version)) {
+				if (getFileNameDll(file, fileDll, fileVersion)) {
+					if (Shell::copyFile(fileNameDll, fileDll)) {
 						String fileNamePdb = Shell::getFileBasename(fileNameDll) + ".pdb";
-						if(Shell::fileExists(fileNamePdb)) {
+						if (Shell::fileExists(fileNamePdb)) {
 							String filePdb = Shell::getFileBasename(fileDll) + ".pdb";
-							if(!Shell::copyFile(fileNamePdb, filePdb)) {
+							if (!Shell::copyFile(fileNamePdb, filePdb)) {
 								return false;
 							};
 						};
@@ -1302,13 +1289,13 @@ namespace XYOCC {
 		bool copyExe(const String &fileName, const String &file) {
 			String fileNameExe;
 			String fileExe;
-			if(getFileNameExe(fileName, fileNameExe)) {
-				if(getFileNameExe(file, fileExe)) {
-					if(Shell::copyFile(fileNameExe, fileExe)) {
+			if (getFileNameExe(fileName, fileNameExe)) {
+				if (getFileNameExe(file, fileExe)) {
+					if (Shell::copyFile(fileNameExe, fileExe)) {
 						String fileNamePdb = Shell::getFileBasename(fileNameExe) + ".pdb";
-						if(Shell::fileExists(fileNamePdb)) {
+						if (Shell::fileExists(fileNamePdb)) {
 							String filePdb = Shell::getFileBasename(fileExe) + ".pdb";
-							if(!Shell::copyFile(fileNamePdb, filePdb)) {
+							if (!Shell::copyFile(fileNamePdb, filePdb)) {
 								return false;
 							};
 						};
@@ -1321,11 +1308,11 @@ namespace XYOCC {
 
 		bool copyLibToFolder(const String &fileName, const String &folder) {
 			String fileNameLib;
-			if(getFileNameLib(fileName, fileNameLib)) {
-				if(Shell::copyFile(fileNameLib, folder + Shell::pathSeparator + Shell::getFileName(fileNameLib))) {
+			if (getFileNameLib(fileName, fileNameLib)) {
+				if (Shell::copyFile(fileNameLib, folder + Shell::pathSeparator + Shell::getFileName(fileNameLib))) {
 					String fileNameExp = Shell::getFileBasename(fileNameLib) + ".exp";
-					if(Shell::fileExists(fileNameExp)) {
-						if(!Shell::copyFile(fileNameExp, folder + Shell::pathSeparator + Shell::getFileName(fileNameExp))) {
+					if (Shell::fileExists(fileNameExp)) {
+						if (!Shell::copyFile(fileNameExp, folder + Shell::pathSeparator + Shell::getFileName(fileNameExp))) {
 							return false;
 						};
 					};
@@ -1337,11 +1324,11 @@ namespace XYOCC {
 
 		bool copyDllToFolder(const String &fileName, const String &folder, const String &version) {
 			String fileNameDll;
-			if(getFileNameDll(fileName, fileNameDll, version)) {
-				if(Shell::copyFile(fileNameDll, folder + Shell::pathSeparator + Shell::getFileName(fileNameDll))) {
+			if (getFileNameDll(fileName, fileNameDll, version)) {
+				if (Shell::copyFile(fileNameDll, folder + Shell::pathSeparator + Shell::getFileName(fileNameDll))) {
 					String fileNamePdb = Shell::getFileBasename(fileNameDll) + ".pdb";
-					if(Shell::fileExists(fileNamePdb)) {
-						if(!Shell::copyFile(fileNamePdb, folder + Shell::pathSeparator + Shell::getFileName(fileNamePdb))) {
+					if (Shell::fileExists(fileNamePdb)) {
+						if (!Shell::copyFile(fileNamePdb, folder + Shell::pathSeparator + Shell::getFileName(fileNamePdb))) {
 							return false;
 						};
 					};
@@ -1353,11 +1340,11 @@ namespace XYOCC {
 
 		bool copyExeToFolder(const String &fileName, const String &folder) {
 			String fileNameExe;
-			if(getFileNameExe(fileName, fileNameExe)) {
-				if(Shell::copyFile(fileNameExe, folder + Shell::pathSeparator + Shell::getFileName(fileNameExe))) {
+			if (getFileNameExe(fileName, fileNameExe)) {
+				if (Shell::copyFile(fileNameExe, folder + Shell::pathSeparator + Shell::getFileName(fileNameExe))) {
 					String fileNamePdb = Shell::getFileBasename(fileNameExe) + ".pdb";
-					if(Shell::fileExists(fileNamePdb)) {
-						if(!Shell::copyFile(fileNamePdb, folder + Shell::pathSeparator + Shell::getFileName(fileNamePdb))) {
+					if (Shell::fileExists(fileNamePdb)) {
+						if (!Shell::copyFile(fileNamePdb, folder + Shell::pathSeparator + Shell::getFileName(fileNamePdb))) {
 							return false;
 						};
 					};
@@ -1368,12 +1355,12 @@ namespace XYOCC {
 		};
 
 		bool copyDllToFolderWithLib(
-			const String &fileNameLib, const String &folderLib,
-			const String &fileNameDll, const String &folderBin,
-			const String &version) {
+		    const String &fileNameLib, const String &folderLib,
+		    const String &fileNameDll, const String &folderBin,
+		    const String &version) {
 
-			if(copyLibToFolder(fileNameLib, folderLib)) {
-				if(copyDllToFolder(fileNameDll, folderBin, version)) {
+			if (copyLibToFolder(fileNameLib, folderLib)) {
+				if (copyDllToFolder(fileNameDll, folderBin, version)) {
 					return true;
 				};
 			};

@@ -8,18 +8,18 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
 
-#include "xyo-system-datetime.hpp"
+#	include "xyo-system-datetime.hpp"
 
 namespace XYO {
 	namespace System {
@@ -166,10 +166,10 @@ namespace XYO {
 			bx.u.LowPart = b.dwLowDateTime;
 			bx.u.HighPart = b.dwHighDateTime;
 
-			if(ax.QuadPart < bx.QuadPart) {
+			if (ax.QuadPart < bx.QuadPart) {
 				return -1;
 			};
-			if(ax.QuadPart == bx.QuadPart) {
+			if (ax.QuadPart == bx.QuadPart) {
 				return 0;
 			};
 			return 1;
@@ -177,12 +177,12 @@ namespace XYO {
 
 		static void unixTimeToFileTime_(time_t t, FILETIME &ft) {
 			LONGLONG ll;
-#ifdef XYO_COMPILER_MSVC
+#	ifdef XYO_COMPILER_MSVC
 			ll = Int32x32To64(t, 10000000UL) + 116444736000000000ui64;
-#endif
-#ifdef XYO_COMPILER_GCC
+#	endif
+#	ifdef XYO_COMPILER_GCC
 			ll = Int32x32To64(t, 10000000UL) + 116444736000000000ULL;
-#endif
+#	endif
 			ft.dwLowDateTime = (DWORD)ll;
 			ft.dwHighDateTime = (DWORD)(ll >> 32);
 		};
@@ -190,23 +190,23 @@ namespace XYO {
 		static void fileTimeToUnixTime_(FILETIME &ft, time_t &t) {
 			LONGLONG ll;
 			ll = (((LONGLONG)(ft.dwHighDateTime)) << 32) + ft.dwLowDateTime;
-#ifdef XYO_COMPILER_MSVC
+#	ifdef XYO_COMPILER_MSVC
 			t = (time_t)((ll - (116444736000000000ui64)) / 10000000ui64);
-#endif
-#ifdef XYO_COMPILER_GCC
+#	endif
+#	ifdef XYO_COMPILER_GCC
 			t = (time_t)((ll - (116444736000000000ULL)) / 10000000ULL);
-#endif
+#	endif
 		};
 
 		static void fileTimeToUnixTimeMilliseconds_(FILETIME &ft, time_t &t) {
 			LONGLONG ll;
 			ll = (((LONGLONG)(ft.dwHighDateTime)) << 32) + ft.dwLowDateTime;
-#ifdef XYO_COMPILER_MSVC
+#	ifdef XYO_COMPILER_MSVC
 			t = (time_t)((ll - (116444736000000000ui64)) / 10000000ui64);
-#endif
-#ifdef XYO_COMPILER_GCC
+#	endif
+#	ifdef XYO_COMPILER_GCC
 			t = (time_t)((ll - (116444736000000000ULL)) / 10000000ULL);
-#endif
+#	endif
 		};
 
 		uint64_t DateTime::toUnixTime() {
@@ -230,12 +230,12 @@ namespace XYO {
 			FILETIME ft;
 			SystemTimeToFileTime(&valueTmp_, &ft);
 			fileTimeToUnixTime_(ft, t);
-#ifdef XYO_COMPILER_MSVC
+#	ifdef XYO_COMPILER_MSVC
 			return ((uint64_t)t) * (1000ui64) + ((uint64_t)valueTmp_.wMilliseconds);
-#endif
-#ifdef XYO_COMPILER_GCC
+#	endif
+#	ifdef XYO_COMPILER_GCC
 			return ((uint64_t)t) * (1000ULL) + ((uint64_t)valueTmp_.wMilliseconds);
-#endif
+#	endif
 		};
 
 	};

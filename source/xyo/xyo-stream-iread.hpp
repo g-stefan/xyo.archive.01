@@ -11,7 +11,7 @@
 #define XYO_STREAM_IREAD_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_INTERFACE(IRead);
 
 			public:
-
 				virtual size_t read(void *output, size_t length) = 0;
 		};
 

@@ -11,7 +11,7 @@
 #define XYO_MANAGEDMEMORY_REGISTRYLEVEL_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
@@ -30,4 +30,3 @@ namespace XYO {
 };
 
 #endif
-

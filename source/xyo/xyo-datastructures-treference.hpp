@@ -11,18 +11,18 @@
 #define XYO_DATASTRUCTURES_TREFERENCE_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 
-		template<typename T, void DeleteMemoryT(T *)>
+		template <typename T, void DeleteMemoryT(T *)>
 		class TReference {
 			protected:
 				T *object;
-			public:
 
+			public:
 				inline TReference() = delete;
 
 				inline ~TReference() {
@@ -56,7 +56,6 @@ namespace XYO {
 				inline T *value() const {
 					return object;
 				};
-
 		};
 
 	};

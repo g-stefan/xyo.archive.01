@@ -11,7 +11,7 @@
 #define XYO_MANAGEDMEMORY_REGISTRYDATA_HPP
 
 #ifndef XYO_DATASTRUCTURES_TXLIST2_HPP
-#include "xyo-datastructures-txlist2.hpp"
+#	include "xyo-datastructures-txlist2.hpp"
 #endif
 
 namespace XYO {
@@ -19,9 +19,9 @@ namespace XYO {
 		using namespace XYO::DataStructures;
 
 		struct RegistryDataNode : TXList2Node<RegistryDataNode> {
-			void *resourceThis;
-			DeleteMemory deleteResource;
-			FinalizeMemory finalizeResource;
+				void *resourceThis;
+				DeleteMemory deleteResource;
+				FinalizeMemory finalizeResource;
 		};
 
 		typedef TXList2<RegistryDataNode> RegistryDataList;
@@ -37,4 +37,3 @@ namespace XYO {
 };
 
 #endif
-

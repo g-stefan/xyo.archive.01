@@ -11,27 +11,27 @@
 #define XYO_MANAGEDMEMORY_TMEMORY_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
+#	include "xyo-managedmemory-tmemorysystem.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIED_HPP
-#include "xyo-managedmemory-tmemorypoolunified.hpp"
+#	include "xyo-managedmemory-tmemorypoolunified.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLACTIVE_HPP
-#include "xyo-managedmemory-tmemorypoolactive.hpp"
+#	include "xyo-managedmemory-tmemorypoolactive.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYPROCESS_HPP
-#include "xyo-managedmemory-tmemoryprocess.hpp"
+#	include "xyo-managedmemory-tmemoryprocess.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYTHREAD_HPP
-#include "xyo-managedmemory-tmemorythread.hpp"
+#	include "xyo-managedmemory-tmemorythread.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYPOOL_HPP
-#include "xyo-managedmemory-tmemorypool.hpp"
+#	include "xyo-managedmemory-tmemorypool.hpp"
 #endif
 
 #ifdef XYO_TMEMORYPOOL_SYSTEM
@@ -39,7 +39,7 @@
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemory : TMemorySystem<T> {};
 
 	};
@@ -50,7 +50,7 @@ namespace XYO {
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemory : TMemoryThread<T> {};
 
 	};

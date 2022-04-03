@@ -11,19 +11,19 @@
 #define XYO_ENCODING_UTF_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 #ifndef XYO_ENCODING_UTF8CORE_HPP
-#include "xyo-encoding-utf8core.hpp"
+#	include "xyo-encoding-utf8core.hpp"
 #endif
 
 #ifndef XYO_ENCODING_UTF16CORE_HPP
-#include "xyo-encoding-utf16core.hpp"
+#	include "xyo-encoding-utf16core.hpp"
 #endif
 
 #ifndef XYO_ENCODING_UTF32CORE_HPP
-#include "xyo-encoding-utf32core.hpp"
+#	include "xyo-encoding-utf32core.hpp"
 #endif
 
 namespace XYO {
@@ -78,4 +78,3 @@ namespace XYO {
 };
 
 #endif
-

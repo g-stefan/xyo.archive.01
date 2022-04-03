@@ -11,7 +11,7 @@
 #define XYO_ALGORITHM_BUFFER8CORE_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {

@@ -22,7 +22,7 @@ namespace XYO {
 			const utf16 utf16StringQuestionMark[] = {'?', 0};
 			const utf32 utf32StringQuestionMark[] = {'?', 0};
 
-			size_t elementUtf32FromUtf8(utf32 *out, const  utf8 *in) {
+			size_t elementUtf32FromUtf8(utf32 *out, const utf8 *in) {
 				size_t in_sz;
 				in_sz = Utf8Core::elementSize(*in);
 				if (in_sz == 0) {
@@ -33,69 +33,69 @@ namespace XYO {
 				};
 				*out = 0;
 				switch (in_sz) {
-					case 1:
-						*out = (utf32) * in;
-						break;
-					case 2:
-						*out = (utf32) (*in & 0x1F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						break;
-					case 3:
-						*out = (utf32) (*in & 0x0F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						break;
-					case 4:
-						*out = (utf32) (*in & 0x07);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						break;
-					case 5:
-						*out = (utf32) (*in & 0x03);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						break;
-					case 6:
-						*out = (utf32) (*in & 0x01);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						*out <<= 6;
-						++in;
-						*out |= (utf32) (*in & 0x3F);
-						break;
+				case 1:
+					*out = (utf32)*in;
+					break;
+				case 2:
+					*out = (utf32)(*in & 0x1F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					break;
+				case 3:
+					*out = (utf32)(*in & 0x0F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					break;
+				case 4:
+					*out = (utf32)(*in & 0x07);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					break;
+				case 5:
+					*out = (utf32)(*in & 0x03);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					break;
+				case 6:
+					*out = (utf32)(*in & 0x01);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					*out <<= 6;
+					++in;
+					*out |= (utf32)(*in & 0x3F);
+					break;
 				};
 				if (Utf32Core::elementIsValid(*out)) {
 					return 1;
@@ -108,7 +108,7 @@ namespace XYO {
 					return 0;
 				};
 
-				//ISO-10646-UTF-8
+				// ISO-10646-UTF-8
 				if ((in & 0xFFFFFF80) == 0x00000000) {
 					return 1;
 				};
@@ -138,80 +138,80 @@ namespace XYO {
 				};
 				*out = 0;
 				switch (sz) {
-					case 1:
-						*out = (utf8) in;
-						break;
-					case 2:
-						out += 1;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x1F) | 0xC0);
-						break;
-					case 3:
-						out += 2;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x0F) | 0xE0);
-						break;
-					case 4:
-						out += 3;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x07) | 0xF0);
-						break;
-					case 5:
-						out += 4;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x03) | 0xF8);
-						break;
-					case 6:
-						out += 5;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x3F) | 0x80);
-						--out;
-						in >>= 6;
-						*out = (utf8) ((in & 0x01) | 0xFC);
-						break;
+				case 1:
+					*out = (utf8)in;
+					break;
+				case 2:
+					out += 1;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x1F) | 0xC0);
+					break;
+				case 3:
+					out += 2;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x0F) | 0xE0);
+					break;
+				case 4:
+					out += 3;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x07) | 0xF0);
+					break;
+				case 5:
+					out += 4;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x03) | 0xF8);
+					break;
+				case 6:
+					out += 5;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x3F) | 0x80);
+					--out;
+					in >>= 6;
+					*out = (utf8)((in & 0x01) | 0xFC);
+					break;
 				};
 				return sz;
 			};
 
 			size_t elementUtf16FromUtf32Size(utf32 in) {
-				//ISO-10646-UTF-16
+				// ISO-10646-UTF-16
 				if (!Utf32Core::elementIsValid(in)) {
 					return 0;
 				};
@@ -229,21 +229,21 @@ namespace XYO {
 				};
 				*out = 0;
 				switch (sz) {
-					case 1:
-						*out = (utf16) in;
-						break;
-					case 2:
-						in -= 0x00010000;
-						++out;
-						*out = (utf16) ((in % 0x0400) + 0xDC00);
-						--out;
-						*out = (utf16) ((in / 0x0400) + 0xD800);
-						break;
+				case 1:
+					*out = (utf16)in;
+					break;
+				case 2:
+					in -= 0x00010000;
+					++out;
+					*out = (utf16)((in % 0x0400) + 0xDC00);
+					--out;
+					*out = (utf16)((in / 0x0400) + 0xD800);
+					break;
 				};
 				return sz;
 			};
 
-			size_t elementUtf32FromUtf16(utf32 *out, const  utf16 *in) {
+			size_t elementUtf32FromUtf16(utf32 *out, const utf16 *in) {
 				size_t sz;
 				sz = Utf16Core::elementSize(*in);
 				if (sz == 0) {
@@ -254,16 +254,16 @@ namespace XYO {
 				};
 				*out = 0;
 				switch (sz) {
-					case 1:
-						*out = (utf32) * in;
-						break;
-					case 2:
-						*out = (*in - 0xD800);
-						*out *= 0x400;
-						++in;
-						*out += (*in - 0xDC00);
-						*out += 0x0010000;
-						break;
+				case 1:
+					*out = (utf32)*in;
+					break;
+				case 2:
+					*out = (*in - 0xD800);
+					*out *= 0x400;
+					++in;
+					*out += (*in - 0xDC00);
+					*out += 0x0010000;
+					break;
 				};
 				if (Utf32Core::elementIsValid(*out)) {
 					return 1;
@@ -305,7 +305,7 @@ namespace XYO {
 				utf32 tmp;
 				size_t sz;
 
-				while(*in) {
+				while (*in) {
 
 					sz = Utf16Core::elementSize(*in);
 					if (sz) {
@@ -357,7 +357,7 @@ namespace XYO {
 					sz = Utf8Core::elementSize(*in);
 					if (sz) {
 						if (elementUtf32FromUtf8(&tmp, in)) {
-							chr[elementUtf16FromUtf32(chr, tmp)]=0;
+							chr[elementUtf16FromUtf32(chr, tmp)] = 0;
 							retV += chr;
 						} else {
 							retV += err;
@@ -378,11 +378,11 @@ namespace XYO {
 				utf16 chr[4];
 				size_t sz;
 
-				while(*in) {
+				while (*in) {
 
 					sz = Utf32Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf16FromUtf32(chr, *in)]=0;
+						chr[elementUtf16FromUtf32(chr, *in)] = 0;
 						retV += chr;
 						continue;
 					};
@@ -403,8 +403,8 @@ namespace XYO {
 
 					sz = Utf8Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf32FromUtf8(chr, in)]=0;
-						retV+=chr;
+						chr[elementUtf32FromUtf8(chr, in)] = 0;
+						retV += chr;
 						in += sz;
 						continue;
 					};
@@ -424,8 +424,8 @@ namespace XYO {
 				while (*in) {
 					sz = Utf16Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf32FromUtf16(chr, in)]=0;
-						retV+=chr;
+						chr[elementUtf32FromUtf16(chr, in)] = 0;
+						retV += chr;
 						in += sz;
 						continue;
 					};
@@ -484,7 +484,7 @@ namespace XYO {
 				size_t sz;
 				utf32 chr;
 
-				while(*in) {
+				while (*in) {
 					sz = Utf8Core::elementSize(*in);
 					if (sz) {
 						ln += elementUtf32FromUtf8(&chr, in);
@@ -523,7 +523,7 @@ namespace XYO {
 				Utf8Read utf8Read;
 
 				if (file.openRead(fileName)) {
-					if(utf8Read.open(&file, mode)) {
+					if (utf8Read.open(&file, mode)) {
 						size_t size;
 						size_t strSize;
 
@@ -531,7 +531,7 @@ namespace XYO {
 						size = file.seekTell();
 						file.seekFromBegin(0);
 						strSize = size;
-						if(!((mode == UtfStreamMode::None) || (mode == UtfStreamMode::Utf8))) {
+						if (!((mode == UtfStreamMode::None) || (mode == UtfStreamMode::Utf8))) {
 							strSize = size * 2;
 						};
 						TPointer<StringReference> result(TMemory<StringReference>::newMemory());
@@ -541,21 +541,21 @@ namespace XYO {
 						result->setLength(readLn);
 
 						size_t verifyLn = 0;
-						switch(mode) {
-							case UtfStreamMode::None:
-							case UtfStreamMode::Utf8:
-								verifyLn = readLn;
-								break;
-							case UtfStreamMode::Utf16:
-								verifyLn = utf16FromUtf8Length(result->value()) * sizeof(utf16);
-								break;
-							case UtfStreamMode::Utf32:
-								verifyLn = utf32FromUtf8Length(result->value()) * sizeof(utf32);
-								break;
-							default:
-								break;
+						switch (mode) {
+						case UtfStreamMode::None:
+						case UtfStreamMode::Utf8:
+							verifyLn = readLn;
+							break;
+						case UtfStreamMode::Utf16:
+							verifyLn = utf16FromUtf8Length(result->value()) * sizeof(utf16);
+							break;
+						case UtfStreamMode::Utf32:
+							verifyLn = utf32FromUtf8Length(result->value()) * sizeof(utf32);
+							break;
+						default:
+							break;
 						};
-						if(size == verifyLn) {
+						if (size == verifyLn) {
 							utf8Read.close();
 							file.close();
 							output = result;
@@ -573,7 +573,7 @@ namespace XYO {
 				Utf8Write utf8Write;
 
 				if (file.openWrite(fileName)) {
-					if(utf8Write.open(&file, mode)) {
+					if (utf8Write.open(&file, mode)) {
 						if (utf8Write.write(value.index(0), value.length()) == value.length()) {
 							utf8Write.close();
 							file.close();
@@ -586,8 +586,6 @@ namespace XYO {
 				return false;
 			};
 
-
 		};
 	};
 };
-

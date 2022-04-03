@@ -8,17 +8,17 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include <pthread.h>
-#include <unistd.h>
+#	include <pthread.h>
+#	include <unistd.h>
 
-#include "xyo-multithreading-criticalsection.hpp"
+#	include "xyo-multithreading-criticalsection.hpp"
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 
 namespace XYO {
 	namespace Multithreading {
@@ -30,26 +30,26 @@ namespace XYO {
 
 		CriticalSection::CriticalSection() {
 			criticalSection = new CriticalSection_();
-			if(pthread_mutex_init(&criticalSection->section, nullptr)) {
+			if (pthread_mutex_init(&criticalSection->section, nullptr)) {
 				throw std::runtime_error("pthread_mutex_init");
 			};
 		};
 
 		CriticalSection::~CriticalSection() noexcept(false) {
-			if(pthread_mutex_destroy(&criticalSection->section)) {
+			if (pthread_mutex_destroy(&criticalSection->section)) {
 				throw std::runtime_error("pthread_mutex_destroy");
 			};
 			delete criticalSection;
 		};
 
 		void CriticalSection::enter() {
-			if(pthread_mutex_lock(&criticalSection->section)) {
+			if (pthread_mutex_lock(&criticalSection->section)) {
 				throw std::runtime_error("pthread_mutex_lock");
 			};
 		};
 
 		void CriticalSection::leave() {
-			if(pthread_mutex_unlock(&criticalSection->section)) {
+			if (pthread_mutex_unlock(&criticalSection->section)) {
 				throw std::runtime_error("pthread_mutex_unlock");
 			};
 		};
@@ -58,7 +58,6 @@ namespace XYO {
 
 };
 
-#endif
+#	endif
 
 #endif
-

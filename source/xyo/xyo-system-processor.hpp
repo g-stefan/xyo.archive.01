@@ -11,11 +11,11 @@
 #define XYO_SYSTEM_PROCESSOR_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 namespace XYO {
@@ -29,4 +29,3 @@ namespace XYO {
 };
 
 #endif
-

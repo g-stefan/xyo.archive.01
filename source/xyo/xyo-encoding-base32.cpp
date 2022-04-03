@@ -31,20 +31,20 @@ namespace XYO {
 				co = toEncode.length();
 				const char *pad = "";
 				c = 0;
-				while(c < co) {
+				while (c < co) {
 
-					n = (((uint64_t) ((uint8_t)toEncode[c])) << 32);
+					n = (((uint64_t)((uint8_t)toEncode[c])) << 32);
 					if (c + 1 < co) {
-						n += (((uint64_t) ((uint8_t)toEncode[c + 1])) << 24);
+						n += (((uint64_t)((uint8_t)toEncode[c + 1])) << 24);
 					};
 					if (c + 2 < co) {
-						n += (((uint64_t) ((uint8_t)toEncode[c + 2])) << 16);
+						n += (((uint64_t)((uint8_t)toEncode[c + 2])) << 16);
 					};
 					if (c + 3 < co) {
-						n += (((uint64_t) ((uint8_t)toEncode[c + 3])) << 8);
+						n += (((uint64_t)((uint8_t)toEncode[c + 3])) << 8);
 					};
 					if (c + 4 < co) {
-						n += (((uint64_t) ((uint8_t)toEncode[c + 4])));
+						n += (((uint64_t)((uint8_t)toEncode[c + 4])));
 					};
 
 					n0 = (n >> 35) & 0x1F;
@@ -54,7 +54,7 @@ namespace XYO {
 					n4 = (n >> 15) & 0x1F;
 					n5 = (n >> 10) & 0x1F;
 					n6 = (n >> 5) & 0x1F;
-					n7 = (n) & 0x1F;
+					n7 = (n)&0x1F;
 
 					buf[0] = base32Code[n0];
 					retV << buf;
@@ -144,7 +144,6 @@ namespace XYO {
 
 					n2 = z;
 
-
 					ch = toDecode[c + 3];
 					for (z = 0; z < 0x20; ++z) {
 						if (base32Code[z] == ch) {
@@ -169,7 +168,7 @@ namespace XYO {
 						if (ch != '=') {
 							return false;
 						};
-						if(p == 5) {
+						if (p == 5) {
 							p = 2;
 						};
 						z = 0;
@@ -186,7 +185,7 @@ namespace XYO {
 						if (ch != '=') {
 							return false;
 						};
-						if(p == 5) {
+						if (p == 5) {
 							p = 3;
 						};
 						z = 0;
@@ -217,7 +216,7 @@ namespace XYO {
 						if (ch != '=') {
 							return false;
 						};
-						if(p == 5) {
+						if (p == 5) {
 							p = 4;
 						};
 						z = 0;
@@ -244,7 +243,7 @@ namespace XYO {
 					c1 = ((n >> 24) & 0x00FF);
 					c2 = ((n >> 16) & 0x00FF);
 					c3 = ((n >> 8) & 0x00FF);
-					c4 = ((n) & 0x00FF);
+					c4 = ((n)&0x00FF);
 
 					out << c0;
 					if (p >= 2) {
@@ -266,4 +265,3 @@ namespace XYO {
 		};
 	};
 };
-

@@ -8,18 +8,18 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include <sys/time.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#	include <sys/time.h>
+#	include <time.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
 
-#include "xyo-system-datetime.hpp"
+#	include "xyo-system-datetime.hpp"
 
 namespace XYO {
 	namespace System {
@@ -73,8 +73,7 @@ namespace XYO {
 			return 0;
 		};
 
-		void DateTime::setLocalTime() {
-		};
+		void DateTime::setLocalTime(){};
 
 		void DateTime::setYear(uint16_t value) {
 			dateTime->value.tm_year = value;
@@ -104,8 +103,7 @@ namespace XYO {
 			dateTime->value.tm_sec = value;
 		};
 
-		void DateTime::setMilliseconds(uint16_t value) {
-		};
+		void DateTime::setMilliseconds(uint16_t value){};
 
 		void DateTime::copy(DateTime &in) {
 			memcpy(&dateTime->value, &in.dateTime->value, sizeof(struct tm));
@@ -134,10 +132,10 @@ namespace XYO {
 			time_t b;
 			a = mktime(&dateTime->value);
 			b = mktime(&in.dateTime->value);
-			if(a < b) {
+			if (a < b) {
 				return -1;
 			};
-			if(a == b) {
+			if (a == b) {
 				return 0;
 			};
 			return 1;
@@ -160,6 +158,5 @@ namespace XYO {
 
 	};
 };
-
 
 #endif

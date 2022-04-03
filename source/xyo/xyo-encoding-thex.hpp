@@ -11,40 +11,40 @@
 #define XYO_ENCODING_THEX_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
 	namespace Encoding {
 
-		template<typename T>
+		template <typename T>
 		struct THex {
-			static inline T encodeUppercase(const typename std::make_unsigned<T>::type x) {
-				if(x < 10) {
-					return ('0' | x);
+				static inline T encodeUppercase(const typename std::make_unsigned<T>::type x) {
+					if (x < 10) {
+						return ('0' | x);
+					};
+					return 'A' + (x - 10);
 				};
-				return 'A' + (x - 10);
-			};
 
-			static inline T encodeLowercase(const typename std::make_unsigned<T>::type x) {
-				if(x < 10) {
-					return ('0' | x);
+				static inline T encodeLowercase(const typename std::make_unsigned<T>::type x) {
+					if (x < 10) {
+						return ('0' | x);
+					};
+					return 'a' + (x - 10);
 				};
-				return 'a' + (x - 10);
-			};
 
-			static inline typename std::make_unsigned<T>::type decode(const T x) {
-				if(x >= '0' && x <= '9') {
-					return (x & 0x0F);
+				static inline typename std::make_unsigned<T>::type decode(const T x) {
+					if (x >= '0' && x <= '9') {
+						return (x & 0x0F);
+					};
+					if (x >= 'A' && x <= 'F') {
+						return x - 'A' + 10;
+					};
+					if (x >= 'a' && x <= 'f') {
+						return x - 'a' + 10;
+					};
+					return 0;
 				};
-				if(x >= 'A' && x <= 'F') {
-					return x - 'A' + 10;
-				};
-				if(x >= 'a' && x <= 'f') {
-					return x - 'a' + 10;
-				};
-				return 0;
-			};
 		};
 
 	};

@@ -11,11 +11,11 @@
 #define XYO_MANAGEDMEMORY_REGISTRYKEY_HPP
 
 #ifndef XYO_DATASTRUCTURES_TXREDBLACKTREE_HPP
-#include "xyo-datastructures-txredblacktree.hpp"
+#	include "xyo-datastructures-txredblacktree.hpp"
 #endif
 
 #ifndef XYO_MULTITHREADING_TATOMIC_HPP
-#include "xyo-multithreading-tatomic.hpp"
+#	include "xyo-multithreading-tatomic.hpp"
 #endif
 
 namespace XYO {
@@ -24,8 +24,8 @@ namespace XYO {
 		using namespace XYO::Multithreading;
 
 		struct RegistryKeyNode : TXRedBlackTreeNode<RegistryKeyNode, const char *> {
-			TAtomic<void *> processValue;
-			size_t threadValue;
+				TAtomic<void *> processValue;
+				size_t threadValue;
 		};
 
 		typedef TXRedBlackTree<RegistryKeyNode> RegistryKeyRBTree;
@@ -44,11 +44,9 @@ namespace XYO {
 #endif
 
 #ifdef XYO_SINGLE_THREAD
-			inline void criticalEnter() {
-			};
+			inline void criticalEnter(){};
 
-			inline void criticalLeave() {
-			};
+			inline void criticalLeave(){};
 #endif
 
 		};
@@ -57,4 +55,3 @@ namespace XYO {
 };
 
 #endif
-

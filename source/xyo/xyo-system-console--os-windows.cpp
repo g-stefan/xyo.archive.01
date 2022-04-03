@@ -8,14 +8,14 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#include <conio.h>
+#	include <conio.h>
 
-#include "xyo-system-console.hpp"
+#	include "xyo-system-console.hpp"
 
 namespace XYO {
 	namespace System {
@@ -34,4 +34,3 @@ namespace XYO {
 };
 
 #endif
-

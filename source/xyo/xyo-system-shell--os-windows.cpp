@@ -8,18 +8,18 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <direct.h>
-#include <io.h>
-#include <sys/stat.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#	include <direct.h>
+#	include <io.h>
+#	include <sys/stat.h>
 
-#include "xyo-system-shell.hpp"
-#include "xyo-encoding-string.hpp"
+#	include "xyo-system-shell.hpp"
+#	include "xyo-encoding-string.hpp"
 
 namespace XYO {
 	namespace System {
@@ -79,7 +79,7 @@ namespace XYO {
 				CloseHandle(hFileA);
 				CloseHandle(hFileB);
 
-				return (int) CompareFileTime(&lastWriteTimeA, &lastWriteTimeB);
+				return (int)CompareFileTime(&lastWriteTimeA, &lastWriteTimeB);
 			};
 
 			int system(const char *cmd) {
@@ -112,7 +112,7 @@ namespace XYO {
 				struct __stat64 status;
 				int result;
 				if (access(file, 0) == 0) {
-					if(_stat64(file, &status) == 0) {
+					if (_stat64(file, &status) == 0) {
 						if (status.st_mode & S_IFREG) {
 							return true;
 						};
@@ -131,14 +131,14 @@ namespace XYO {
 
 				// check for simple drive check X: => X:\ .
 				ln = strlen(dir);
-#ifdef XYO_COMPILER_GCC
-				if(ln == 0) {
+#	ifdef XYO_COMPILER_GCC
+				if (ln == 0) {
 					ln = strlen(dir); // strange gcc bug!? (ln=0) on X:
 				};
-#endif
-				if(ln > 0) {
-					if(dir[ln - 1] == ':') {
-						if(ln < 4) {
+#	endif
+				if (ln > 0) {
+					if (dir[ln - 1] == ':') {
+						if (ln < 4) {
 							strcpy(buf, dir);
 							strcat(buf, "\\");
 							dir = buf;
@@ -146,7 +146,7 @@ namespace XYO {
 					};
 					//
 					if (access(dir, 0) == 0) {
-						if(_stat64(dir, &status) == 0) {
+						if (_stat64(dir, &status) == 0) {
 							if (status.st_mode & S_IFDIR) {
 								return true;
 							};
@@ -168,7 +168,7 @@ namespace XYO {
 			bool realpath(const char *fileNameIn, char *fileNameOut, long int filenameOutSize) {
 				DWORD retV;
 				retV = GetFullPathNameA(fileNameIn, filenameOutSize, fileNameOut, nullptr);
-				if(retV == 0 || retV >= filenameOutSize) {
+				if (retV == 0 || retV >= filenameOutSize) {
 					return false;
 				};
 				return true;
@@ -176,9 +176,9 @@ namespace XYO {
 
 			uint32_t execute(const char *cmd) {
 				DWORD ReturnValue;
-				STARTUPINFO         SInfo;
+				STARTUPINFO SInfo;
 				PROCESS_INFORMATION PInfo;
-				BOOL    IsOk;
+				BOOL IsOk;
 
 				ReturnValue = 0;
 
@@ -190,19 +190,18 @@ namespace XYO {
 				SInfo.wShowWindow = SW_SHOW;
 
 				IsOk = CreateProcessA(
-						nullptr,
-						(LPSTR)cmd,
-						nullptr,
-						nullptr,
-						FALSE,
-						0,
-						nullptr,
-						nullptr,
-						&SInfo,
-						&PInfo
-					);
+				    nullptr,
+				    (LPSTR)cmd,
+				    nullptr,
+				    nullptr,
+				    FALSE,
+				    0,
+				    nullptr,
+				    nullptr,
+				    &SInfo,
+				    &PInfo);
 
-				if(IsOk) {
+				if (IsOk) {
 					WaitForSingleObject(PInfo.hProcess, INFINITE);
 					GetExitCodeProcess(PInfo.hProcess, &ReturnValue);
 					CloseHandle(PInfo.hThread);
@@ -215,24 +214,24 @@ namespace XYO {
 			uint32_t executeWriteOutputToFile(const char *cmd, const char *out) {
 				DWORD ReturnValue;
 				SECURITY_ATTRIBUTES SecAttr;
-				STARTUPINFO         SInfo;
+				STARTUPINFO SInfo;
 				PROCESS_INFORMATION PInfo;
-				BOOL    IsOk;
-				HANDLE              hWrite2Std = nullptr;
-				HANDLE              hRead2Std  = nullptr;
-				HANDLE              hWriteProc = nullptr;
-				HANDLE              hReadProc  = nullptr;
+				BOOL IsOk;
+				HANDLE hWrite2Std = nullptr;
+				HANDLE hRead2Std = nullptr;
+				HANDLE hWriteProc = nullptr;
+				HANDLE hReadProc = nullptr;
 
-				HANDLE              h_out  = nullptr;
+				HANDLE h_out = nullptr;
 
-				BYTE  buffer[16384];
+				BYTE buffer[16384];
 				DWORD buffer_ln;
 				DWORD total_buffer_ln;
 
 				ReturnValue = 0;
 
 				h_out = CreateFile((LPSTR)out, CREATE_ALWAYS, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
-				if(h_out == INVALID_HANDLE_VALUE) {
+				if (h_out == INVALID_HANDLE_VALUE) {
 					return 0;
 				};
 
@@ -251,68 +250,65 @@ namespace XYO {
 				CreatePipe(&hReadProc, &hWrite2Std, &SecAttr, 16384);
 				CreatePipe(&hRead2Std, &hWriteProc, &SecAttr, 16384);
 
-				SInfo.hStdInput  = hRead2Std;
+				SInfo.hStdInput = hRead2Std;
 				SInfo.hStdOutput = hWrite2Std;
-				SInfo.hStdError  = hWrite2Std;
+				SInfo.hStdError = hWrite2Std;
 
 				IsOk = CreateProcessA(
-						nullptr,
-						(LPSTR)cmd,
-						nullptr,
-						nullptr,
-						TRUE,
-						0,
-						nullptr,
-						nullptr,
-						&SInfo,
-						&PInfo
-					);
+				    nullptr,
+				    (LPSTR)cmd,
+				    nullptr,
+				    nullptr,
+				    TRUE,
+				    0,
+				    nullptr,
+				    nullptr,
+				    &SInfo,
+				    &PInfo);
 
-				if(IsOk) {
+				if (IsOk) {
 
-					for(;;) {
-						if(PeekNamedPipe(hReadProc, nullptr, 0, nullptr, &total_buffer_ln, nullptr)) {
-							if(total_buffer_ln > 0) {
-								while(total_buffer_ln > 16384) {
+					for (;;) {
+						if (PeekNamedPipe(hReadProc, nullptr, 0, nullptr, &total_buffer_ln, nullptr)) {
+							if (total_buffer_ln > 0) {
+								while (total_buffer_ln > 16384) {
 									buffer_ln = 16384;
-									if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+									if (ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
 										WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
 									};
 									total_buffer_ln -= 16384;
 								};
-								if(total_buffer_ln > 0) {
+								if (total_buffer_ln > 0) {
 									buffer_ln = total_buffer_ln;
-									if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+									if (ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
 										WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
 									};
 								};
 							} else {
-								//test end of process
-								if(WAIT_TIMEOUT != WaitForSingleObject(PInfo.hProcess, 1)) {
+								// test end of process
+								if (WAIT_TIMEOUT != WaitForSingleObject(PInfo.hProcess, 1)) {
 
-									if(PeekNamedPipe(hReadProc, nullptr, 0, nullptr, &total_buffer_ln, nullptr)) {
+									if (PeekNamedPipe(hReadProc, nullptr, 0, nullptr, &total_buffer_ln, nullptr)) {
 
-										while(total_buffer_ln > 16384) {
+										while (total_buffer_ln > 16384) {
 											buffer_ln = 16384;
-											if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+											if (ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
 												WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
 											};
 											total_buffer_ln -= 16384;
 										};
-										if(total_buffer_ln > 0) {
+										if (total_buffer_ln > 0) {
 											buffer_ln = total_buffer_ln;
-											if(ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
+											if (ReadFile(hReadProc, buffer, buffer_ln, &buffer_ln, nullptr)) {
 												WriteFile(h_out, buffer, buffer_ln, &buffer_ln, nullptr);
 											};
 										};
-
 									};
-
 
 									break;
 								};
 							};
-						} else if(WAIT_OBJECT_0 == WaitForSingleObject(PInfo.hThread, 1)) {
+						} else if (WAIT_OBJECT_0 == WaitForSingleObject(PInfo.hThread, 1)) {
 							break;
 						}
 					};
@@ -327,7 +323,6 @@ namespace XYO {
 					CloseHandle(hWrite2Std);
 					CloseHandle(hReadProc);
 					CloseHandle(h_out);
-
 				};
 
 				return ReturnValue;
@@ -335,9 +330,9 @@ namespace XYO {
 
 			uint32_t executeHidden(const char *cmd) {
 				DWORD ReturnValue;
-				STARTUPINFO         SInfo;
+				STARTUPINFO SInfo;
 				PROCESS_INFORMATION PInfo;
-				BOOL    IsOk;
+				BOOL IsOk;
 
 				ReturnValue = 0;
 
@@ -349,18 +344,17 @@ namespace XYO {
 				SInfo.wShowWindow = SW_HIDE;
 
 				IsOk = CreateProcessA(
-						nullptr,
-						(LPSTR)cmd,
-						nullptr,
-						nullptr,
-						FALSE,
-						0,
-						nullptr,
-						nullptr,
-						&SInfo,
-						&PInfo
-					);
-				if(IsOk) {
+				    nullptr,
+				    (LPSTR)cmd,
+				    nullptr,
+				    nullptr,
+				    FALSE,
+				    0,
+				    nullptr,
+				    nullptr,
+				    &SInfo,
+				    &PInfo);
+				if (IsOk) {
 					WaitForSingleObject(PInfo.hProcess, INFINITE);
 					GetExitCodeProcess(PInfo.hProcess, &ReturnValue);
 					CloseHandle(PInfo.hThread);
@@ -370,7 +364,7 @@ namespace XYO {
 			};
 
 			ProcessId executeNoWait(const char *cmd) {
-				STARTUPINFO         SInfo;
+				STARTUPINFO SInfo;
 				PROCESS_INFORMATION PInfo;
 
 				memset(&SInfo, 0, sizeof(SInfo));
@@ -379,19 +373,18 @@ namespace XYO {
 				SInfo.dwFlags = STARTF_USESHOWWINDOW;
 				SInfo.wShowWindow = SW_SHOW;
 
-#pragma warning( suppress : 6335 )
-				if(CreateProcessA(
-						nullptr,
-						(LPSTR)cmd,
-						nullptr,
-						nullptr,
-						FALSE,
-						0,
-						nullptr,
-						nullptr,
-						&SInfo,
-						&PInfo
-					)) {
+#	pragma warning(suppress : 6335)
+				if (CreateProcessA(
+				        nullptr,
+				        (LPSTR)cmd,
+				        nullptr,
+				        nullptr,
+				        FALSE,
+				        0,
+				        nullptr,
+				        nullptr,
+				        &SInfo,
+				        &PInfo)) {
 					return PInfo.dwProcessId;
 				};
 
@@ -399,9 +392,9 @@ namespace XYO {
 			};
 
 			ProcessId executeHiddenNoWait(const char *cmd) {
-				STARTUPINFO         SInfo;
+				STARTUPINFO SInfo;
 				PROCESS_INFORMATION PInfo;
-				BOOL    IsOk;
+				BOOL IsOk;
 
 				memset(&SInfo, 0, sizeof(SInfo));
 				memset(&PInfo, 0, sizeof(PInfo));
@@ -409,19 +402,18 @@ namespace XYO {
 				SInfo.dwFlags = STARTF_USESHOWWINDOW;
 				SInfo.wShowWindow = SW_HIDE;
 
-#pragma warning( suppress : 6335 )
-				if(CreateProcessA(
-						nullptr,
-						(LPSTR)cmd,
-						nullptr,
-						nullptr,
-						FALSE,
-						0,
-						nullptr,
-						nullptr,
-						&SInfo,
-						&PInfo
-					)) {
+#	pragma warning(suppress : 6335)
+				if (CreateProcessA(
+				        nullptr,
+				        (LPSTR)cmd,
+				        nullptr,
+				        nullptr,
+				        FALSE,
+				        0,
+				        nullptr,
+				        nullptr,
+				        &SInfo,
+				        &PInfo)) {
 					return PInfo.dwProcessId;
 				};
 				return 0;
@@ -434,17 +426,16 @@ namespace XYO {
 
 				dwProcessId = (DWORD)processId;
 				hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, dwProcessId);
-				if(hProcess != nullptr) {
+				if (hProcess != nullptr) {
 					dwExitCode = 0;
-					if(::GetExitCodeProcess(hProcess, &dwExitCode)) {
-						if(dwExitCode != STILL_ACTIVE) {}
-						else {
+					if (::GetExitCodeProcess(hProcess, &dwExitCode)) {
+						if (dwExitCode != STILL_ACTIVE) {
+						} else {
 							DWORD waitProcess = ::WaitForSingleObject(hProcess, 0);
-							if(waitProcess == WAIT_OBJECT_0) {
-							} else if(waitProcess == WAIT_TIMEOUT) {
+							if (waitProcess == WAIT_OBJECT_0) {
+							} else if (waitProcess == WAIT_TIMEOUT) {
 								CloseHandle(hProcess);
 								return false;
-
 							};
 						}
 					};
@@ -454,40 +445,39 @@ namespace XYO {
 				return true;
 			};
 
-			static BOOL CALLBACK shellTerminateAppEnum__( HWND hwnd, LPARAM lParam ) {
-				DWORD dwProcessId ;
+			static BOOL CALLBACK shellTerminateAppEnum__(HWND hwnd, LPARAM lParam) {
+				DWORD dwProcessId;
 
-				GetWindowThreadProcessId(hwnd, &dwProcessId) ;
+				GetWindowThreadProcessId(hwnd, &dwProcessId);
 
-				if(dwProcessId == (DWORD)lParam) {
-					PostMessage(hwnd, WM_CLOSE, 0, 0) ;
+				if (dwProcessId == (DWORD)lParam) {
+					PostMessage(hwnd, WM_CLOSE, 0, 0);
 				}
 
-				return TRUE ;
+				return TRUE;
 			};
 
 			bool terminateProcess(const ProcessId processId, const uint32_t waitMilliseconds_) {
 
 				DWORD dwProcessId;
 				HANDLE hProcess;
-				DWORD  dwExitCode;
+				DWORD dwExitCode;
 
 				dwProcessId = (DWORD)processId;
 				hProcess = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE,
-						dwProcessId);
-				if(hProcess) {
-					EnumWindows((WNDENUMPROC)shellTerminateAppEnum__, (LPARAM) dwProcessId);
+				                       dwProcessId);
+				if (hProcess) {
+					EnumWindows((WNDENUMPROC)shellTerminateAppEnum__, (LPARAM)dwProcessId);
 
-					if(waitMilliseconds_ == 0) {
+					if (waitMilliseconds_ == 0) {
 						TerminateProcess(hProcess, 0);
 					} else {
-						if(WaitForSingleObject(hProcess, waitMilliseconds_) != WAIT_OBJECT_0) {
+						if (WaitForSingleObject(hProcess, waitMilliseconds_) != WAIT_OBJECT_0) {
 							TerminateProcess(hProcess, 0);
 						};
 					};
 
 					CloseHandle(hProcess);
-
 				};
 
 				return true;
@@ -505,4 +495,3 @@ namespace XYO {
 };
 
 #endif
-

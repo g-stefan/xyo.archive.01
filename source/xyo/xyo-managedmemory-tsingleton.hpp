@@ -11,21 +11,20 @@
 #define XYO_MANAGEDMEMORY_TSINGLETON_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TSINGLETONPROCESS_HPP
-#include "xyo-managedmemory-tsingletonprocess.hpp"
+#	include "xyo-managedmemory-tsingletonprocess.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TSINGLETONTHREAD_HPP
-#include "xyo-managedmemory-tsingletonthread.hpp"
+#	include "xyo-managedmemory-tsingletonthread.hpp"
 #endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TSingleton : TSingletonThread<T> {};
 
 	};
 };
 
 #endif
-

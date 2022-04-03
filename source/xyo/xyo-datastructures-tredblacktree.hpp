@@ -11,54 +11,55 @@
 #define XYO_DATASTRUCTURES_TREDBLACKTREE_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TXREDBLACKTREE_HPP
-#include "xyo-datastructures-txredblacktree.hpp"
+#	include "xyo-datastructures-txredblacktree.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename TKey, typename TValue, template <typename U> class TNodeMemory>
+		template <typename TKey, typename TValue, template <typename U> class TNodeMemory>
 		struct TRedBlackTreeNode : TXRedBlackTreeNode<TRedBlackTreeNode<TKey, TValue, TNodeMemory>, TKey> {
-			typedef TRedBlackTreeNode TNode;
-			typedef TXRedBlackTree<TNode, TNodeMemory> TXRBTree;
+				typedef TRedBlackTreeNode TNode;
+				typedef TXRedBlackTree<TNode, TNodeMemory> TXRBTree;
 
-			TValue value;
+				TValue value;
 
-			inline TNode *minimum() {
-				return TXRBTree::minimum(this);
-			};
+				inline TNode *minimum() {
+					return TXRBTree::minimum(this);
+				};
 
-			inline TNode *maximum() {
-				return TXRBTree::maximum(this);
-			};
+				inline TNode *maximum() {
+					return TXRBTree::maximum(this);
+				};
 
-			inline TNode *successor() {
-				return TXRBTree::successor(this);
-			};
+				inline TNode *successor() {
+					return TXRBTree::successor(this);
+				};
 
-			inline TNode *predecesor() {
-				return TXRBTree::predecesor(this);
-			};
+				inline TNode *predecesor() {
+					return TXRBTree::predecesor(this);
+				};
 
-			inline void activeConstructor() {
-				TIfHasActiveConstructor<TKey>::activeConstructor(&this->key);
-				TIfHasActiveConstructor<TValue>::activeConstructor(&this->value);
-			};
+				inline void activeConstructor() {
+					TIfHasActiveConstructor<TKey>::activeConstructor(&this->key);
+					TIfHasActiveConstructor<TValue>::activeConstructor(&this->value);
+				};
 
-			inline void activeDestructor() {
-				TIfHasActiveDestructor<TKey>::activeDestructor(&this->key);
-				TIfHasActiveDestructor<TValue>::activeDestructor(&this->value);
-			};
+				inline void activeDestructor() {
+					TIfHasActiveDestructor<TKey>::activeDestructor(&this->key);
+					TIfHasActiveDestructor<TValue>::activeDestructor(&this->value);
+				};
 		};
 
-		template<typename TKey, typename TValue, template <typename U> class TNodeMemory = TMemory>
+		template <typename TKey, typename TValue, template <typename U> class TNodeMemory = TMemory>
 		class TRedBlackTree : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TRedBlackTree);
+
 			public:
 				typedef TRedBlackTreeNode<TKey, TValue, TNodeMemory> TNode;
 				typedef TXRedBlackTree<TNode, TNodeMemory> TXRBTree;
@@ -104,7 +105,7 @@ namespace XYO {
 				inline TNode *find(const TKeyType *key) {
 					TNode *x;
 					int compare;
-					for(x = root; x;) {
+					for (x = root; x;) {
 						compare = TComparator<TKeyType>::compare(*key, *(x->key));
 						if (compare == 0) {
 							return x;
@@ -358,4 +359,3 @@ namespace XYO {
 };
 
 #endif
-

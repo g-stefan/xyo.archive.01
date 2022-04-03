@@ -10,16 +10,16 @@
 #ifndef XYO_VERSION_HPP
 #define XYO_VERSION_HPP
 
-#define XYO_VERSION_ABCD                6,0,0,84
-#define XYO_VERSION_STR                 "6.0.0"
-#define XYO_VERSION_STR_BUILD           "84"
-#define XYO_VERSION_STR_DATETIME        "2022-01-09 01:13:02"
+#define XYO_VERSION_ABCD 6, 0, 0, 84
+#define XYO_VERSION_STR "6.0.0"
+#define XYO_VERSION_STR_BUILD "84"
+#define XYO_VERSION_STR_DATETIME "2022-01-09 01:13:02"
 
 #ifndef XYO_RC
 
-#ifndef XYO__EXPORT_HPP
-#include "xyo--export.hpp"
-#endif
+#	ifndef XYO__EXPORT_HPP
+#		include "xyo--export.hpp"
+#	endif
 
 namespace XYO {
 	namespace Version {
@@ -32,4 +32,3 @@ namespace XYO {
 
 #endif
 #endif
-

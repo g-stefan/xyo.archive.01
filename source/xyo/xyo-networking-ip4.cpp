@@ -26,7 +26,6 @@ namespace XYO {
 			retV <<= 8;
 			retV |= ip[0];
 			return retV;
-
 		};
 
 		void IP4::fromU32(uint32_t ip_) {
@@ -45,8 +44,8 @@ namespace XYO {
 
 		bool IP4::isInTheSameNetwork(IP4 &ip_, IP4 &mask_) {
 			int k;
-			for(k=0; k<4; ++k) {
-				if((ip[k]&mask_.ip[k]) != (ip_.ip[k]&mask_.ip[k])) {
+			for (k = 0; k < 4; ++k) {
+				if ((ip[k] & mask_.ip[k]) != (ip_.ip[k] & mask_.ip[k])) {
 					return false;
 				};
 			};
@@ -55,5 +54,3 @@ namespace XYO {
 
 	};
 };
-
-

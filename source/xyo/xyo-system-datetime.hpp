@@ -11,7 +11,7 @@
 #define XYO_SYSTEM_DATETIME_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -24,11 +24,9 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(DateTime);
 
 			protected:
-
 				DateTime_ *dateTime;
 
 			public:
-
 				XYO_EXPORT DateTime();
 				XYO_EXPORT ~DateTime();
 
@@ -62,4 +60,3 @@ namespace XYO {
 };
 
 #endif
-

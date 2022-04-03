@@ -8,19 +8,19 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#	include <winsock2.h>
+#	include <ws2tcpip.h>
 
-#include "xyo-networking-socket.hpp"
-#include "xyo-networking-url.hpp"
-#include "xyo-encoding-string.hpp"
+#	include "xyo-networking-socket.hpp"
+#	include "xyo-networking-url.hpp"
+#	include "xyo-encoding-string.hpp"
 
 namespace XYO {
 	namespace Networking {
@@ -45,14 +45,13 @@ namespace XYO {
 			close();
 			delete this_;
 
-			if(ipAddress) {
-				if(ipAddressIs6) {
+			if (ipAddress) {
+				if (ipAddressIs6) {
 					delete reinterpret_cast<IPAddress6 *>(ipAddress);
 				} else {
 					delete reinterpret_cast<IPAddress4 *>(ipAddress);
 				};
 			};
-
 		};
 
 		Socket::operator bool() const {
@@ -63,7 +62,7 @@ namespace XYO {
 			struct sockaddr_in addr;
 			close();
 
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
@@ -76,8 +75,8 @@ namespace XYO {
 			addr.sin_addr.s_addr = adr_.ip.toU32();
 
 			this_->value = socket(AF_INET, SOCK_STREAM, 0);
-			if(this_->value != INVALID_SOCKET) {
-				if(connect(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) == 0) {
+			if (this_->value != INVALID_SOCKET) {
+				if (connect(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) == 0) {
 					(reinterpret_cast<IPAddress4 *>(ipAddress))->copy(adr_);
 					return true;
 				};
@@ -96,7 +95,7 @@ namespace XYO {
 			struct sockaddr_in6 addr;
 			close();
 
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
@@ -108,13 +107,13 @@ namespace XYO {
 			addr.sin6_port = htons(adr_.port);
 
 			int k;
-			for(k=0; k<16; ++k) {
+			for (k = 0; k < 16; ++k) {
 				addr.sin6_addr.s6_addr[k] = (reinterpret_cast<IPAddress6 *>(ipAddress))->ip.ip[k];
 			};
 
 			this_->value = socket(AF_INET6, SOCK_STREAM, 0);
-			if(this_->value != INVALID_SOCKET) {
-				if(connect(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6)) == 0) {
+			if (this_->value != INVALID_SOCKET) {
+				if (connect(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6)) == 0) {
 					(reinterpret_cast<IPAddress6 *>(ipAddress))->copy(adr_);
 					return true;
 				};
@@ -133,7 +132,7 @@ namespace XYO {
 			struct sockaddr_in addr;
 			close();
 
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
@@ -146,8 +145,8 @@ namespace XYO {
 			addr.sin_addr.s_addr = adr_.ip.toU32();
 
 			this_->value = socket(AF_INET, SOCK_STREAM, 0);
-			if(this_->value != INVALID_SOCKET) {
-				if(bind(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr)) == 0) {
+			if (this_->value != INVALID_SOCKET) {
+				if (bind(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr)) == 0) {
 					(reinterpret_cast<IPAddress4 *>(ipAddress))->copy(adr_);
 					return true;
 				};
@@ -166,7 +165,7 @@ namespace XYO {
 			struct sockaddr_in6 addr;
 			close();
 
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
@@ -178,20 +177,19 @@ namespace XYO {
 			addr.sin6_port = htons(adr_.port);
 
 			int k;
-			for(k=0; k<16; ++k) {
+			for (k = 0; k < 16; ++k) {
 				addr.sin6_addr.s6_addr[k] = (reinterpret_cast<IPAddress6 *>(ipAddress))->ip.ip[k];
 			};
 
 			this_->value = socket(AF_INET6, SOCK_STREAM, 0);
-			if(this_->value != INVALID_SOCKET) {
-				if(bind(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6)) == 0) {
+			if (this_->value != INVALID_SOCKET) {
+				if (bind(this_->value, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6)) == 0) {
 					(reinterpret_cast<IPAddress6 *>(ipAddress))->copy(adr_);
 					return true;
 				};
 				closesocket(this_->value);
 				this_->value = INVALID_SOCKET;
 			};
-
 
 			delete reinterpret_cast<IPAddress6 *>(ipAddress);
 			ipAddress = nullptr;
@@ -201,7 +199,7 @@ namespace XYO {
 		};
 
 		bool Socket::listen(uint16_t queue_) {
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return false;
 			};
 			return ((::listen(this_->value, queue_)) != INVALID_SOCKET);
@@ -212,27 +210,27 @@ namespace XYO {
 
 			socklen_t _addrlen;
 
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return false;
 			};
 
-			if(!ipAddress) {
+			if (!ipAddress) {
 				return false;
 			};
 
-			if(ipAddressIs6) {
+			if (ipAddressIs6) {
 				struct sockaddr_in6 addr;
 				memset(&addr, 0, sizeof(struct sockaddr_in6));
 				_addrlen = sizeof(struct sockaddr_in6);
 				addr.sin6_family = AF_INET6;
-				socket_.this_->value =::accept(this_->value, (struct sockaddr *)&addr, &_addrlen);
-				if(socket_.this_->value != INVALID_SOCKET) {
+				socket_.this_->value = ::accept(this_->value, (struct sockaddr *)&addr, &_addrlen);
+				if (socket_.this_->value != INVALID_SOCKET) {
 					socket_.ipAddress = reinterpret_cast<IPAddress_ *>(new IPAddress6());
 					socket_.ipAddressIs6 = true;
 					(reinterpret_cast<IPAddress6 *>(socket_.ipAddress))->port = addr.sin6_port;
 					int k;
-					for(k=0; k<16; ++k) {
-						(reinterpret_cast<IPAddress6 *>(socket_.ipAddress))->ip.ip[k]=addr.sin6_addr.s6_addr[k];
+					for (k = 0; k < 16; ++k) {
+						(reinterpret_cast<IPAddress6 *>(socket_.ipAddress))->ip.ip[k] = addr.sin6_addr.s6_addr[k];
 					};
 					return true;
 				};
@@ -241,8 +239,8 @@ namespace XYO {
 				memset(&addr, 0, sizeof(struct sockaddr_in));
 				_addrlen = sizeof(struct sockaddr_in);
 				addr.sin_family = AF_INET;
-				socket_.this_->value =::accept(this_->value, (struct sockaddr *)&addr, &_addrlen);
-				if(socket_.this_->value != INVALID_SOCKET) {
+				socket_.this_->value = ::accept(this_->value, (struct sockaddr *)&addr, &_addrlen);
+				if (socket_.this_->value != INVALID_SOCKET) {
 					socket_.ipAddress = reinterpret_cast<IPAddress_ *>(new IPAddress4());
 					socket_.ipAddressIs6 = false;
 					(reinterpret_cast<IPAddress4 *>(socket_.ipAddress))->port = addr.sin_port;
@@ -255,34 +253,34 @@ namespace XYO {
 		};
 
 		void Socket::close() {
-			if(this_->value != INVALID_SOCKET) {
+			if (this_->value != INVALID_SOCKET) {
 				shutdown(this_->value, 2);
 				closesocket(this_->value);
 				this_->value = INVALID_SOCKET;
 			};
 
-			if(ipAddress) {
-				if(ipAddressIs6) {
+			if (ipAddress) {
+				if (ipAddressIs6) {
 					delete reinterpret_cast<IPAddress6 *>(ipAddress);
 				} else {
 					delete reinterpret_cast<IPAddress4 *>(ipAddress);
 				};
 			};
 
-			ipAddress=nullptr;
-			ipAddressIs6=false;
+			ipAddress = nullptr;
+			ipAddressIs6 = false;
 
 			unLinkOwner();
 		};
 
 		size_t Socket::read(void *output, size_t ln) {
 			long int recvLn;
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return 0;
 			};
 
 			recvLn = recv(this_->value, (char *)output, ln, 0);
-			if(recvLn == SOCKET_ERROR) {
+			if (recvLn == SOCKET_ERROR) {
 				return 0;
 			};
 			return (recvLn);
@@ -290,16 +288,16 @@ namespace XYO {
 
 		size_t Socket::write(const void *input, size_t ln_) {
 			size_t idx = 0;
-			long int  ln = ln_;
-			long int  sndln;
+			long int ln = ln_;
+			long int sndln;
 
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return 0;
 			};
-			if(ln_ == 0) { // keep alive
+			if (ln_ == 0) { // keep alive
 				waitToWrite(0);
 				sndln = send(this_->value, (const char *)input, ln_, 0);
-				if(sndln == SOCKET_ERROR) {
+				if (sndln == SOCKET_ERROR) {
 					return 0;
 				};
 				return sndln;
@@ -307,14 +305,13 @@ namespace XYO {
 			do {
 				waitToWrite(0);
 				sndln = send(this_->value, &(((const char *)input)[idx]), ln, 0);
-				if(sndln == SOCKET_ERROR) {
+				if (sndln == SOCKET_ERROR) {
 					return idx;
 				};
 				ln -= sndln;
 				idx += sndln;
-			} while(ln > 0);
+			} while (ln > 0);
 			return idx;
-
 		};
 
 		int Socket::waitToWrite(uint32_t microSeconds) {
@@ -322,7 +319,7 @@ namespace XYO {
 			fd_set sock_set;
 			struct timeval timev;
 
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return -1;
 			}
 
@@ -331,14 +328,13 @@ namespace XYO {
 			FD_ZERO(&sock_set);
 			FD_SET(this_->value, &sock_set);
 			ret = select(1, nullptr, &sock_set, nullptr, &timev);
-			if(ret == SOCKET_ERROR) {
+			if (ret == SOCKET_ERROR) {
 				return -1;
 			}
-			if(ret == 0) {
+			if (ret == 0) {
 				return 0;
 			}
 			return 1;
-
 		};
 
 		int Socket::waitToRead(uint32_t microSeconds) {
@@ -346,7 +342,7 @@ namespace XYO {
 			fd_set sock_set;
 			struct timeval timev;
 
-			if(this_->value == INVALID_SOCKET) {
+			if (this_->value == INVALID_SOCKET) {
 				return -1;
 			}
 
@@ -355,22 +351,22 @@ namespace XYO {
 			FD_ZERO(&sock_set);
 			FD_SET(this_->value, &sock_set);
 			ret = select(1, &sock_set, nullptr, nullptr, &timev);
-			if(ret == SOCKET_ERROR) {
+			if (ret == SOCKET_ERROR) {
 				return -1;
 			}
-			if(ret == 0) {
+			if (ret == 0) {
 				return 0;
 			}
 			return 1;
 		};
 
 		bool Socket::openClientX(const String &adr_) {
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
 			int ip0, ip1, ip2, ip3, port;
-			if(sscanf(adr_, "%d.%d.%d.%d:%d", &ip0, &ip1, &ip2, &ip3, &port) == 5) {
+			if (sscanf(adr_, "%d.%d.%d.%d:%d", &ip0, &ip1, &ip2, &ip3, &port) == 5) {
 				IPAddress4 adr;
 				adr.ip.ip[0] = ip0;
 				adr.ip.ip[1] = ip1;
@@ -385,32 +381,32 @@ namespace XYO {
 			String urlAddress;
 			String urlPort;
 
-			if(!URL::getSchemeName(adr_, urlSchemeName)) {
+			if (!URL::getSchemeName(adr_, urlSchemeName)) {
 				urlSchemeName = "none";
 			};
-			if(!URL::getHostNameAndPort(adr_, urlHostAndPort)) {
-				urlHostAndPort=adr_;
+			if (!URL::getHostNameAndPort(adr_, urlHostAndPort)) {
+				urlHostAndPort = adr_;
 			};
-			urlAddress=urlHostAndPort;
-			if(!String::split2FromEnd(urlHostAndPort, ":", urlAddress, urlPort)) {
-				if(String::matchAscii(urlSchemeName, "http")) {
+			urlAddress = urlHostAndPort;
+			if (!String::split2FromEnd(urlHostAndPort, ":", urlAddress, urlPort)) {
+				if (String::matchAscii(urlSchemeName, "http")) {
 					urlPort = "80";
-				} else if(String::matchAscii(urlSchemeName, "https")) {
+				} else if (String::matchAscii(urlSchemeName, "https")) {
 					urlPort = "443";
-				} else if(String::matchAscii(urlSchemeName, "ftp")) {
+				} else if (String::matchAscii(urlSchemeName, "ftp")) {
 					urlPort = "20";
-				} else if(String::matchAscii(urlSchemeName, "ssh")) {
+				} else if (String::matchAscii(urlSchemeName, "ssh")) {
 					urlPort = "22";
-				} else if(String::matchAscii(urlSchemeName, "telnet")) {
+				} else if (String::matchAscii(urlSchemeName, "telnet")) {
 					urlPort = "23";
 				} else {
 					return false;
 				};
 			};
-			if(urlAddress[0]=='[') {
-				urlAddress=String::substring(urlAddress, 1, urlAddress.length()-2);
+			if (urlAddress[0] == '[') {
+				urlAddress = String::substring(urlAddress, 1, urlAddress.length() - 2);
 			};
-			if(sscanf(urlPort, "%d", &port) != 1) {
+			if (sscanf(urlPort, "%d", &port) != 1) {
 				return false;
 			};
 
@@ -427,29 +423,29 @@ namespace XYO {
 			hints.ai_addr = NULL;
 			hints.ai_next = NULL;
 
-			if(getaddrinfo(urlAddress, nullptr, &hints, &result)!=0) {
+			if (getaddrinfo(urlAddress, nullptr, &hints, &result) != 0) {
 				return false;
 			};
-			for(scan=result; scan!=NULL; scan=scan->ai_next) {
-				if(scan->ai_family == AF_INET) {
+			for (scan = result; scan != NULL; scan = scan->ai_next) {
+				if (scan->ai_family == AF_INET) {
 					IPAddress4 adr;
 					adr.port = port;
 					adr.ip.fromU32(((struct sockaddr_in *)(scan->ai_addr))->sin_addr.s_addr);
-					if(openClient(adr)) {
+					if (openClient(adr)) {
 						freeaddrinfo(result);
 						return true;
 					};
 				};
-				if(scan->ai_family == AF_INET6) {
+				if (scan->ai_family == AF_INET6) {
 					IPAddress6 adr;
 					adr.port = port;
 
 					int k;
-					for(k=0; k<16; ++k) {
-						adr.ip.ip[k]=((struct sockaddr_in6 *)(scan->ai_addr))->sin6_addr.s6_addr[k];
+					for (k = 0; k < 16; ++k) {
+						adr.ip.ip[k] = ((struct sockaddr_in6 *)(scan->ai_addr))->sin6_addr.s6_addr[k];
 					};
 
-					if(openClient(adr)) {
+					if (openClient(adr)) {
 						freeaddrinfo(result);
 						return true;
 					};
@@ -463,12 +459,12 @@ namespace XYO {
 
 		bool Socket::openServerX(const String &adr_) {
 
-			if(!Network::isValid()) {
+			if (!Network::isValid()) {
 				return false;
 			};
 
 			int ip0, ip1, ip2, ip3, port;
-			if(sscanf(adr_, "%d.%d.%d.%d:%d", &ip0, &ip1, &ip2, &ip3, &port) == 5) {
+			if (sscanf(adr_, "%d.%d.%d.%d:%d", &ip0, &ip1, &ip2, &ip3, &port) == 5) {
 				IPAddress4 adr;
 				adr.ip.ip[0] = ip0;
 				adr.ip.ip[1] = ip1;
@@ -483,32 +479,32 @@ namespace XYO {
 			String urlAddress;
 			String urlPort;
 
-			if(!URL::getSchemeName(adr_, urlSchemeName)) {
+			if (!URL::getSchemeName(adr_, urlSchemeName)) {
 				urlSchemeName = "none";
 			};
-			if(!URL::getHostNameAndPort(adr_, urlHostAndPort)) {
-				urlHostAndPort=adr_;
+			if (!URL::getHostNameAndPort(adr_, urlHostAndPort)) {
+				urlHostAndPort = adr_;
 			};
-			urlAddress=urlHostAndPort;
-			if(!String::split2FromEnd(urlHostAndPort, ":", urlAddress, urlPort)) {
-				if(String::matchAscii(urlSchemeName, "http")) {
+			urlAddress = urlHostAndPort;
+			if (!String::split2FromEnd(urlHostAndPort, ":", urlAddress, urlPort)) {
+				if (String::matchAscii(urlSchemeName, "http")) {
 					urlPort = "80";
-				} else if(String::matchAscii(urlSchemeName, "https")) {
+				} else if (String::matchAscii(urlSchemeName, "https")) {
 					urlPort = "443";
-				} else if(String::matchAscii(urlSchemeName, "ftp")) {
+				} else if (String::matchAscii(urlSchemeName, "ftp")) {
 					urlPort = "20";
-				} else if(String::matchAscii(urlSchemeName, "ssh")) {
+				} else if (String::matchAscii(urlSchemeName, "ssh")) {
 					urlPort = "22";
-				} else if(String::matchAscii(urlSchemeName, "telnet")) {
+				} else if (String::matchAscii(urlSchemeName, "telnet")) {
 					urlPort = "23";
 				} else {
 					return false;
 				};
 			};
-			if(urlAddress[0]=='[') {
-				urlAddress=String::substring(urlAddress, 1, urlAddress.length()-2);
+			if (urlAddress[0] == '[') {
+				urlAddress = String::substring(urlAddress, 1, urlAddress.length() - 2);
 			};
-			if(sscanf(urlPort, "%d", &port) != 1) {
+			if (sscanf(urlPort, "%d", &port) != 1) {
 				return false;
 			};
 
@@ -525,29 +521,29 @@ namespace XYO {
 			hints.ai_addr = NULL;
 			hints.ai_next = NULL;
 
-			if(getaddrinfo(urlAddress, nullptr, &hints, &result)!=0) {
+			if (getaddrinfo(urlAddress, nullptr, &hints, &result) != 0) {
 				return false;
 			};
-			for(scan=result; scan!=NULL; scan=scan->ai_next) {
-				if(scan->ai_family == AF_INET) {
+			for (scan = result; scan != NULL; scan = scan->ai_next) {
+				if (scan->ai_family == AF_INET) {
 					IPAddress4 adr;
 					adr.port = port;
 					adr.ip.fromU32(((struct sockaddr_in *)(scan->ai_addr))->sin_addr.s_addr);
-					if(openServer(adr)) {
+					if (openServer(adr)) {
 						freeaddrinfo(result);
 						return true;
 					};
 				};
-				if(scan->ai_family == AF_INET6) {
+				if (scan->ai_family == AF_INET6) {
 					IPAddress6 adr;
 					adr.port = port;
 
 					int k;
-					for(k=0; k<16; ++k) {
-						adr.ip.ip[k]=((struct sockaddr_in6 *)(scan->ai_addr))->sin6_addr.s6_addr[k];
+					for (k = 0; k < 16; ++k) {
+						adr.ip.ip[k] = ((struct sockaddr_in6 *)(scan->ai_addr))->sin6_addr.s6_addr[k];
 					};
 
-					if(openServer(adr)) {
+					if (openServer(adr)) {
 						freeaddrinfo(result);
 						return true;
 					};
@@ -560,24 +556,24 @@ namespace XYO {
 		};
 
 		bool Socket::isIPAddress4() {
-			if(!ipAddress) {
+			if (!ipAddress) {
 				return false;
 			};
 			return (!ipAddressIs6);
 		};
 
 		bool Socket::isIPAddress6() {
-			if(!ipAddress) {
+			if (!ipAddress) {
 				return false;
 			};
 			return ipAddressIs6;
 		};
 
 		bool Socket::getIPAddress4(IPAddress4 &address_) {
-			if(!ipAddress) {
+			if (!ipAddress) {
 				return false;
 			};
-			if(ipAddressIs6) {
+			if (ipAddressIs6) {
 				return false;
 			};
 			address_.copy(*(reinterpret_cast<IPAddress4 *>(ipAddress)));
@@ -585,10 +581,10 @@ namespace XYO {
 		};
 
 		bool Socket::getIPAddress6(IPAddress6 &address_) {
-			if(!ipAddress) {
+			if (!ipAddress) {
 				return false;
 			};
-			if(!ipAddressIs6) {
+			if (!ipAddressIs6) {
 				return false;
 			};
 			address_.copy(*(reinterpret_cast<IPAddress6 *>(ipAddress)));
@@ -611,7 +607,7 @@ namespace XYO {
 		};
 
 		void Socket::unLinkOwner() {
-			if(linkOwner_ != nullptr) {
+			if (linkOwner_ != nullptr) {
 				linkOwner_->this_->value = INVALID_SOCKET;
 				linkOwner_->linkOwner_ = nullptr;
 				linkOwner_ = nullptr;
@@ -624,7 +620,7 @@ namespace XYO {
 			linkOwner_ = socket_.linkOwner_;
 			socket_.this_->value = INVALID_SOCKET;
 			socket_.linkOwner_ = nullptr;
-			if(linkOwner_) {
+			if (linkOwner_) {
 				linkOwner_->linkOwner_ = this;
 			};
 		};

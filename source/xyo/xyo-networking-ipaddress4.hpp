@@ -11,7 +11,7 @@
 #define XYO_NETWORKING_IPADDRESS4_HPP
 
 #ifndef XYO_NETWORKING_IP4_HPP
-#include "xyo-networking-ip4.hpp"
+#	include "xyo-networking-ip4.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(IPAddress4);
 
 			public:
-
 				IP4 ip;
 				uint16_t port;
 
@@ -33,6 +32,4 @@ namespace XYO {
 	};
 };
 
-
 #endif
-

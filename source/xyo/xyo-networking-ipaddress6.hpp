@@ -11,7 +11,7 @@
 #define XYO_NETWORKING_IPADDRESS6_HPP
 
 #ifndef XYO_NETWORKING_IP6_HPP
-#include "xyo-networking-ip6.hpp"
+#	include "xyo-networking-ip6.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(IPAddress6);
 
 			public:
-
 				IP6 ip;
 				uint16_t port;
 
@@ -34,4 +33,3 @@ namespace XYO {
 };
 
 #endif
-

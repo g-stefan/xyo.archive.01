@@ -11,47 +11,43 @@
 #define XYO_MULTITHREADING_SYNCHRONIZE_HPP
 
 #ifndef XYO_MULTITHREADING_CRITICALSECTION_HPP
-#include "xyo-multithreading-criticalsection.hpp"
+#	include "xyo-multithreading-criticalsection.hpp"
 #endif
 
 #ifdef XYO_MULTI_THREAD
 namespace XYO {
 	namespace Multithreading {
 
-		template<typename T>
+		template <typename T>
 		class Synchronize {
 			public:
-
-				static inline T process(CriticalSection &criticalSection, const std::function<T ()> &fn) {
+				static inline T process(CriticalSection &criticalSection, const std::function<T()> &fn) {
 					T retV;
 					criticalSection.enter();
 					try {
 						retV = fn();
-					} catch(...) {
+					} catch (...) {
 						criticalSection.leave();
 						throw;
 					}
 					criticalSection.leave();
 					return retV;
 				};
-
 		};
 
-		template<>
+		template <>
 		class Synchronize<void> {
 			public:
-
-				static inline void process(CriticalSection &criticalSection, const std::function<void ()> &fn) {
+				static inline void process(CriticalSection &criticalSection, const std::function<void()> &fn) {
 					criticalSection.enter();
 					try {
 						fn();
-					} catch(...) {
+					} catch (...) {
 						criticalSection.leave();
 						throw;
 					}
 					criticalSection.leave();
 				};
-
 		};
 
 	};
@@ -62,22 +58,20 @@ namespace XYO {
 namespace XYO {
 	namespace Multithreading {
 
-		template<typename T>
+		template <typename T>
 		struct Synchronize {
 
-			static inline T process(CriticalSection &, const std::function<T ()> &fn) {
-				return fn();
-			};
-
+				static inline T process(CriticalSection &, const std::function<T()> &fn) {
+					return fn();
+				};
 		};
 
-		template<>
+		template <>
 		struct Synchronize<void> {
 
-			static inline void process(CriticalSection &, const std::function<void ()> &fn) {
-				fn();
-			};
-
+				static inline void process(CriticalSection &, const std::function<void()> &fn) {
+					fn();
+				};
 		};
 
 	};
@@ -85,4 +79,3 @@ namespace XYO {
 #endif
 
 #endif
-

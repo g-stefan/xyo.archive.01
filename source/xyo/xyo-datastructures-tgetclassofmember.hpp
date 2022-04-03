@@ -11,17 +11,16 @@
 #define XYO_DATASTRUCTURES_TGETCLASSOFMEMBER_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 
-		template<typename T, typename X>
+		template <typename T, typename X>
 		T TGetClassOfMember(X T::*);
 
 	};
 };
 
 #endif
-

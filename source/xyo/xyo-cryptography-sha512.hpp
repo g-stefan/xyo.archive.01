@@ -11,7 +11,7 @@
 #define XYO_CRYPTOGRAPHY_SHA512_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -20,6 +20,7 @@ namespace XYO {
 
 		class SHA512 : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(SHA512);
+
 			protected:
 				XYO_EXPORT static const uint64_t k_[];
 
@@ -30,6 +31,7 @@ namespace XYO {
 				uint64_t length0;
 				uint64_t length1;
 				size_t stateM;
+
 			public:
 				XYO_EXPORT SHA512();
 				XYO_EXPORT void processInit();

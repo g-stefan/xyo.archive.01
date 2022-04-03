@@ -19,20 +19,20 @@ namespace XYO {
 		};
 
 		Buffer::~Buffer() {
-			if(buffer != nullptr) {
+			if (buffer != nullptr) {
 				delete[] buffer;
 			};
 		};
 
 		void Buffer::setSize(size_t sz) {
-			if(size == sz) {
+			if (size == sz) {
 				return;
 			};
 			uint8_t *newBuffer;
 			newBuffer = new uint8_t[sz];
 			memset(newBuffer, 0, sz);
-			if(buffer != nullptr) {
-				if(length > sz) {
+			if (buffer != nullptr) {
+				if (length > sz) {
 					length = sz;
 				};
 				memcpy(newBuffer, buffer, length);
@@ -43,7 +43,7 @@ namespace XYO {
 		};
 
 		void Buffer::activeDestructor() {
-			if(buffer != nullptr) {
+			if (buffer != nullptr) {
 				delete[] buffer;
 				buffer = nullptr;
 			};
@@ -63,8 +63,8 @@ namespace XYO {
 
 		String Buffer::toString() {
 			StringReference *retV = TMemory<StringReference>::newMemory();
-			if(buffer != nullptr) {
-				if(length > 0) {
+			if (buffer != nullptr) {
+				if (length > 0) {
 					retV->from((char *)buffer, length);
 					return retV;
 				};
@@ -81,7 +81,7 @@ namespace XYO {
 
 		void Buffer::fromHex(const String &str_) {
 			size_t ln = str_.length() / 2;
-			if(ln == 0) {
+			if (ln == 0) {
 				length = 0;
 				return;
 			};
@@ -92,14 +92,14 @@ namespace XYO {
 			size_t k;
 			unsigned int h1, h2;
 
-			for(k = 0, m = 0; k < ln; m += 2, ++k) {
+			for (k = 0, m = 0; k < ln; m += 2, ++k) {
 				h1 = str_[m];
-				if(h1 >= '0' && h1 <= '9') {
+				if (h1 >= '0' && h1 <= '9') {
 					h1 -= '0';
-				} else if(h1 >= 'A' && h1 <= 'F') {
+				} else if (h1 >= 'A' && h1 <= 'F') {
 					h1 -= 'A';
 					h1 += 10;
-				} else if(h1 >= 'a' && h1 <= 'f') {
+				} else if (h1 >= 'a' && h1 <= 'f') {
 					h1 -= 'a';
 					h1 += 10;
 				} else {
@@ -107,12 +107,12 @@ namespace XYO {
 				};
 
 				h2 = str_[m + 1];
-				if(h2 >= '0' && h2 <= '9') {
+				if (h2 >= '0' && h2 <= '9') {
 					h2 -= '0';
-				} else if(h2 >= 'A' && h2 <= 'F') {
+				} else if (h2 >= 'A' && h2 <= 'F') {
 					h2 -= 'A';
 					h2 += 10;
-				} else if(h2 >= 'a' && h2 <= 'f') {
+				} else if (h2 >= 'a' && h2 <= 'f') {
 					h2 -= 'a';
 					h2 += 10;
 				} else {
@@ -125,8 +125,8 @@ namespace XYO {
 
 		String Buffer::toHex() {
 			StringReference *retV = TMemory<StringReference>::newMemory();
-			if(buffer != nullptr) {
-				if(length > 0) {
+			if (buffer != nullptr) {
+				if (length > 0) {
 					retV->init(length * 2 + 1);
 					retV->setLength(length * 2);
 					char *output_ = retV->value();
@@ -134,16 +134,16 @@ namespace XYO {
 					size_t k;
 					unsigned int h1;
 					unsigned int h2;
-					for(k = 0; k < length; ++k) {
+					for (k = 0; k < length; ++k) {
 						h1 = (buffer[k] >> 4) & 0x0F;
-						if(h1 > 9) {
+						if (h1 > 9) {
 							h1 -= 10;
 							h1 += 'a';
 						} else {
 							h1 += '0';
 						};
 						h2 = (buffer[k]) & 0x0F;
-						if(h2 > 9) {
+						if (h2 > 9) {
 							h2 -= 10;
 							h2 += 'a';
 						} else {
@@ -162,13 +162,13 @@ namespace XYO {
 		};
 
 		void Buffer::copy(size_t start, size_t ln, uint8_t *buf_) {
-			if(ln == 0) {
+			if (ln == 0) {
 				return;
 			};
-			if(start > size) {
+			if (start > size) {
 				return;
 			};
-			if(start + ln > size) {
+			if (start + ln > size) {
 				ln = size - start;
 			};
 			memcpy(&buffer[start], buf_, ln);
@@ -182,5 +182,3 @@ namespace XYO {
 
 	};
 };
-
-

@@ -26,7 +26,7 @@ namespace XYO {
 		};
 
 		void Semaphore::wait() {
-			while(!state.get()) {
+			while (!state.get()) {
 				Thread::sleep(1);
 			};
 			state.set(false);
@@ -48,4 +48,3 @@ namespace XYO {
 };
 
 #endif
-

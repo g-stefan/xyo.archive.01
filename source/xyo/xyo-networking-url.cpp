@@ -21,9 +21,9 @@ namespace XYO {
 				StringReference *out = TMemory<StringReference>::newMemory();
 				out->init();
 				size_t k;
-				for(k = 0; k < value.length(); ++k) {
-					if(value[k] == '%') {
-						if(k + 2 < value.length()) {
+				for (k = 0; k < value.length(); ++k) {
+					if (value[k] == '%') {
+						if (k + 2 < value.length()) {
 							out->concatenateX(Hex::decode(value[k + 1]) << 4 | Hex::decode(value[k + 2]));
 							k += 2;
 						};
@@ -38,20 +38,9 @@ namespace XYO {
 				StringReference *out = TMemory<StringReference>::newMemory();
 				out->init();
 				size_t k;
-				for(k = 0; k < value.length(); ++k) {
-					if(
-						(value[k] >= 'A' && value[k] <= 'Z')
-						|| (value[k] >= 'a' && value[k] <= 'z')
-						|| (value[k] >= '0' && value[k] <= '9')
-						|| (value[k] == '_')
-						|| (value[k] == '.')
-						|| (value[k] == '!')
-						|| (value[k] == '~')
-						|| (value[k] == '*')
-						|| (value[k] == '\'')
-						|| (value[k] == '(')
-						|| (value[k] == ')')
-					) {
+				for (k = 0; k < value.length(); ++k) {
+					if (
+					    (value[k] >= 'A' && value[k] <= 'Z') || (value[k] >= 'a' && value[k] <= 'z') || (value[k] >= '0' && value[k] <= '9') || (value[k] == '_') || (value[k] == '.') || (value[k] == '!') || (value[k] == '~') || (value[k] == '*') || (value[k] == '\'') || (value[k] == '(') || (value[k] == ')')) {
 						out->concatenateX(value[k]);
 						continue;
 					};
@@ -64,7 +53,7 @@ namespace XYO {
 
 			bool getSchemeName(const String &url, String &out) {
 				size_t index;
-				if(StringCore::indexOf(url, "://", index)) {
+				if (StringCore::indexOf(url, "://", index)) {
 					out = String::substring(url, 0, index);
 					return true;
 				};
@@ -76,9 +65,9 @@ namespace XYO {
 				size_t part;
 				String firstPart;
 				String secondPart;
-				if(StringCore::indexOf(url, "://", index)) {
-					if(StringCore::indexOf(url, "/", index + 3, part)) {
-						if(String::split2(String::substring(url, index + 3, part - (index + 3)), "@", firstPart, secondPart)) {
+				if (StringCore::indexOf(url, "://", index)) {
+					if (StringCore::indexOf(url, "/", index + 3, part)) {
+						if (String::split2(String::substring(url, index + 3, part - (index + 3)), "@", firstPart, secondPart)) {
 							out = secondPart;
 							return true;
 						};
@@ -96,9 +85,9 @@ namespace XYO {
 				size_t part;
 				String firstPart;
 				String secondPart;
-				if(StringCore::indexOf(url, "://", index)) {
-					if(StringCore::indexOf(url, "/", index + 3, part)) {
-						if(String::split2(String::substring(url, index + 3, part - (index + 3)), "@", firstPart, secondPart)) {
+				if (StringCore::indexOf(url, "://", index)) {
+					if (StringCore::indexOf(url, "/", index + 3, part)) {
+						if (String::split2(String::substring(url, index + 3, part - (index + 3)), "@", firstPart, secondPart)) {
 							out = firstPart;
 							return true;
 						};
@@ -112,9 +101,9 @@ namespace XYO {
 				size_t part;
 				String firstPart;
 				String secondPart;
-				if(StringCore::indexOf(url, "://", index)) {
-					if(StringCore::indexOf(url, "/", index + 3, part)) {
-						if(String::split2(String::substring(url, part), "?", firstPart, secondPart)) {
+				if (StringCore::indexOf(url, "://", index)) {
+					if (StringCore::indexOf(url, "/", index + 3, part)) {
+						if (String::split2(String::substring(url, part), "?", firstPart, secondPart)) {
 							out = firstPart;
 							return true;
 						};
@@ -133,10 +122,10 @@ namespace XYO {
 				String firstPart;
 				String secondPart;
 				String thirdPart;
-				if(String::indexOf(url, "://", 0, index)) {
-					if(StringCore::indexOf(url, "/", index + 3, part)) {
-						if(String::split2(String::substring(url, part + 1), "?", firstPart, secondPart)) {
-							if(String::split2(secondPart, "#", firstPart, thirdPart)) {
+				if (String::indexOf(url, "://", 0, index)) {
+					if (StringCore::indexOf(url, "/", index + 3, part)) {
+						if (String::split2(String::substring(url, part + 1), "?", firstPart, secondPart)) {
+							if (String::split2(secondPart, "#", firstPart, thirdPart)) {
 								out = firstPart;
 								return true;
 							};
@@ -149,4 +138,3 @@ namespace XYO {
 		};
 	};
 };
-

@@ -8,34 +8,34 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE
-#define _POSIX_C_SOURCE 200809L
-#endif
+#	ifndef _POSIX_SOURCE
+#		define _POSIX_SOURCE
+#		define _POSIX_C_SOURCE 200809L
+#	endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
 
-#include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <termios.h>
+#	include <unistd.h>
+#	include <dirent.h>
+#	include <fcntl.h>
+#	include <termios.h>
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#	include <ctype.h>
+#	include <stdio.h>
+#	include <stdlib.h>
+#	include <string.h>
 
-#include <cstdio>
+#	include <cstdio>
 
-#include "xyo-system-console.hpp"
+#	include "xyo-system-console.hpp"
 
-#define DT_DIR__ 0x04
+#	define DT_DIR__ 0x04
 
 namespace XYO {
 	namespace System {
@@ -73,7 +73,7 @@ namespace XYO {
 				newTerm.c_lflag &= ~(ICANON | ECHO);
 				tcsetattr(STDIN_FILENO, TCSANOW, &newTerm);
 
-				if(read(0, &retV, 1) != 1) {
+				if (read(0, &retV, 1) != 1) {
 					retV = 0;
 				};
 
@@ -85,6 +85,4 @@ namespace XYO {
 	};
 };
 
-
 #endif
-

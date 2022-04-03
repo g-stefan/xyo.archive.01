@@ -11,11 +11,11 @@
 #define XYO_SYSTEM_FILETIME_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 namespace XYO {
@@ -28,11 +28,9 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(FileTime);
 
 			protected:
-
 				FileTime_ *fileTime;
 
 			public:
-
 				XYO_EXPORT FileTime();
 				XYO_EXPORT ~FileTime();
 
@@ -49,4 +47,3 @@ namespace XYO {
 };
 
 #endif
-

@@ -11,19 +11,19 @@
 #define XYO_STREAM_STREAMX_HPP
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 #ifndef XYO_STREAM_IWRITE_HPP
-#include "xyo-stream-iwrite.hpp"
+#	include "xyo-stream-iwrite.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_BUFFER_HPP
-#include "xyo-datastructures-buffer.hpp"
+#	include "xyo-datastructures-buffer.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {

@@ -11,7 +11,7 @@
 #define XYO_STREAM_ISEEK_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -23,7 +23,6 @@ namespace XYO {
 				XYO_INTERFACE(ISeek);
 
 			public:
-
 				virtual bool seekFromBegin(uint64_t x) = 0;
 				virtual bool seek(uint64_t x) = 0;
 				virtual bool seekFromEnd(uint64_t x) = 0;

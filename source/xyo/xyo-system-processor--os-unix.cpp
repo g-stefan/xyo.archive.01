@@ -8,34 +8,33 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/sysinfo.h>
-#include <unistd.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
+#	include <sys/time.h>
+#	include <sys/sysinfo.h>
+#	include <unistd.h>
+#	include <time.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
 
-#include "xyo-system-processor.hpp"
+#	include "xyo-system-processor.hpp"
 
 namespace XYO {
 	namespace System {
 		namespace Processor {
 
 			int32_t getCount() {
-				return sysconf (_SC_NPROCESSORS_ONLN);
+				return sysconf(_SC_NPROCESSORS_ONLN);
 			};
 
 		};
 	};
 };
-
 
 #endif

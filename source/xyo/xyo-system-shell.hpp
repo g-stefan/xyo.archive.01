@@ -11,19 +11,19 @@
 #define XYO_SYSTEM_SHELL_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 #ifndef XYO_SYSTEM_SHELLFIND_HPP
-#include "xyo-system-shellfind.hpp"
+#	include "xyo-system-shellfind.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_BUFFER_HPP
-#include "xyo-datastructures-buffer.hpp"
+#	include "xyo-datastructures-buffer.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 namespace XYO {
@@ -102,21 +102,20 @@ namespace XYO {
 			XYO_EXPORT bool mkdirRecursivelyIfNotExists(const String &path);
 			XYO_EXPORT bool mkdirFilePath(const String &fileName);
 			XYO_EXPORT bool copyFile(const String &source, const String &target);
-			XYO_EXPORT bool fileReplaceText(const String &fileInName, const String &fileOutName, TDynamicArray<TDynamicArray<String> > &textInOut, size_t maxLineSize);
+			XYO_EXPORT bool fileReplaceText(const String &fileInName, const String &fileOutName, TDynamicArray<TDynamicArray<String>> &textInOut, size_t maxLineSize);
 			XYO_EXPORT bool isChanged(const String &target, TDynamicArray<String> &source);
 			XYO_EXPORT bool isChangedRecursive(const char *target, const char *source, const char *basePath = nullptr);
 			//
 			XYO_EXPORT bool copyFileIfExists(const String &source, const String &target);
 			//
 			XYO_EXPORT void mainArgsFilter(char *cmdX);
-			XYO_EXPORT void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char** &cmdS);
+			XYO_EXPORT void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char **&cmdS);
 			XYO_EXPORT void mainArgsDelete(int cmdN, char **cmdS);
-			XYO_EXPORT void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char** &cmdS);
-			XYO_EXPORT void mainArgsSet(const char *cmdLine, int &cmdN, char** &cmdS);
+			XYO_EXPORT void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char **&cmdS);
+			XYO_EXPORT void mainArgsSet(const char *cmdLine, int &cmdN, char **&cmdS);
 
 		};
 	};
 };
 
 #endif
-

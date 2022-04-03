@@ -12,14 +12,14 @@
 
 #ifdef XYO_TMEMORYPOOL_SYSTEM
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
+#		include "xyo-managedmemory-tmemorysystem.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryPoolActiveProcess : TMemorySystem<T> {};
 
 	};
@@ -27,52 +27,51 @@ namespace XYO {
 
 #elif defined(XYO_TMEMORYPOOL_ACTIVE_AS_UNIFIED)
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIEDPROCESS_HPP
-#include "xyo-managedmemory-tmemorypoolunifiedprocess.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIEDPROCESS_HPP
+#		include "xyo-managedmemory-tmemorypoolunifiedprocess.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
-		struct TMemoryPoolActiveProcess: TMemoryPoolUnifiedProcess<T> {};
+		template <typename T>
+		struct TMemoryPoolActiveProcess : TMemoryPoolUnifiedProcess<T> {};
 
 	};
 };
 
 #else
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIEDPROCESS_HPP
-#include "xyo-managedmemory-tmemorypoolunifiedprocess.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIEDPROCESS_HPP
+#		include "xyo-managedmemory-tmemorypoolunifiedprocess.hpp"
+#	endif
 
-#ifndef XYO_DATASTRUCTURES_TXLIST1_HPP
-#include "xyo-datastructures-txlist1.hpp"
-#endif
+#	ifndef XYO_DATASTRUCTURES_TXLIST1_HPP
+#		include "xyo-datastructures-txlist1.hpp"
+#	endif
 
-#ifdef XYO_MULTI_THREAD
-#       ifndef XYO_MULTITHREADING_CRITICALSECTION_HPP
-#       include "xyo-multithreading-criticalsection.hpp"
-#       endif
-#endif
+#	ifdef XYO_MULTI_THREAD
+#		ifndef XYO_MULTITHREADING_CRITICALSECTION_HPP
+#			include "xyo-multithreading-criticalsection.hpp"
+#		endif
+#	endif
 
-#ifndef XYO_MULTITHREADING_TATOMIC_HPP
-#include "xyo-multithreading-tatomic.hpp"
-#endif
+#	ifndef XYO_MULTITHREADING_TATOMIC_HPP
+#		include "xyo-multithreading-tatomic.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 		using namespace XYO::DataStructures;
 		using namespace XYO::Multithreading;
 
-		template<typename T>
+		template <typename T>
 		class TMemoryPoolActiveProcessImplement {
 			protected:
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 				CriticalSection criticalSection;
-#endif
+#	endif
 			public:
-
 				enum {
 					NewElementCount = 8,
 					FreeElementCountThreshold = 24,
@@ -80,50 +79,47 @@ namespace XYO {
 				};
 
 				struct Link {
-					Link *next;
+						Link *next;
 
-					uint8_t value[sizeof(T)];
-#ifdef XYO_TMEMORYPOOL_CHECK
-					bool isDeleted;
-#endif
-
+						uint8_t value[sizeof(T)];
+#	ifdef XYO_TMEMORYPOOL_CHECK
+						bool isDeleted;
+#	endif
 				};
 
-
-#ifdef XYO_TMEMORYPOOL_ACTIVE_LEVEL_IS_SYSTEM
+#	ifdef XYO_TMEMORYPOOL_ACTIVE_LEVEL_IS_SYSTEM
 				typedef TXList1<Link, TMemorySystem> ListLink;
-#else
+#	else
 				typedef TXList1<Link, TMemoryPoolUnifiedProcess> ListLink;
-#endif
+#	endif
 				Link *poolFreeLink;
 				size_t poolFreeLinkCount;
-#ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
+#	ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
 				size_t checkCount;
-#endif
-
+#	endif
 
 				inline TMemoryPoolActiveProcessImplement() {
 					ListLink::constructor(poolFreeLink);
 					poolFreeLinkCount = 0;
-#ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
+#	ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
 					checkCount = 0;
-#endif
-#ifdef XYO_TMEMORYPOOL_CONSTRUCTOR_INFO
+#	endif
+#	ifdef XYO_TMEMORYPOOL_CONSTRUCTOR_INFO
 					printf("# Constructor  %s - " XYO_FORMAT_SIZET "\n", registryKey(), sizeof(T));
-#endif
+#	endif
 				};
 
 				inline ~TMemoryPoolActiveProcessImplement() {
-#ifdef XYO_TMEMORYPOOL_DESTRUCTOR_INFO
+#	ifdef XYO_TMEMORYPOOL_DESTRUCTOR_INFO
 					printf("# Destructor %s - " XYO_FORMAT_SIZET "\n", registryKey(), sizeof(T));
-#endif
+#	endif
 
-#ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
-					if(checkCount != 0) {
+#	ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
+					if (checkCount != 0) {
 						printf("# Check Count Info: " XYO_FORMAT_SIZET " - %s\n", checkCount, registryKey());
 						fflush(stdout);
 					};
-#endif
+#	endif
 
 					Link *this_;
 					while (poolFreeLink) {
@@ -141,10 +137,10 @@ namespace XYO {
 					Link *this_;
 					for (k = 0; k < NewElementCount; ++k) {
 						this_ = ListLink::newNode();
-						new(&this_->value[0]) T();
-#ifdef XYO_TMEMORYPOOL_CHECK
+						new (&this_->value[0]) T();
+#	ifdef XYO_TMEMORYPOOL_CHECK
 						this_->isDeleted = true;
-#endif
+#	endif
 						++poolFreeLinkCount;
 						ListLink::push(poolFreeLink, this_);
 						TIfHasSetDeleteMemory<T>::setDeleteMemory(reinterpret_cast<T *>(&this_->value[0]), (DeleteMemory)deleteMemory_, reinterpret_cast<T *>(&this_->value[0]));
@@ -153,26 +149,26 @@ namespace XYO {
 
 				inline T *newMemory() {
 					T *this_;
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 					criticalSection.enter();
-#endif
-					if(!poolFreeLink) {
+#	endif
+					if (!poolFreeLink) {
 						grow();
 					};
 					this_ = reinterpret_cast<T *>(&poolFreeLink->value[0]);
-#ifdef XYO_TMEMORYPOOL_CHECK
+#	ifdef XYO_TMEMORYPOOL_CHECK
 					poolFreeLink->isDeleted = false;
-#endif
+#	endif
 					--poolFreeLinkCount;
 					ListLink::popUnsafeX(poolFreeLink);
 
-#ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
+#	ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
 					checkCount++;
-#endif
+#	endif
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 					criticalSection.leave();
-#endif
+#	endif
 					TIfHasActiveConstructor<T>::activeConstructor(this_);
 					return this_;
 				};
@@ -180,40 +176,40 @@ namespace XYO {
 				static inline const std::string deleteMemoryOnAlreadyDeletedObject_() {
 					std::string retV("deleteMemory on already deleted object ");
 					retV += registryKey();
-					return  retV;
+					return retV;
 				};
 
 				inline void deleteMemory(T *this_) {
-#ifdef XYO_TMEMORYPOOL_CHECK
-					if((reinterpret_cast<Link *>( (reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value) ))->isDeleted) {
-#ifdef XYO_TMEMORYPOOL_CHECK_INFO
+#	ifdef XYO_TMEMORYPOOL_CHECK
+					if ((reinterpret_cast<Link *>((reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value)))->isDeleted) {
+#		ifdef XYO_TMEMORYPOOL_CHECK_INFO
 						printf("# Double deleteMemory: %p - %s", this_, registryKey());
 						fflush(stdout);
-#endif
+#		endif
 						throw std::runtime_error(deleteMemoryOnAlreadyDeletedObject_());
 					};
-					(reinterpret_cast<Link *>( (reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value) ))->isDeleted = true;
-#endif
-#ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
+					(reinterpret_cast<Link *>((reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value)))->isDeleted = true;
+#	endif
+#	ifdef XYO_TMEMORYPOOL_CHECK_COUNT_INFO
 					checkCount--;
-#endif
+#	endif
 
 					TIfHasActiveDestructor<T>::activeDestructor(this_);
 
 					Link *itemListToFree = nullptr;
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 					criticalSection.enter();
-#endif
-					this_ = reinterpret_cast<T *>( (reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value) );
+#	endif
+					this_ = reinterpret_cast<T *>((reinterpret_cast<uint8_t *>(this_)) - offsetof(Link, value));
 					ListLink::push(poolFreeLink, (reinterpret_cast<Link *>(this_)));
 					++poolFreeLinkCount;
 
-					if(poolFreeLinkCount == FreeElementCountThreshold) {
+					if (poolFreeLinkCount == FreeElementCountThreshold) {
 						Link *item;
 						size_t k;
-						for(k = 0; k < FreeElementCount; ++k) {
-							if(poolFreeLink) {
+						for (k = 0; k < FreeElementCount; ++k) {
+							if (poolFreeLink) {
 								--poolFreeLinkCount;
 								item = poolFreeLink;
 								ListLink::popUnsafeX(poolFreeLink);
@@ -225,12 +221,11 @@ namespace XYO {
 						};
 					};
 
-
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 					criticalSection.leave();
-#endif
+#	endif
 
-					if(itemListToFree != nullptr) {
+					if (itemListToFree != nullptr) {
 						Link *this_;
 						while (itemListToFree) {
 							this_ = itemListToFree;
@@ -241,7 +236,6 @@ namespace XYO {
 							ListLink::deleteNode(this_);
 						};
 					};
-
 				};
 
 				static inline void initMemory() {
@@ -251,7 +245,7 @@ namespace XYO {
 				static inline const std::string deleteMemoryWithoutInitialization_() {
 					std::string retV("deleteMemory without initialization ");
 					retV += TMemoryPoolActiveProcessImplement<T>::registryKey();
-					return  retV;
+					return retV;
 				};
 
 				static inline void deleteMemory_(T *this_) {
@@ -260,11 +254,10 @@ namespace XYO {
 					// dynamic link guard, can be multiple instances in different libraries
 					// this will recover the original instance
 					//
-					if(!memoryPool.get()) {
+					if (!memoryPool.get()) {
 						memoryPool.set(reinterpret_cast<TMemoryPoolActiveProcessImplement<T> *>(
-								RegistryProcess::getKey(TMemoryPoolActiveProcessImplement<T>::registryKey())
-							));
-						if(!memoryPool.get()) {
+						    RegistryProcess::getKey(TMemoryPoolActiveProcessImplement<T>::registryKey())));
+						if (!memoryPool.get()) {
 							throw std::runtime_error(deleteMemoryWithoutInitialization_());
 						};
 					};
@@ -281,20 +274,20 @@ namespace XYO {
 				static void resourceFinalizer(void *);
 		};
 
-		template<typename T>
-		const char   *TMemoryPoolActiveProcessImplement<T>::registryKey() {
+		template <typename T>
+		const char *TMemoryPoolActiveProcessImplement<T>::registryKey() {
 			return typeid(TMemoryPoolActiveProcessImplement<T>).name();
 		};
 
-		template<typename T>
+		template <typename T>
 		TAtomic<TMemoryPoolActiveProcessImplement<T> *> TMemoryPoolActiveProcessImplement<T>::memoryPool(nullptr);
 
-		template<typename T>
+		template <typename T>
 		void TMemoryPoolActiveProcessImplement<T>::resourceDelete(void *this_) {
 			delete (TMemoryPoolActiveProcessImplement<T> *)this_;
 		};
 
-		template<typename T>
+		template <typename T>
 		void TMemoryPoolActiveProcessImplement<T>::resourceFinalizer(void *this_) {
 			TMemoryPoolActiveProcessImplement<T>::Link *scan = ((TMemoryPoolActiveProcessImplement<T> *)this_)->poolFreeLink;
 			while (scan) {
@@ -303,32 +296,28 @@ namespace XYO {
 			};
 		};
 
-		template<typename T>
+		template <typename T>
 		class TMemoryPoolActiveProcess {
 			protected:
-
-				template<typename U, bool hasDecReferenceCount>
+				template <typename U, bool hasDecReferenceCount>
 				struct TDeleteMemory {
 
-					static inline void deleteMemory(U *this_) {
-						TMemoryPoolActiveProcessImplement<T>::deleteMemory_(this_);
-					};
-
+						static inline void deleteMemory(U *this_) {
+							TMemoryPoolActiveProcessImplement<T>::deleteMemory_(this_);
+						};
 				};
 
-				template<typename U>
+				template <typename U>
 				struct TDeleteMemory<U, true> {
 
-					static inline void deleteMemory(U *this_) {
-						this_->decReferenceCount();
-					};
-
+						static inline void deleteMemory(U *this_) {
+							this_->decReferenceCount();
+						};
 				};
 
 			public:
-
 				static inline T *newMemory() {
-					if(!TMemoryPoolActiveProcessImplement<T>::memoryPool.get()) {
+					if (!TMemoryPoolActiveProcessImplement<T>::memoryPool.get()) {
 						initMemory();
 					};
 					return (TMemoryPoolActiveProcessImplement<T>::memoryPool.get())->newMemory();
@@ -344,28 +333,23 @@ namespace XYO {
 					void *registryLink;
 
 					//
-					if(RegistryProcess::checkAndRegisterKey(TMemoryPoolActiveProcessImplement<T>::registryKey(), registryLink, [] {
-					return (TMemoryPoolActiveProcessImplement<T>::memoryPool.get() == nullptr);
-					}
-					, [](void *this__) {
+					if (RegistryProcess::checkAndRegisterKey(
+					        TMemoryPoolActiveProcessImplement<T>::registryKey(), registryLink, [] { return (TMemoryPoolActiveProcessImplement<T>::memoryPool.get() == nullptr); }, [](void *this__) {
 						TMemoryPoolActiveProcessImplement<T>
 						*this_ = reinterpret_cast<TMemoryPoolActiveProcessImplement<T> *>(this__);
-						TMemoryPoolActiveProcessImplement<T>::memoryPool.set(this_);
-					})) {
+						TMemoryPoolActiveProcessImplement<T>::memoryPool.set(this_); })) {
 						TIfHasInitMemory<T>::initMemory();
 
 						TMemoryPoolActiveProcessImplement<T>::memoryPool.set(new TMemoryPoolActiveProcessImplement<T>());
 
 						RegistryProcess::setValue(
-							registryLink,
-							RegistryLevel::Active,
-							TMemoryPoolActiveProcessImplement<T>::memoryPool.get(),
-							TMemoryPoolActiveProcessImplement<T>::resourceDelete,
-							(THasActiveFinalizer<T>::value) ? TMemoryPoolActiveProcessImplement<T>::resourceFinalizer : nullptr
-						);
+						    registryLink,
+						    RegistryLevel::Active,
+						    TMemoryPoolActiveProcessImplement<T>::memoryPool.get(),
+						    TMemoryPoolActiveProcessImplement<T>::resourceDelete,
+						    (THasActiveFinalizer<T>::value) ? TMemoryPoolActiveProcessImplement<T>::resourceFinalizer : nullptr);
 					};
 				};
-
 		};
 
 	};

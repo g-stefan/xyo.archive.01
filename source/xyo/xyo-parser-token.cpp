@@ -17,8 +17,7 @@ namespace XYO {
 			input.pointerLink(this);
 		};
 
-		Token::~Token() {
-		};
+		Token::~Token(){};
 
 		void Token::activeDestructor() {
 			input.deleteMemory();
@@ -34,7 +33,7 @@ namespace XYO {
 		};
 
 		bool Token::isBOM() {
-			if(input->isN("\xEF\xBB\xBF")) {
+			if (input->isN("\xEF\xBB\xBF")) {
 				return true;
 			};
 			return false;
@@ -42,24 +41,24 @@ namespace XYO {
 
 		bool Token::isSpace() {
 			bool isOk = false;
-			while(!input->isEof()) {
+			while (!input->isEof()) {
 
-				if(input->is1('\x20')) {
+				if (input->is1('\x20')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x09')) {
+				if (input->is1('\x09')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x0D')) {
+				if (input->is1('\x0D')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x0A')) {
+				if (input->is1('\x0A')) {
 					isOk = true;
 					continue;
 				};
@@ -75,16 +74,14 @@ namespace XYO {
 					if (input->is('/')) {
 						if (input->read()) {
 							if (
-								input->is('\x0D')
-								|| input->is('\x0A')
+							    input->is('\x0D') || input->is('\x0A')
 
 							) {
 								return isSpace();
 							};
 							while (input->read()) {
 								if (
-									input->is('\x0D')
-									|| input->is('\x0A')
+								    input->is('\x0D') || input->is('\x0A')
 
 								) {
 									return isSpace();
@@ -119,18 +116,12 @@ namespace XYO {
 		};
 
 		bool Token::isSymbol(String &token) {
-			if (input->is('_')
-				|| input->between('A', 'Z')
-				|| input->between('a', 'z')
-			) {
+			if (input->is('_') || input->between('A', 'Z') || input->between('a', 'z')) {
 				token.empty();
 				token << input->inputChar;
 				while (input->read()) {
 					if (
-						input->is('_')
-						|| input->between('A', 'Z')
-						|| input->between('a', 'z')
-					) {
+					    input->is('_') || input->between('A', 'Z') || input->between('a', 'z')) {
 						token << input->inputChar;
 					} else {
 						ignoreSpaceOrComment();
@@ -191,28 +182,28 @@ namespace XYO {
 									char code[5];
 									String codeScan;
 									unsigned int code4;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[0] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[1] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[2] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[3] = input->inputChar;
 									code[4] = 0;
-									if(sscanf(code, "%04X", &code4) != 1) {
+									if (sscanf(code, "%04X", &code4) != 1) {
 										return false;
 									};
 									code[0] = (code4 >> 8) & 0xFF;
-									code[1] = (code4) & 0xFF;
+									code[1] = (code4)&0xFF;
 									code[2] = 0;
 									token.concatenate(code, 2);
 									continue;
@@ -220,46 +211,46 @@ namespace XYO {
 								if (input->is('U')) {
 									char code[9];
 									unsigned long int code8;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[0] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[1] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[2] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[3] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[4] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[5] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[6] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[7] = input->inputChar;
 									code[8] = 0;
-									if(sscanf(code, "%08lX", &code8) != 1) {
+									if (sscanf(code, "%08lX", &code8) != 1) {
 										return false;
 									};
 									code[0] = (code8 >> 24) & 0xFF;
 									code[1] = (code8 >> 16) & 0xFF;
 									code[2] = (code8 >> 8) & 0xFF;
-									code[3] = (code8) & 0xFF;
+									code[3] = (code8)&0xFF;
 									code[4] = 0;
 									token.concatenate(code, 4);
 									continue;
@@ -267,19 +258,19 @@ namespace XYO {
 								if (input->is('x')) {
 									char code[3];
 									unsigned int codeHex;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[0] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[1] = input->inputChar;
 									code[2] = 0;
-									if(sscanf(code, "%02X", &codeHex) != 1) {
+									if (sscanf(code, "%02X", &codeHex) != 1) {
 										return false;
 									};
-									code[0] = (codeHex) & 0xFF;
+									code[0] = (codeHex)&0xFF;
 									code[1] = 0;
 									token.concatenate(code, 1);
 									continue;
@@ -288,19 +279,19 @@ namespace XYO {
 									char code[4];
 									unsigned int codeOctal;
 									code[0] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[1] = input->inputChar;
-									if(!input->read()) {
+									if (!input->read()) {
 										return false;
 									};
 									code[2] = input->inputChar;
 									code[3] = 0;
-									if(sscanf(code, "%03o", &codeOctal) != 1) {
+									if (sscanf(code, "%03o", &codeOctal) != 1) {
 										return false;
 									};
-									code[0] = (codeOctal) & 0xFF;
+									code[0] = (codeOctal)&0xFF;
 									code[1] = 0;
 									token.concatenate(codeOctal, 1);
 									continue;
@@ -327,32 +318,32 @@ namespace XYO {
 			if (input->is('-') || input->between('0', '9')) {
 				token.empty();
 				token << input->inputChar;
-				while(input->read()) {
-					if(input->between('0', '9')) {
+				while (input->read()) {
+					if (input->between('0', '9')) {
 						token << input->inputChar;
 						continue;
 					};
 					break;
 				};
 				if (input->is('.')) {
-					if(input->read()) {
-						if(input->between('0', '9')) {
+					if (input->read()) {
+						if (input->between('0', '9')) {
 							token << '.';
 							token << input->inputChar;
-							while(input->read()) {
-								if(input->between('0', '9')) {
+							while (input->read()) {
+								if (input->between('0', '9')) {
 									token << input->inputChar;
 									continue;
 								};
 								break;
 							};
-							if(input->is('e') || input->is('E')) {
+							if (input->is('e') || input->is('E')) {
 								token << input->inputChar;
-								if(input->read()) {
-									if(input->is('+') || input->is('-')) {
+								if (input->read()) {
+									if (input->is('+') || input->is('-')) {
 										token << input->inputChar;
-										while(input->read()) {
-											if(input->between('0', '9')) {
+										while (input->read()) {
+											if (input->between('0', '9')) {
 												token << input->inputChar;
 												continue;
 											};

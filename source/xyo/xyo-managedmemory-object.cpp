@@ -15,7 +15,7 @@ namespace XYO {
 		using namespace XYO::DataStructures;
 
 		Object::Object() {
-#ifdef  XYO_OBJECT_REFERENCE_COUNT_INFO
+#ifdef XYO_OBJECT_REFERENCE_COUNT_INFO
 			printf("%p: Object()\n", this);
 #endif
 			referenceCounter_ = 0;
@@ -26,7 +26,7 @@ namespace XYO {
 		};
 
 		Object::~Object() {
-#ifdef  XYO_OBJECT_REFERENCE_COUNT_INFO
+#ifdef XYO_OBJECT_REFERENCE_COUNT_INFO
 			printf("%p: ~Object()\n", this);
 #endif
 		};
@@ -48,7 +48,7 @@ namespace XYO {
 					};
 					return;
 				};
-				if(referenceIsBranch_) {
+				if (referenceIsBranch_) {
 					referenceMarkAndSweep_();
 				};
 				return;
@@ -89,7 +89,7 @@ namespace XYO {
 
 			if (referenceCounter_ <= 0) {
 				referenceCounter_ = 0;
-				if(referenceIsBranch_) {
+				if (referenceIsBranch_) {
 					referenceMarkAndSweep_();
 				};
 			};
@@ -100,7 +100,7 @@ namespace XYO {
 			printf("%p: transferPointerX %p, %p, %p\n", this, value, object, object_);
 			fflush(stdout);
 #endif
-			if(this == object) {
+			if (this == object) {
 				return;
 			};
 
@@ -108,7 +108,7 @@ namespace XYO {
 
 			value->object = const_cast<void *>(object_);
 
-			if(object) {
+			if (object) {
 				(const_cast<Object *>(object))->addPointerX(value);
 			};
 
@@ -128,7 +128,7 @@ namespace XYO {
 
 			if (referenceCounter_ <= 0) {
 				referenceCounter_ = 0;
-				if(referenceIsBranch_) {
+				if (referenceIsBranch_) {
 					referenceMarkAndSweep_();
 				};
 			};
@@ -136,7 +136,7 @@ namespace XYO {
 
 		void Object::referenceMarkAndSweep_() {
 
-			if(referenceMarkIsDynamic_()) {
+			if (referenceMarkIsDynamic_()) {
 				referenceMarkReset_();
 
 				//
@@ -157,7 +157,6 @@ namespace XYO {
 				return;
 			};
 			referenceMarkReset_();
-
 		};
 
 		bool Object::referenceMarkIsDynamic_() {
@@ -166,7 +165,7 @@ namespace XYO {
 			referenceMark_ = true;
 			for (index = pointerXHead_; index; index = index->next) {
 				if (index->link) {
-					if(!index->link->deleteMemory_) {
+					if (!index->link->deleteMemory_) {
 						return false;
 					};
 					if (index->link->referenceCounter_) {
@@ -175,7 +174,7 @@ namespace XYO {
 					if (index->link->referenceMark_) {
 						continue;
 					};
-					if(!index->link->referenceMarkIsDynamic_()) {
+					if (!index->link->referenceMarkIsDynamic_()) {
 						return false;
 					};
 				};
@@ -189,7 +188,7 @@ namespace XYO {
 			referenceMark_ = false;
 			for (index = pointerXHead_; index; index = index->next) {
 				if (index->link) {
-					if(!index->link->deleteMemory_) {
+					if (!index->link->deleteMemory_) {
 						return false;
 					};
 					if (index->link->referenceCounter_) {
@@ -198,7 +197,7 @@ namespace XYO {
 					if (!index->link->referenceMark_) {
 						continue;
 					};
-					if(!index->link->referenceMarkReset_()) {
+					if (!index->link->referenceMarkReset_()) {
 						return false;
 					};
 				};
@@ -208,5 +207,3 @@ namespace XYO {
 
 	};
 };
-
-

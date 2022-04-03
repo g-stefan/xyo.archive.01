@@ -11,30 +11,30 @@
 #define XYO_DATASTRUCTURES_TSTATICCAST_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T>
+		template <typename T>
 		T TStaticCast(Object *this_) {
-			if(this_ == nullptr) {
+			if (this_ == nullptr) {
 				return nullptr;
 			};
-			return static_cast<T >(this_);
+			return static_cast<T>(this_);
 		};
 
-		template<typename T>
+		template <typename T>
 		Object *TStaticCast(T this_) {
-			if(this_ == nullptr) {
+			if (this_ == nullptr) {
 				return nullptr;
 			};
 			return static_cast<Object *>(this_);
 		};
 
-		template<Object *>
+		template <Object *>
 		Object *TStaticCast(Object *this_) {
 			return this_;
 		};
@@ -43,4 +43,3 @@ namespace XYO {
 };
 
 #endif
-

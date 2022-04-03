@@ -11,7 +11,7 @@
 #define XYO_ENCODING_HEX_HPP
 
 #ifndef XYO_ENCODING_THEX_HPP
-#include "xyo-encoding-thex.hpp"
+#	include "xyo-encoding-thex.hpp"
 #endif
 
 namespace XYO {

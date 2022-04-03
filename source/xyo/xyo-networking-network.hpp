@@ -11,7 +11,7 @@
 #define XYO_NETWORKING_NETWORK_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -25,4 +25,3 @@ namespace XYO {
 };
 
 #endif
-

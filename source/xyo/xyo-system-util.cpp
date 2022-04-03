@@ -28,11 +28,11 @@ namespace XYO {
 			using namespace XYO::Encoding;
 
 			bool fileToCpp(
-				const char *stringName,
-				const char *fileNameIn,
-				const char *fileNameOut,
-				bool append,
-				bool isString) {
+			    const char *stringName,
+			    const char *fileNameIn,
+			    const char *fileNameOut,
+			    bool append,
+			    bool isString) {
 
 				FILE *input;
 				FILE *output;
@@ -44,7 +44,7 @@ namespace XYO {
 				if (input != nullptr) {
 					output = fopen(fileNameOut, append ? "ab" : "wb");
 					if (output != nullptr) {
-						if(isString) {
+						if (isString) {
 							fprintf(output, "static const char %s[]={", stringName);
 						} else {
 							fprintf(output, "static const uint8_t %s[]={", stringName);
@@ -53,14 +53,14 @@ namespace XYO {
 						ch = 0x00;
 						index = 0;
 						first = 1;
-						while(fread(&ch, 1, 1, input) == 1) {
+						while (fread(&ch, 1, 1, input) == 1) {
 
-							if(first) {
+							if (first) {
 								first = 0;
 								fprintf(output, "\n\t");
 							} else {
 								fprintf(output, ",");
-								if(index == 0) {
+								if (index == 0) {
 									fprintf(output, "\n\t");
 								};
 							};
@@ -73,15 +73,15 @@ namespace XYO {
 							ch = 0;
 						};
 
-						if(index == 0) {
+						if (index == 0) {
 							fprintf(output, "\n\t");
 						};
 
 						++index;
 						index %= 32;
 
-						if(isString) {
-							if(index > 0) {
+						if (isString) {
+							if (index > 0) {
 								fprintf(output, ",0x00");
 							};
 						};
@@ -97,10 +97,10 @@ namespace XYO {
 			};
 
 			bool fileToJs(
-				const char *stringName,
-				const char *fileNameIn,
-				const char *fileNameOut,
-				bool append) {
+			    const char *stringName,
+			    const char *fileNameIn,
+			    const char *fileNameOut,
+			    bool append) {
 
 				FILE *input;
 				FILE *output;
@@ -117,14 +117,14 @@ namespace XYO {
 						ch = 0x00;
 						index = 0;
 						first = 1;
-						while(fread(&ch, 1, 1, input) == 1) {
+						while (fread(&ch, 1, 1, input) == 1) {
 
-							if(first) {
+							if (first) {
 								first = 0;
 								fprintf(output, "\n\t");
 							} else {
 								fprintf(output, ",");
-								if(index == 0) {
+								if (index == 0) {
 									fprintf(output, "\n\t");
 								};
 							};
@@ -137,7 +137,7 @@ namespace XYO {
 							ch = 0;
 						};
 
-						if(index == 0) {
+						if (index == 0) {
 							fprintf(output, "\n\t");
 						};
 
@@ -152,10 +152,10 @@ namespace XYO {
 			};
 
 			bool fileToRc(
-				const char *stringName,
-				const char *fileNameIn,
-				const char *fileNameOut,
-				bool append) {
+			    const char *stringName,
+			    const char *fileNameIn,
+			    const char *fileNameOut,
+			    bool append) {
 
 				FILE *input;
 				FILE *output;
@@ -169,7 +169,6 @@ namespace XYO {
 					if (output != nullptr) {
 
 						fprintf(output, "%s RCDATA {", stringName);
-
 
 						flag = 0;
 						do {
@@ -193,7 +192,6 @@ namespace XYO {
 							fprintf(output, "}\n");
 						};
 
-
 						fclose(output);
 						fclose(input);
 						return true;
@@ -204,10 +202,10 @@ namespace XYO {
 			};
 
 			bool pathToHtmlRc(
-				const char *pathOrFileNameIn,
-				const char *fileNameOut,
-				bool append,
-				const char *basePath) {
+			    const char *pathOrFileNameIn,
+			    const char *fileNameOut,
+			    bool append,
+			    const char *basePath) {
 
 				int k;
 				size_t index;
@@ -218,11 +216,11 @@ namespace XYO {
 				String basePathX;
 				String fileName;
 
-				if(!(String::indexOf(pathToSearch, "*", 0, index) || String::indexOf(pathToSearch, "?", 0, index))) {
+				if (!(String::indexOf(pathToSearch, "*", 0, index) || String::indexOf(pathToSearch, "?", 0, index))) {
 					pathToSearch += "/*";
 				};
 
-				if(basePath) {
+				if (basePath) {
 					basePathX = basePath;
 				} else {
 					basePathX = Shell::getFilePathX(pathToSearch);
@@ -232,12 +230,12 @@ namespace XYO {
 				if (output != nullptr) {
 
 					Shell::getFileList(pathToSearch, fileList);
-					for(k = 0; k < fileList.length(); ++k) {
+					for (k = 0; k < fileList.length(); ++k) {
 						fileName = String::substring(fileList[k], basePathX.length());
 						line = String::replace(fileName, "\\", "/") +
-							" HTML \"" +
-							String::replace(String::replace(fileList[k], "/", "\\"), "\\", "\\\\") +
-							"\"\r\n";
+						       " HTML \"" +
+						       String::replace(String::replace(fileList[k], "/", "\\"), "\\", "\\\\") +
+						       "\"\r\n";
 						fwrite(line.value(), 1, line.length(), output);
 					};
 					fclose(output);
@@ -245,8 +243,8 @@ namespace XYO {
 					fileList.empty();
 
 					Shell::getDirList(pathToSearch, fileList);
-					for(k = 0; k < fileList.length(); ++k) {
-						if(!pathToHtmlRc(fileList[k], fileNameOut, true, basePathX)) {
+					for (k = 0; k < fileList.length(); ++k) {
+						if (!pathToHtmlRc(fileList[k], fileNameOut, true, basePathX)) {
 							return false;
 						};
 					};
@@ -257,16 +255,16 @@ namespace XYO {
 			};
 
 			bool fileToCString(
-				const char *stringName,
-				const char *fileNameIn,
-				const char *fileNameOut) {
+			    const char *stringName,
+			    const char *fileNameIn,
+			    const char *fileNameOut) {
 
 				String content;
-				if(Shell::fileGetContents(fileNameIn, content)) {
-					if(Shell::filePutContents(fileNameOut, "static const char *")) {
-						if(Shell::filePutContentsAppend(fileNameOut, stringName)) {
-							if(Shell::filePutContentsAppend(fileNameOut, "=")) {
-								if(Shell::filePutContentsAppend(fileNameOut, String::encodeC(content))) {
+				if (Shell::fileGetContents(fileNameIn, content)) {
+					if (Shell::filePutContents(fileNameOut, "static const char *")) {
+						if (Shell::filePutContentsAppend(fileNameOut, stringName)) {
+							if (Shell::filePutContentsAppend(fileNameOut, "=")) {
+								if (Shell::filePutContentsAppend(fileNameOut, String::encodeC(content))) {
 									return Shell::filePutContentsAppend(fileNameOut, ";\r\n");
 								};
 							};
@@ -277,36 +275,36 @@ namespace XYO {
 			};
 
 			bool fileToCStringDirect(
-				const char *fileNameIn,
-				const char *fileNameOut) {
+			    const char *fileNameIn,
+			    const char *fileNameOut) {
 
 				String content;
-				if(Shell::fileGetContents(fileNameIn, content)) {
+				if (Shell::fileGetContents(fileNameIn, content)) {
 					return Shell::filePutContents(fileNameOut, String::encodeC(content));
 				};
 				return false;
 			};
 
 			bool fileHashSHA256(
-				const char *fileName,
-				String &hash) {
+			    const char *fileName,
+			    String &hash) {
 				File fileIn;
-				if(fileIn.openRead(fileName)) {
+				if (fileIn.openRead(fileName)) {
 					size_t readLn;
 					SHA256 hashFile;
 					hashFile.processInit();
 					uint8_t buffer[16384];
-					for(;;) {
-						readLn=fileIn.read(buffer, 16384);
-						if(readLn > 0) {
+					for (;;) {
+						readLn = fileIn.read(buffer, 16384);
+						if (readLn > 0) {
 							hashFile.processU8(buffer, readLn);
 						};
-						if(readLn < 16384) {
+						if (readLn < 16384) {
 							break;
 						};
 					};
 					hashFile.processDone();
-					hash=hashFile.getHashHex();
+					hash = hashFile.getHashHex();
 					fileIn.close();
 					return true;
 				};
@@ -314,25 +312,25 @@ namespace XYO {
 			};
 
 			bool fileHashSHA512(
-				const char *fileName,
-				String &hash) {
+			    const char *fileName,
+			    String &hash) {
 				File fileIn;
-				if(fileIn.openRead(fileName)) {
+				if (fileIn.openRead(fileName)) {
 					size_t readLn;
 					SHA512 hashFile;
 					hashFile.processInit();
 					uint8_t buffer[16384];
-					for(;;) {
-						readLn=fileIn.read(buffer, 16384);
-						if(readLn > 0) {
+					for (;;) {
+						readLn = fileIn.read(buffer, 16384);
+						if (readLn > 0) {
 							hashFile.processU8(buffer, readLn);
 						};
-						if(readLn < 16384) {
+						if (readLn < 16384) {
 							break;
 						};
 					};
 					hashFile.processDone();
-					hash=hashFile.getHashHex();
+					hash = hashFile.getHashHex();
 					fileIn.close();
 					return true;
 				};
@@ -342,4 +340,3 @@ namespace XYO {
 		};
 	};
 };
-

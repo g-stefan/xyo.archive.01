@@ -11,48 +11,46 @@
 #define XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T, size_t dataSize>
+		template <typename T, size_t dataSize>
 		struct TDynamicArrayNode {
-			typedef TDynamicArrayNode TNode;
+				typedef TDynamicArrayNode TNode;
 
-			T value[dataSize];
+				T value[dataSize];
 
-			inline TDynamicArrayNode() {
-			};
+				inline TDynamicArrayNode(){};
 
-			inline ~TDynamicArrayNode() {
-			};
+				inline ~TDynamicArrayNode(){};
 
-			inline void activeConstructor() {
-				TIfHasActiveConstructor<T>::activeConstructorArray(&value[0], dataSize);
-			};
+				inline void activeConstructor() {
+					TIfHasActiveConstructor<T>::activeConstructorArray(&value[0], dataSize);
+				};
 
-			inline void activeDestructor() {
-				TIfHasActiveDestructor<T>::activeDestructorArray(&value[0], dataSize);
-			};
+				inline void activeDestructor() {
+					TIfHasActiveDestructor<T>::activeDestructorArray(&value[0], dataSize);
+				};
 
-			inline void empty(int count_) {
-				TIfHasActiveDestructor<T>::activeDestructorArray(&value[0], count_);
-				TIfHasActiveConstructor<T>::activeConstructorArray(&value[0], count_);
-			};
+				inline void empty(int count_) {
+					TIfHasActiveDestructor<T>::activeDestructorArray(&value[0], count_);
+					TIfHasActiveConstructor<T>::activeConstructorArray(&value[0], count_);
+				};
 
-			inline void resetIndex(size_t index) {
-				TIfHasActiveDestructor<T>::activeDestructor(&value[index]);
-				TIfHasActiveConstructor<T>::activeConstructor(&value[index]);
-			};
-
+				inline void resetIndex(size_t index) {
+					TIfHasActiveDestructor<T>::activeDestructor(&value[index]);
+					TIfHasActiveConstructor<T>::activeConstructor(&value[index]);
+				};
 		};
 
-		template<typename T, size_t dataSize2Pow = 4, template <typename U> class TNodeMemory = TMemory>
+		template <typename T, size_t dataSize2Pow = 4, template <typename U> class TNodeMemory = TMemory>
 		class TDynamicArray : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TDynamicArray);
+
 			public:
 				static const size_t dataSize = (1 << dataSize2Pow);
 				static const size_t dataMask = ((1 << dataSize2Pow) - 1);
@@ -93,11 +91,11 @@ namespace XYO {
 				inline void empty() {
 					int indexHigh;
 					int indexScanHigh;
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return;
 					};
 					indexHigh = length_ >> dataSize2Pow;
-					for(indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
+					for (indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
 						value[indexScanHigh]->empty(dataSize);
 					};
 					value[indexHigh]->empty(length_ & dataMask);
@@ -110,7 +108,7 @@ namespace XYO {
 					TNode **newValue;
 					TNode **oldValue;
 					newValue = new TNode *[newIndexSize];
-					memcpy(newValue, value, sizeof (TNode *) * indexSize);
+					memcpy(newValue, value, sizeof(TNode *) * indexSize);
 					for (k = indexSize; k < newIndexSize; ++k) {
 						newValue[k] = TNodeMemory<TNode>::newMemory();
 						TIfHasPointerLink<T>::pointerLinkArray(&newValue[k]->value[0], this, dataSize);
@@ -122,7 +120,7 @@ namespace XYO {
 					delete[] oldValue;
 				};
 
-				inline T &operator [](int idx) {
+				inline T &operator[](int idx) {
 					return index((size_t)idx);
 				};
 
@@ -238,7 +236,7 @@ namespace XYO {
 				};
 
 				inline bool isEmpty() const {
-					return (length_==0);
+					return (length_ == 0);
 				};
 
 				inline bool shift(T &out) {
@@ -247,21 +245,21 @@ namespace XYO {
 					size_t indexScanHigh;
 					size_t indexScanLow;
 
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return false;
 					};
 					out = value[0]->value[0];
 					--length_;
-					if(length_ > 0) {
+					if (length_ > 0) {
 						indexHigh = length_ >> dataSize2Pow;
 						indexLow = length_ & dataMask;
-						for(indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
-							for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
+							for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 								value[indexScanHigh]->value[indexScanLow] = std::move(value[indexScanHigh]->value[indexScanLow + 1]);
 							};
 							value[indexScanHigh]->value[dataSize - 1] = std::move(value[indexScanHigh + 1]->value[0]);
 						};
-						for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 							value[indexHigh]->value[indexScanLow] = std::move(value[indexHigh]->value[indexScanLow + 1]);
 						};
 						value[indexHigh]->resetIndex(indexScanLow);
@@ -275,21 +273,21 @@ namespace XYO {
 					size_t indexScanHigh;
 					size_t indexScanLow;
 
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return false;
 					};
 					out = value[0]->value[0];
 					--length_;
-					if(length_ > 0) {
+					if (length_ > 0) {
 						indexHigh = length_ >> dataSize2Pow;
 						indexLow = length_ & dataMask;
-						for(indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
-							for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
+							for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 								value[indexScanHigh]->value[indexScanLow] = std::move(value[indexScanHigh]->value[indexScanLow + 1]);
 							};
 							value[indexScanHigh]->value[dataSize - 1] = std::move(value[indexScanHigh + 1]->value[0]);
 						};
-						for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 							value[indexHigh]->value[indexScanLow] = std::move(value[indexHigh]->value[indexScanLow + 1]);
 						};
 						value[indexHigh]->resetIndex(indexScanLow);
@@ -303,21 +301,21 @@ namespace XYO {
 					size_t indexScanHigh;
 					size_t indexScanLow;
 
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return false;
 					};
 					out = value[0]->value[0];
 					--length_;
-					if(length_ > 0) {
+					if (length_ > 0) {
 						indexHigh = length_ >> dataSize2Pow;
 						indexLow = length_ & dataMask;
-						for(indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
-							for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
+							for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 								value[indexScanHigh]->value[indexScanLow] = std::move(value[indexScanHigh]->value[indexScanLow + 1]);
 							};
 							value[indexScanHigh]->value[dataSize - 1] = std::move(value[indexScanHigh + 1]->value[0]);
 						};
-						for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 							value[indexHigh]->value[indexScanLow] = std::move(value[indexHigh]->value[indexScanLow + 1]);
 						};
 						value[indexHigh]->resetIndex(indexScanLow);
@@ -331,20 +329,20 @@ namespace XYO {
 					size_t indexScanHigh;
 					size_t indexScanLow;
 
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return;
 					};
 					--length_;
-					if(length_ > 0) {
+					if (length_ > 0) {
 						indexHigh = length_ >> dataSize2Pow;
 						indexLow = length_ & dataMask;
-						for(indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
-							for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanHigh = 0; indexScanHigh < indexHigh; ++indexScanHigh) {
+							for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 								value[indexScanHigh]->value[indexScanLow] = std::move(value[indexScanHigh]->value[indexScanLow + 1]);
 							};
 							value[indexScanHigh]->value[dataSize - 1] = std::move(value[indexScanHigh + 1]->value[0]);
 						};
-						for(indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanLow = 0; indexScanLow < dataSize - 1; ++indexScanLow) {
 							value[indexHigh]->value[indexScanLow] = std::move(value[indexHigh]->value[indexScanLow + 1]);
 						};
 						value[indexHigh]->resetIndex(indexScanLow);
@@ -359,28 +357,28 @@ namespace XYO {
 					size_t indexScanHigh;
 					size_t indexScanLow;
 
-					if(length_ == 0) {
+					if (length_ == 0) {
 						return false;
 					};
-					if(index >= length_) {
+					if (index >= length_) {
 						return false;
 					};
 					--length_;
-					if(length_ > 0) {
+					if (length_ > 0) {
 						indexHighX = index >> dataSize2Pow;
 						indexLowX = index & dataMask;
 						indexHigh = length_ >> dataSize2Pow;
 						indexLow = length_ & dataMask;
-						for(indexScanHigh = indexHighX; indexScanHigh < indexHigh; ++indexScanHigh) {
-							for(indexScanLow = indexLowX; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanHigh = indexHighX; indexScanHigh < indexHigh; ++indexScanHigh) {
+							for (indexScanLow = indexLowX; indexScanLow < dataSize - 1; ++indexScanLow) {
 								value[indexScanHigh]->value[indexScanLow] = std::move(value[indexScanHigh]->value[indexScanLow + 1]);
 							};
 							value[indexScanHigh]->value[dataSize - 1] = value[indexScanHigh + 1]->value[0];
-							for(indexScanLow = 0; indexScanLow < indexLowX; ++indexScanLow) {
+							for (indexScanLow = 0; indexScanLow < indexLowX; ++indexScanLow) {
 								value[indexScanHigh + 1]->value[indexScanLow] = std::move(value[indexScanHigh + 1]->value[indexScanLow + 1]);
 							};
 						};
-						for(indexScanLow = indexLowX; indexScanLow < dataSize - 1; ++indexScanLow) {
+						for (indexScanLow = indexLowX; indexScanLow < dataSize - 1; ++indexScanLow) {
 							value[indexHigh]->value[indexScanLow] = std::move(value[indexHigh]->value[indexScanLow + 1]);
 						};
 						value[indexHigh]->resetIndex(indexScanLow);
@@ -406,7 +404,7 @@ namespace XYO {
 					if (idx >= itemSize) {
 						growWith((idx >> dataSize2Pow) - indexSize + 1);
 					};
-					for(k = length_ - 1; k > idx; --k) {
+					for (k = length_ - 1; k > idx; --k) {
 						index(k) = std::move(index(k - 1));
 					};
 					return index(idx);
@@ -433,7 +431,7 @@ namespace XYO {
 				inline void copy(const TDynamicArray &value) {
 					size_t k;
 					empty();
-					for(k=0; k<value.length(); ++k) {
+					for (k = 0; k < value.length(); ++k) {
 						value.get(k, index(k));
 					};
 				};
@@ -443,4 +441,3 @@ namespace XYO {
 };
 
 #endif
-

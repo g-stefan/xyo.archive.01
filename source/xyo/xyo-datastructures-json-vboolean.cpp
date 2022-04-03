@@ -22,7 +22,7 @@ namespace XYO {
 			};
 
 			String VBoolean::toString() {
-				if(value) {
+				if (value) {
 					return "true";
 				};
 				return "false";
@@ -36,7 +36,7 @@ namespace XYO {
 
 			TPointer<VBoolean> VBoolean::fromString(const String &value) {
 				TPointer<VBoolean> retV(TMemory<VBoolean>::newMemory());
-				if(value == "true") {
+				if (value == "true") {
 					retV->value = true;
 					return retV;
 				};
@@ -47,5 +47,3 @@ namespace XYO {
 		};
 	};
 };
-
-

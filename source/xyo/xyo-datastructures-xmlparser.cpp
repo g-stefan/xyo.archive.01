@@ -17,15 +17,13 @@ namespace XYO {
 		using namespace XYO::Parser;
 		using namespace XYO::System;
 
-
 		// Reader
 
 		XMLReader::XMLReader() {
 			input.pointerLink(this);
 		};
 
-		XMLReader::~XMLReader() {
-		};
+		XMLReader::~XMLReader(){};
 
 		void XMLReader::activeDestructor() {
 			input.deleteMemory();
@@ -38,7 +36,7 @@ namespace XYO {
 
 		bool XMLReader::open(IRead *iRead_) {
 			input.newMemory();
-			if(input->open(iRead_, 16)) {
+			if (input->open(iRead_, 16)) {
 				return true;
 			};
 			return false;
@@ -50,24 +48,24 @@ namespace XYO {
 
 		bool XMLReader::isSpace() {
 			bool isOk = false;
-			while(!input->isEof()) {
+			while (!input->isEof()) {
 
-				if(input->is1('\x20')) {
+				if (input->is1('\x20')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x09')) {
+				if (input->is1('\x09')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x0D')) {
+				if (input->is1('\x0D')) {
 					isOk = true;
 					continue;
 				};
 
-				if(input->is1('\x0A')) {
+				if (input->is1('\x0A')) {
 					isOk = true;
 					continue;
 				};
@@ -78,21 +76,21 @@ namespace XYO {
 		};
 
 		bool XMLReader::ignoreSpace() {
-			while(!input->isEof()) {
+			while (!input->isEof()) {
 
-				if(input->is1('\x20')) {
+				if (input->is1('\x20')) {
 					continue;
 				};
 
-				if(input->is1('\x09')) {
+				if (input->is1('\x09')) {
 					continue;
 				};
 
-				if(input->is1('\x0D')) {
+				if (input->is1('\x0D')) {
 					continue;
 				};
 
-				if(input->is1('\x0A')) {
+				if (input->is1('\x0A')) {
 					continue;
 				};
 
@@ -102,26 +100,26 @@ namespace XYO {
 		};
 
 		bool XMLReader::readName(String &name) {
-			while(!input->isEof()) {
-				if(input->is1('\x20')) {
+			while (!input->isEof()) {
+				if (input->is1('\x20')) {
 					return true;
 				};
-				if(input->is1('\x09')) {
+				if (input->is1('\x09')) {
 					return true;
 				};
-				if(input->is1('\x0D')) {
+				if (input->is1('\x0D')) {
 					return true;
 				};
-				if(input->is1('\x0A')) {
+				if (input->is1('\x0A')) {
 					return true;
 				};
-				if(input->is('=')) {
+				if (input->is('=')) {
 					return true;
 				};
-				if(input->is('/')) {
+				if (input->is('/')) {
 					return true;
 				};
-				if(input->is('>')) {
+				if (input->is('>')) {
 					return true;
 				};
 
@@ -134,46 +132,46 @@ namespace XYO {
 		bool XMLReader::readAttributes(typename XMLDocument::Attributes &attributes) {
 			int index = 0;
 			bool isOk;
-			while(!input->isEof()) {
-				if(!ignoreSpace()) {
+			while (!input->isEof()) {
+				if (!ignoreSpace()) {
 					return false;
 				};
 
-				if(input->is('/')) {
+				if (input->is('/')) {
 					return true;
 				};
-				if(input->is('>')) {
+				if (input->is('>')) {
 					return true;
 				};
 
 				attributes[index].newMemory();
-				if(!readName(attributes[index]->name)) {
+				if (!readName(attributes[index]->name)) {
 					return false;
 				};
 
-				if(!ignoreSpace()) {
+				if (!ignoreSpace()) {
 					return false;
 				};
 
-				if(!input->is1('=')) {
+				if (!input->is1('=')) {
 					return false;
 				};
 
-				if(!ignoreSpace()) {
+				if (!ignoreSpace()) {
 					return false;
 				};
 
-				if(input->is1('"')) {
+				if (input->is1('"')) {
 					isOk = false;
-					while(!input->isEof()) {
-						if(input->is1('"')) {
+					while (!input->isEof()) {
+						if (input->is1('"')) {
 							isOk = true;
 							break;
 						};
 						attributes[index]->value += input->inputChar;
 						input->read();
 					};
-					if(!isOk) {
+					if (!isOk) {
 						return false;
 					};
 
@@ -181,10 +179,10 @@ namespace XYO {
 					continue;
 				};
 
-				if(input->is1('\'')) {
+				if (input->is1('\'')) {
 					isOk = false;
-					while(!input->isEof()) {
-						if(input->is1('\'')) {
+					while (!input->isEof()) {
+						if (input->is1('\'')) {
 							isOk = true;
 							break;
 						};
@@ -192,7 +190,7 @@ namespace XYO {
 						input->read();
 					};
 
-					if(!isOk) {
+					if (!isOk) {
 						return false;
 					};
 
@@ -208,10 +206,10 @@ namespace XYO {
 		bool XMLReader::process(XMLDocument &document, int mode) {
 			TPointer<typename XMLDocument::Node> node;
 			bool isOk;
-			while(!input->isEof()) {
+			while (!input->isEof()) {
 
 				// BOM
-				if(input->isN("\xEF\xBB\xBF")) {
+				if (input->isN("\xEF\xBB\xBF")) {
 					node.newMemory();
 					node->type = XMLNodeType::Bom;
 					node->name = "\xEF\xBB\xBF";
@@ -220,12 +218,12 @@ namespace XYO {
 				};
 
 				// Declaration / Processing instructions
-				if(input->isN("<?")) {
+				if (input->isN("<?")) {
 					node.newMemory();
 					node->type = XMLNodeType::Declaration;
 					isOk = false;
-					while(!input->isEof()) {
-						if(input->isN("?>")) {
+					while (!input->isEof()) {
+						if (input->isN("?>")) {
 							document.add(node);
 							isOk = true;
 							break;
@@ -233,20 +231,20 @@ namespace XYO {
 						node->name += input->inputChar;
 						input->read();
 					};
-					if(!isOk) {
+					if (!isOk) {
 						return false;
 					};
 					continue;
 				};
 
 				// Document Type Definition
-				if(input->isN("<!DOCTYPE")) {
-					if(isSpace()) {
+				if (input->isN("<!DOCTYPE")) {
+					if (isSpace()) {
 						node.newMemory();
 						node->type = XMLNodeType::DocumentTypeDefinition;
 						isOk = false;
-						while(!input->isEof()) {
-							if(input->is1('>')) {
+						while (!input->isEof()) {
+							if (input->is1('>')) {
 								document.add(node);
 								isOk = true;
 								break;
@@ -254,7 +252,7 @@ namespace XYO {
 							node->name += input->inputChar;
 							input->read();
 						};
-						if(!isOk) {
+						if (!isOk) {
 							return false;
 						};
 						continue;
@@ -263,12 +261,12 @@ namespace XYO {
 				};
 
 				// Comment
-				if(input->isN("<!--")) {
+				if (input->isN("<!--")) {
 					node.newMemory();
 					node->type = XMLNodeType::Comment;
 					isOk = false;
-					while(!input->isEof()) {
-						if(input->isN("-->")) {
+					while (!input->isEof()) {
+						if (input->isN("-->")) {
 							document.add(node);
 							isOk = true;
 							break;
@@ -276,19 +274,19 @@ namespace XYO {
 						node->name += input->inputChar;
 						input->read();
 					};
-					if(!isOk) {
+					if (!isOk) {
 						return false;
 					};
 					continue;
 				};
 
 				// CDATA
-				if(input->isN("<![CDATA[")) {
+				if (input->isN("<![CDATA[")) {
 					node.newMemory();
 					node->type = XMLNodeType::CDATA;
 					isOk = false;
-					while(!input->isEof()) {
-						if(input->isN("]]>")) {
+					while (!input->isEof()) {
+						if (input->isN("]]>")) {
 							document.add(node);
 							isOk = true;
 							break;
@@ -296,45 +294,45 @@ namespace XYO {
 						node->name += input->inputChar;
 						input->read();
 					};
-					if(!isOk) {
+					if (!isOk) {
 						return false;
 					};
 					continue;
 				};
 
 				// Element
-				if(input->is1('<')) {
+				if (input->is1('<')) {
 					// end tag ...
-					if(input->is('/')) {
+					if (input->is('/')) {
 						input->push();
 						input->set('<');
 						return true;
 					};
 
-					if(isSpace()) {
+					if (isSpace()) {
 						return false;
 					};
 
 					node.newMemory();
 					node->type = XMLNodeType::Element;
 
-					if(readName(node->name)) {
+					if (readName(node->name)) {
 						node->attributes.newMemory();
-						if(readAttributes(*(node->attributes))) {
-							if(input->isN("/>")) {
+						if (readAttributes(*(node->attributes))) {
+							if (input->isN("/>")) {
 								document.add(node);
 								continue;
 							};
 
-							if(input->is1('>')) {
+							if (input->is1('>')) {
 								XMLDocument branch(document.add(node));
-								if(process(branch, mode)) {
-									if(input->isN("</")) {
-										if(input->isN(node->name)) {
-											if(!ignoreSpace()) {
+								if (process(branch, mode)) {
+									if (input->isN("</")) {
+										if (input->isN(node->name)) {
+											if (!ignoreSpace()) {
 												return false;
 											};
-											if(input->is1('>')) {
+											if (input->is1('>')) {
 												continue;
 											};
 										};
@@ -351,8 +349,8 @@ namespace XYO {
 				node.newMemory();
 				node->type = XMLNodeType::Content;
 				isOk = false;
-				while(!input->isEof()) {
-					if(input->is('<')) {
+				while (!input->isEof()) {
+					if (input->is('<')) {
 						isOk = true;
 						break;
 					};
@@ -360,14 +358,14 @@ namespace XYO {
 					input->read();
 				};
 
-				if(mode == XMLParserMode::Trim) {
+				if (mode == XMLParserMode::Trim) {
 					String tmp = String::trimAscii(node->name);
-					if(!tmp.isEmpty()) {
+					if (!tmp.isEmpty()) {
 						node->name = tmp;
 						document.add(node);
 					};
 
-					if(isOk) {
+					if (isOk) {
 						continue;
 					};
 
@@ -376,7 +374,7 @@ namespace XYO {
 
 				document.add(node);
 
-				if(isOk) {
+				if (isOk) {
 					continue;
 				};
 
@@ -390,9 +388,9 @@ namespace XYO {
 		TPointer<XMLDocument> XMLReader::read(int mode) {
 			TPointer<XMLDocument> retV;
 
-			if(input->read()) {
+			if (input->read()) {
 				retV.newMemory();
-				if(process(*retV, mode)) {
+				if (process(*retV, mode)) {
 					return retV;
 				};
 			};
@@ -403,8 +401,8 @@ namespace XYO {
 		TPointer<XMLDocument> XMLReader::load(const char *fileName, int mode) {
 			XMLReader xmlReader;
 			File file;
-			if(file.openRead(fileName)) {
-				if(xmlReader.open(&file)) {
+			if (file.openRead(fileName)) {
+				if (xmlReader.open(&file)) {
 					return xmlReader.read(mode);
 				};
 			};
@@ -417,8 +415,7 @@ namespace XYO {
 			iWrite.pointerLink(this);
 		};
 
-		XMLWriter::~XMLWriter() {
-		};
+		XMLWriter::~XMLWriter(){};
 
 		void XMLWriter::activeDestructor() {
 			iWrite.deleteMemory();
@@ -434,17 +431,17 @@ namespace XYO {
 		};
 
 		bool XMLWriter::writeIndentationBegin(int mode, int level) {
-			if(mode == XMLParserMode::Indentation4Spaces) {
-				for(; level > 0; --level) {
-					if(!write("\x20\x20\x20\x20")) {
+			if (mode == XMLParserMode::Indentation4Spaces) {
+				for (; level > 0; --level) {
+					if (!write("\x20\x20\x20\x20")) {
 						return false;
 					};
 				};
 				return true;
 			};
-			if(mode == XMLParserMode::IndentationTab) {
-				for(; level > 0; --level) {
-					if(!write("\x09")) {
+			if (mode == XMLParserMode::IndentationTab) {
+				for (; level > 0; --level) {
+					if (!write("\x09")) {
 						return false;
 					};
 				};
@@ -454,8 +451,8 @@ namespace XYO {
 		};
 
 		bool XMLWriter::writeIndentationEnd(int mode) {
-			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
-				if(!write("\x0D\x0A")) {
+			if ((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
+				if (!write("\x0D\x0A")) {
 					return false;
 				};
 				return true;
@@ -464,39 +461,39 @@ namespace XYO {
 		};
 
 		bool XMLWriter::indentationIsEmpty(String &value, int mode) {
-			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
+			if ((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
 				return ((String::trimAscii(value)).isEmpty());
 			};
 			return false;
 		};
 
 		bool XMLWriter::writeIndentationTrim(String &value, int mode) {
-			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab) || (mode == XMLParserMode::Trim)) {
+			if ((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab) || (mode == XMLParserMode::Trim)) {
 				String tmp = String::trimAscii(value);
-				if(!tmp.isEmpty()) {
-					if(!write(tmp)) {
+				if (!tmp.isEmpty()) {
+					if (!write(tmp)) {
 						return false;
 					};
 				};
 				return true;
 			};
-			if(!write(value)) {
+			if (!write(value)) {
 				return false;
 			};
 			return true;
 		};
 
 		bool XMLWriter::indentationIsContentBranch(XMLDocument &document, int mode) {
-			if((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
+			if ((mode == XMLParserMode::Indentation4Spaces) || (mode == XMLParserMode::IndentationTab)) {
 				typename XMLDocument::Branch::Node *node;
-				if(!document.root) {
+				if (!document.root) {
 					return true;
 				};
-				for(node = document.root->head; node != nullptr; node = node->next) {
-					if(!node->value) {
+				for (node = document.root->head; node != nullptr; node = node->next) {
+					if (!node->value) {
 						continue;
 					};
-					if((node->value->type != XMLNodeType::Content) && (node->value->type != XMLNodeType::Bom)) {
+					if ((node->value->type != XMLNodeType::Content) && (node->value->type != XMLNodeType::Bom)) {
 						return false;
 					};
 				};
@@ -507,178 +504,176 @@ namespace XYO {
 
 		bool XMLWriter::write(XMLDocument &document, int mode, int level) {
 			typename XMLDocument::Branch::Node *node;
-			if(!document.root) {
+			if (!document.root) {
 				return true;
 			};
-			for(node = document.root->head; node != nullptr; node = node->next) {
-				if(!node->value) {
+			for (node = document.root->head; node != nullptr; node = node->next) {
+				if (!node->value) {
 					continue;
 				};
 
-				if(node->value->type == XMLNodeType::Content) {
-					if(indentationIsEmpty(node->value->name, mode)) {
+				if (node->value->type == XMLNodeType::Content) {
+					if (indentationIsEmpty(node->value->name, mode)) {
 						continue;
 					};
 				};
 
-				if(!writeIndentationBegin(mode, level)) {
+				if (!writeIndentationBegin(mode, level)) {
 					return false;
 				};
 
-				switch(node->value->type) {
-					case XMLNodeType::Bom:
-						if(!write(node->value->name)) {
-							return false;
-						};
-						break;
-					case XMLNodeType::Declaration:
-						if(!write("<?")) {
-							return false;
-						};
-						if(!write(node->value->name)) {
-							return false;
-						};
-						if(!write("?>")) {
-							return false;
-						};
-						break;
-					case XMLNodeType::DocumentTypeDefinition:
-						if(!write("<!DOCTYPE")) {
-							return false;
-						};
-						if(!write(node->value->name)) {
-							return false;
-						};
-						if(!write(">")) {
-							return false;
-						};
-						break;
-					case XMLNodeType::Comment:
-						if(!write("<!--")) {
-							return false;
-						};
-						if(!write(node->value->name)) {
-							return false;
-						};
-						if(!write("-->")) {
-							return false;
-						};
-						break;
-					case XMLNodeType::CDATA:
-						if(!write("<![CDATA[")) {
-							return false;
-						};
-						if(!write(node->value->name)) {
-							return false;
-						};
-						if(!write("]]>")) {
-							return false;
-						};
-						break;
-					case XMLNodeType::Content:
-						if(!writeIndentationTrim(node->value->name, mode)) {
-							return false;
-						};
-						break;
-					case XMLNodeType::Element:
-						if(!write("<")) {
-							return false;
-						};
-						if(!write(node->value->name)) {
-							return false;
-						};
-						if(node->value->attributes) {
-							if(node->value->attributes->length() > 0) {
-								for(int index = 0; index < node->value->attributes->length(); ++index) {
-									TPointer<typename XMLDocument::Attribute> &attribute_((*node->value->attributes)[index]);
-									if(attribute_) {
-										if(!write("\x20")) {
-											return false;
-										};
-										if(!write(attribute_->name)) {
-											return false;
-										};
-										if(!write("=\"")) {
-											return false;
-										};
-										if(!write(attribute_->value)) {
-											return false;
-										};
-										if(!write("\"")) {
-											return false;
-										};
+				switch (node->value->type) {
+				case XMLNodeType::Bom:
+					if (!write(node->value->name)) {
+						return false;
+					};
+					break;
+				case XMLNodeType::Declaration:
+					if (!write("<?")) {
+						return false;
+					};
+					if (!write(node->value->name)) {
+						return false;
+					};
+					if (!write("?>")) {
+						return false;
+					};
+					break;
+				case XMLNodeType::DocumentTypeDefinition:
+					if (!write("<!DOCTYPE")) {
+						return false;
+					};
+					if (!write(node->value->name)) {
+						return false;
+					};
+					if (!write(">")) {
+						return false;
+					};
+					break;
+				case XMLNodeType::Comment:
+					if (!write("<!--")) {
+						return false;
+					};
+					if (!write(node->value->name)) {
+						return false;
+					};
+					if (!write("-->")) {
+						return false;
+					};
+					break;
+				case XMLNodeType::CDATA:
+					if (!write("<![CDATA[")) {
+						return false;
+					};
+					if (!write(node->value->name)) {
+						return false;
+					};
+					if (!write("]]>")) {
+						return false;
+					};
+					break;
+				case XMLNodeType::Content:
+					if (!writeIndentationTrim(node->value->name, mode)) {
+						return false;
+					};
+					break;
+				case XMLNodeType::Element:
+					if (!write("<")) {
+						return false;
+					};
+					if (!write(node->value->name)) {
+						return false;
+					};
+					if (node->value->attributes) {
+						if (node->value->attributes->length() > 0) {
+							for (int index = 0; index < node->value->attributes->length(); ++index) {
+								TPointer<typename XMLDocument::Attribute> &attribute_((*node->value->attributes)[index]);
+								if (attribute_) {
+									if (!write("\x20")) {
+										return false;
+									};
+									if (!write(attribute_->name)) {
+										return false;
+									};
+									if (!write("=\"")) {
+										return false;
+									};
+									if (!write(attribute_->value)) {
+										return false;
+									};
+									if (!write("\"")) {
+										return false;
 									};
 								};
 							};
 						};
-						if(node->value->branch) {
-							if(node->value->branch->isEmpty()) {
-								if(!write("\x20")) {
-									return false;
-								};
-								if(!write("/>")) {
-									return false;
-								};
-								break;
-							};
-
-							if(!write(">")) {
+					};
+					if (node->value->branch) {
+						if (node->value->branch->isEmpty()) {
+							if (!write("\x20")) {
 								return false;
 							};
-
-							XMLDocument branch(node->value->branch);
-
-							if(indentationIsContentBranch(branch, mode)) {
-								if(!write(branch, XMLParserMode::Trim, 0)) {
-									return false;
-								};
-							} else {
-
-								if(!writeIndentationEnd(mode)) {
-									return false;
-								};
-
-								if(!write(branch, mode, level + 1)) {
-									return false;
-								};
-
-								if(!writeIndentationBegin(mode, level)) {
-									return false;
-								};
-
-							};
-
-							if(!write("</")) {
+							if (!write("/>")) {
 								return false;
 							};
-
-							if(!write(node->value->name)) {
-								return false;
-							};
-
-							if(!write(">")) {
-								return false;
-							};
-
 							break;
 						};
 
-						if(!write("\x20")) {
+						if (!write(">")) {
 							return false;
 						};
-						if(!write("/>")) {
+
+						XMLDocument branch(node->value->branch);
+
+						if (indentationIsContentBranch(branch, mode)) {
+							if (!write(branch, XMLParserMode::Trim, 0)) {
+								return false;
+							};
+						} else {
+
+							if (!writeIndentationEnd(mode)) {
+								return false;
+							};
+
+							if (!write(branch, mode, level + 1)) {
+								return false;
+							};
+
+							if (!writeIndentationBegin(mode, level)) {
+								return false;
+							};
+						};
+
+						if (!write("</")) {
+							return false;
+						};
+
+						if (!write(node->value->name)) {
+							return false;
+						};
+
+						if (!write(">")) {
 							return false;
 						};
 
 						break;
-					default:
-						break;
+					};
+
+					if (!write("\x20")) {
+						return false;
+					};
+					if (!write("/>")) {
+						return false;
+					};
+
+					break;
+				default:
+					break;
 				};
 
-				if(!writeIndentationEnd(mode)) {
+				if (!writeIndentationEnd(mode)) {
 					return false;
 				};
-
 			};
 			return true;
 		};
@@ -686,8 +681,8 @@ namespace XYO {
 		bool XMLWriter::save(XMLDocument &xml, const char *fileName, int mode) {
 			XMLWriter xmlWriter;
 			File file;
-			if(file.openWrite(fileName)) {
-				if(xmlWriter.open(&file)) {
+			if (file.openWrite(fileName)) {
+				if (xmlWriter.open(&file)) {
 					return xmlWriter.write(xml, mode);
 				};
 			};
@@ -696,4 +691,3 @@ namespace XYO {
 
 	};
 };
-

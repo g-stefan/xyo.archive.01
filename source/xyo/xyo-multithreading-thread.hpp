@@ -11,7 +11,7 @@
 #define XYO_MULTITHREADING_THREAD_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_SINGLE_THREAD
@@ -20,7 +20,7 @@ namespace XYO {
 	namespace Multithreading {
 
 		struct Thread {
-			XYO_EXPORT static void sleep(int milliSeconds);
+				XYO_EXPORT static void sleep(int milliSeconds);
 		};
 
 	};
@@ -30,13 +30,13 @@ namespace XYO {
 
 #ifdef XYO_MULTI_THREAD
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
+#		include "xyo-managedmemory-tmemory.hpp"
+#	endif
 
-#ifndef XYO_MULTITHREADING_TATOMIC_HPP
-#include "xyo-multithreading-tatomic.hpp"
-#endif
+#	ifndef XYO_MULTITHREADING_TATOMIC_HPP
+#		include "xyo-multithreading-tatomic.hpp"
+#	endif
 
 namespace XYO {
 	namespace Multithreading {
@@ -50,11 +50,9 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Thread);
 
 			protected:
-
 				class Thread_ *thread;
 
 			public:
-
 				XYO_EXPORT Thread();
 				XYO_EXPORT ~Thread();
 				XYO_EXPORT bool start(ThreadProcedure procedure, void *this_);

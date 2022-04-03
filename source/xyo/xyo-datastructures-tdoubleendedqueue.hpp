@@ -11,36 +11,36 @@
 #define XYO_DATASTRUCTURES_TDOUBLEENDEDQUEUE_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TXLIST3_HPP
-#include "xyo-datastructures-txlist3.hpp"
+#	include "xyo-datastructures-txlist3.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T>
-		struct TDoubleEndedQueueNode : TXList3Node<TDoubleEndedQueueNode<T> > {
-			typedef TDoubleEndedQueueNode TNode;
+		template <typename T>
+		struct TDoubleEndedQueueNode : TXList3Node<TDoubleEndedQueueNode<T>> {
+				typedef TDoubleEndedQueueNode TNode;
 
-			T value;
+				T value;
 
-			inline void activeConstructor() {
-				TIfHasActiveConstructor<T>::activeConstructor(&value);
-			};
+				inline void activeConstructor() {
+					TIfHasActiveConstructor<T>::activeConstructor(&value);
+				};
 
-			inline void activeDestructor() {
-				TIfHasActiveDestructor<T>::activeDestructor(&value);
-			};
-
+				inline void activeDestructor() {
+					TIfHasActiveDestructor<T>::activeDestructor(&value);
+				};
 		};
 
-		template<typename T, template <typename U> class TNodeMemory = TMemory>
+		template <typename T, template <typename U> class TNodeMemory = TMemory>
 		class TDoubleEndedQueue : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TDoubleEndedQueue);
+
 			public:
 				typedef TDoubleEndedQueueNode<T> TNode;
 				typedef TXList3<TNode, TNodeMemory> TXList;
@@ -90,7 +90,7 @@ namespace XYO {
 
 				inline bool pop(T &value) {
 					TNode *node = TXList::pop(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -100,7 +100,7 @@ namespace XYO {
 
 				inline bool pop(TPointerT &value) {
 					TNode *node = TXList::pop(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -110,7 +110,7 @@ namespace XYO {
 
 				inline bool pop(TPointerXT &value) {
 					TNode *node = TXList::pop(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -126,7 +126,7 @@ namespace XYO {
 
 				inline bool pop() {
 					TNode *node = TXList::pop(head, tail);
-					if(node) {
+					if (node) {
 						TXList::deleteNode(node);
 						return true;
 					};
@@ -165,7 +165,7 @@ namespace XYO {
 
 				inline bool popFromTail(T &value) {
 					TNode *node = TXList::popFromTail(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -175,7 +175,7 @@ namespace XYO {
 
 				inline bool popFromTail(TPointerT &value) {
 					TNode *node = TXList::popFromTail(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -185,7 +185,7 @@ namespace XYO {
 
 				inline bool popFromTail(TPointerXT &value) {
 					TNode *node = TXList::popFromTail(head, tail);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXList::deleteNode(node);
 						return true;
@@ -201,7 +201,7 @@ namespace XYO {
 
 				inline bool popFromTail() {
 					TNode *node = TXList::popFromTail(head, tail);
-					if(node) {
+					if (node) {
 						TXList::deleteNode(node);
 						return true;
 					};
@@ -233,11 +233,9 @@ namespace XYO {
 					head = listHead;
 					tail = listTail;
 				};
-
 		};
 
 	};
 };
 
 #endif
-

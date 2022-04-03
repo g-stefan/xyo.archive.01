@@ -29,17 +29,16 @@ namespace XYO {
 			};
 
 			void *registryInit() {
-				static bool registryInitIsRecursive=false;
-				if(registryInitIsRecursive) {
+				static bool registryInitIsRecursive = false;
+				if (registryInitIsRecursive) {
 					return nullptr;
 				};
-				registryInitIsRecursive=true;
+				registryInitIsRecursive = true;
 				static RegistryInit registryInitInstance;
-				registryInitIsRecursive=false;
+				registryInitIsRecursive = false;
 				return &registryInitInstance;
 			};
 
 		};
 	};
 };
-

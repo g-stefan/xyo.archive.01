@@ -8,7 +8,7 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #include "xyo-system-filetime.hpp"
@@ -21,12 +21,12 @@ namespace XYO {
 
 		bool FileTime::isChanged(TDynamicArray<FileTime> &x) {
 			int k;
-			if(!fileTime) {
+			if (!fileTime) {
 				return true;
 			};
 
-			for(k = 0; k < x.length(); ++k) {
-				if(compare(x[k]) < 0) {
+			for (k = 0; k < x.length(); ++k) {
+				if (compare(x[k]) < 0) {
 					return true;
 				};
 			};
@@ -35,4 +35,3 @@ namespace XYO {
 
 	};
 };
-

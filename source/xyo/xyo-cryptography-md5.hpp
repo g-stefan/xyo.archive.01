@@ -11,7 +11,7 @@
 #define XYO_CRYPTOGRAPHY_MD5_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -20,8 +20,8 @@ namespace XYO {
 
 		class MD5 : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(MD5);
-			protected:
 
+			protected:
 				XYO_EXPORT static const uint16_t r[];
 				XYO_EXPORT static const uint32_t k[];
 
@@ -34,6 +34,7 @@ namespace XYO {
 				uint8_t lastData[4];
 				uint64_t length;
 				size_t stateM;
+
 			public:
 				XYO_EXPORT MD5();
 				XYO_EXPORT void processInit();

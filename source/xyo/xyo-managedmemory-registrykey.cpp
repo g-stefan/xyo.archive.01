@@ -26,19 +26,18 @@ namespace XYO {
 			static CriticalSection *criticalSection;
 #endif
 
-
 			bool checkAndRegisterKey(const char *key, RegistryKeyNode *&this_) {
 #ifdef XYO_MULTI_THREAD
 				criticalSection->enter();
 				this_ = RBTree::find(root, key);
-				if(this_ != nullptr) {
+				if (this_ != nullptr) {
 					criticalSection->leave();
 					return false;
 				};
 
 				try {
 					this_ = RBTree::newNode();
-				} catch(...) {
+				} catch (...) {
 					criticalSection->leave();
 					throw;
 				};
@@ -58,7 +57,7 @@ namespace XYO {
 
 #ifdef XYO_SINGLE_THREAD
 				this_ = RBTree::find(root, key);
-				if(this_ != nullptr) {
+				if (this_ != nullptr) {
 					return false;
 				};
 
@@ -106,9 +105,7 @@ namespace XYO {
 #ifdef XYO_MULTI_THREAD
 				delete criticalSection;
 #endif
-
 			};
-
 
 #ifdef XYO_MULTI_THREAD
 
@@ -125,4 +122,3 @@ namespace XYO {
 		};
 	};
 };
-

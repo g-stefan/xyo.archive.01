@@ -11,7 +11,7 @@
 #define XYO_SYSTEM_SHELLFIND_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -25,12 +25,10 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(ShellFind);
 
 			protected:
-
 				ShellFind_ *shellFind_;
 				bool isValid_;
 
 			public:
-
 				XYO_EXPORT ShellFind();
 				XYO_EXPORT ~ShellFind();
 
@@ -51,4 +49,3 @@ namespace XYO {
 };
 
 #endif
-

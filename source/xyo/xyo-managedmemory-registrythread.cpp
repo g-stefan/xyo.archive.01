@@ -8,22 +8,22 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_MULTI_THREAD
 
-#include "xyo-managedmemory-registrydata.hpp"
-#include "xyo-managedmemory-registrykey.hpp"
-#include "xyo-managedmemory-registry.hpp"
-#include "xyo-managedmemory-registrythread.hpp"
+#	include "xyo-managedmemory-registrydata.hpp"
+#	include "xyo-managedmemory-registrykey.hpp"
+#	include "xyo-managedmemory-registry.hpp"
+#	include "xyo-managedmemory-registrythread.hpp"
 
 namespace XYO {
 	namespace ManagedMemory {
 		namespace RegistryThread {
 
 			struct RegistryThreadData {
-				RegistryDataNode *data[4];
+					RegistryDataNode *data[4];
 			};
 
 			typedef RegistryDataList List;
@@ -34,7 +34,7 @@ namespace XYO {
 
 			static void resizeFastTrack(size_t newSize) {
 
-				if(newSize < fastTrackSize) {
+				if (newSize < fastTrackSize) {
 					return;
 				};
 
@@ -49,8 +49,8 @@ namespace XYO {
 				fastTrackOld_ = fastTrack;
 
 				fastTrackNew_ = new void *[fastTrackSize];
-				memset(fastTrackNew_, 0, sizeof(void *)*fastTrackSize);
-				memcpy(fastTrackNew_, fastTrack, sizeof(void *)*oldSize);
+				memset(fastTrackNew_, 0, sizeof(void *) * fastTrackSize);
+				memcpy(fastTrackNew_, fastTrack, sizeof(void *) * oldSize);
 				fastTrack = fastTrackNew_;
 
 				delete[] fastTrackOld_;
@@ -82,8 +82,7 @@ namespace XYO {
 
 				fastTrackSize = 8;
 				fastTrack = new void *[fastTrackSize];
-				memset(fastTrack, 0, sizeof(void *)*fastTrackSize);
-
+				memset(fastTrack, 0, sizeof(void *) * fastTrackSize);
 			};
 
 			void threadEnd() {
@@ -123,11 +122,11 @@ namespace XYO {
 				RegistryKey::checkAndRegisterKey(registryKey, node);
 
 				registryLink = node->threadValue;
-				if(fastTrackSize <= registryLink) {
+				if (fastTrackSize <= registryLink) {
 					resizeFastTrack(registryLink);
 				};
 
-				if(fastTrack[registryLink] == nullptr) {
+				if (fastTrack[registryLink] == nullptr) {
 					// some value for recursive call protection, require setValue
 					fastTrack[registryLink] = node;
 					return true;
@@ -137,7 +136,7 @@ namespace XYO {
 
 			void setValue(size_t registryLink, size_t categoryLevel, void *resourceThis, DeleteMemory deleteResource, FinalizeMemory finalizeResource) {
 
-				if(fastTrackSize <= registryLink) {
+				if (fastTrackSize <= registryLink) {
 					resizeFastTrack(registryLink);
 				};
 
@@ -151,9 +150,9 @@ namespace XYO {
 
 			void *getValue(size_t registryLink) {
 
-				if(fastTrackSize <= registryLink) {
+				if (fastTrackSize <= registryLink) {
 					// Global initialization guard, registryLink == 0  , fastTrackSize == 0 , force initMemory
-					if(registryLink == 0) {
+					if (registryLink == 0) {
 						return nullptr;
 					};
 					resizeFastTrack(registryLink);
@@ -165,13 +164,12 @@ namespace XYO {
 			size_t getKey(const char *registryKey) {
 
 				RegistryKeyNode *node = RegistryKey::getKey(registryKey);
-				if(node) {
+				if (node) {
 					return node->threadValue;
 				};
 
 				return 0;
 			};
-
 
 		};
 	};

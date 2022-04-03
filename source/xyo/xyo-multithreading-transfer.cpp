@@ -19,11 +19,10 @@ namespace XYO {
 			link(nullptr);
 		};
 
-		Transfer::~Transfer() {
-		};
+		Transfer::~Transfer(){};
 
 		void Transfer::link(Transfer *this_) {
-			if(this_) {
+			if (this_) {
 				thread1 = this_;
 				thread2 = nullptr;
 				this_->thread1 = nullptr;
@@ -39,12 +38,12 @@ namespace XYO {
 		};
 
 		void Transfer::set(Object *value_) {
-			if(thread1) {
+			if (thread1) {
 				value1 = value_;
 				hasValue1.set(true);
 				sync1.wait();
 			};
-			if(thread2) {
+			if (thread2) {
 				value2 = value_;
 				hasValue2.set(true);
 				sync2.wait();
@@ -53,15 +52,15 @@ namespace XYO {
 
 		TPointer<Object> Transfer::get(TransferProcedure transferProcedure) {
 			TPointer<Object> retV;
-			if(thread1) {
-				if(transferProcedure) {
+			if (thread1) {
+				if (transferProcedure) {
 					retV = (*transferProcedure)(thread1->value2);
 				};
 				thread1->hasValue2.set(false);
 				thread1->sync2.notify();
 			};
-			if(thread2) {
-				if(transferProcedure) {
+			if (thread2) {
+				if (transferProcedure) {
 					retV = (*transferProcedure)(thread2->value1);
 				};
 				thread2->hasValue1.set(false);
@@ -71,10 +70,10 @@ namespace XYO {
 		};
 
 		bool Transfer::hasValue() {
-			if(thread1) {
+			if (thread1) {
 				return thread1->hasValue2.get();
 			};
-			if(thread2) {
+			if (thread2) {
 				return thread2->hasValue1.get();
 			};
 			return false;

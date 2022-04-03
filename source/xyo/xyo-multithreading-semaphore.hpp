@@ -11,7 +11,7 @@
 #define XYO_MULTITHREADING_SEMAPHORE_HPP
 
 #ifndef XYO_MULTITHREADING_TATOMIC_HPP
-#include "xyo-multithreading-tatomic.hpp"
+#	include "xyo-multithreading-tatomic.hpp"
 #endif
 
 #ifdef XYO_MULTI_THREAD
@@ -23,11 +23,9 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Semaphore);
 
 			protected:
-
 				TAtomic<bool> state;
 
 			public:
-
 				XYO_EXPORT Semaphore();
 
 				XYO_EXPORT void wait();
@@ -42,4 +40,3 @@ namespace XYO {
 #endif
 
 #endif
-

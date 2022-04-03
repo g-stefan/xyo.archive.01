@@ -24,7 +24,7 @@ namespace XYO {
 
 		void RandomMT::seed(uint32_t seed_) {
 			int i;
-			if(seed_ == 0) {
+			if (seed_ == 0) {
 				seed_ = static_cast<uint32_t>(time(nullptr));
 			};
 			mt[0] = seed_;
@@ -37,7 +37,7 @@ namespace XYO {
 
 		uint32_t RandomMT::nextRandom() {
 			uint32_t y;
-			if(index == 0) {
+			if (index == 0) {
 				int i;
 				for (i = 1; i < 623; ++i) {
 					y = (mt[i] & 0x80000000UL) + (mt[(i + 1) % 624] & 0x7fffffffUL);
@@ -71,4 +71,3 @@ namespace XYO {
 
 	};
 };
-

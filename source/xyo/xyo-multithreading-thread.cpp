@@ -8,19 +8,18 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_MULTI_THREAD
 
-#include "xyo-multithreading-thread.hpp"
+#	include "xyo-multithreading-thread.hpp"
 
 namespace XYO {
 	namespace Multithreading {
 		using namespace XYO::ManagedMemory;
 
-		class ThreadTimeout:
-			public Object {
+		class ThreadTimeout : public Object {
 			public:
 				ThreadProcedure procedure;
 				void *this_;
@@ -45,7 +44,7 @@ namespace XYO {
 			threadTimeout->milliSeconds = milliSeconds;
 
 			threadTimeout->incReferenceCount();
-			if(thread->start(onTimeoutProcedure, threadTimeout)) {
+			if (thread->start(onTimeoutProcedure, threadTimeout)) {
 				return thread;
 			};
 			threadTimeout->decReferenceCount();
@@ -53,8 +52,7 @@ namespace XYO {
 			return nullptr;
 		};
 
-		class ThreadInterval:
-			public Object {
+		class ThreadInterval : public Object {
 			public:
 				ThreadProcedure procedure;
 				void *this_;
@@ -64,7 +62,7 @@ namespace XYO {
 
 		static void onIntervalProcedure(void *this__) {
 			ThreadInterval *this_ = reinterpret_cast<ThreadInterval *>(this__);
-			while(this_->clearInterval->get() == false) {
+			while (this_->clearInterval->get() == false) {
 				Thread::sleep(this_->milliSeconds);
 				(*this_->procedure)(this_->this_);
 			};
@@ -83,7 +81,7 @@ namespace XYO {
 			threadInterval->clearInterval = &clearInterval;
 
 			threadInterval->incReferenceCount();
-			if(thread->start(onIntervalProcedure, threadInterval)) {
+			if (thread->start(onIntervalProcedure, threadInterval)) {
 				return thread;
 			};
 			threadInterval->decReferenceCount();
@@ -91,8 +89,7 @@ namespace XYO {
 			return nullptr;
 		};
 
-		class ThreadFinish:
-			public Object {
+		class ThreadFinish : public Object {
 			public:
 				ThreadProcedure procedure;
 				void *this_;
@@ -101,7 +98,7 @@ namespace XYO {
 
 		static void onFinishProcedure(void *this__) {
 			ThreadFinish *this_ = reinterpret_cast<ThreadFinish *>(this__);
-			while(this_->thread->isRunning()) {
+			while (this_->thread->isRunning()) {
 				Thread::sleep(1);
 			};
 			(*this_->procedure)(this_->this_);
@@ -119,7 +116,7 @@ namespace XYO {
 			threadFinish->thread = &thread_;
 
 			threadFinish->incReferenceCount();
-			if(thread->start(onFinishProcedure, threadFinish)) {
+			if (thread->start(onFinishProcedure, threadFinish)) {
 				return thread;
 			};
 			threadFinish->decReferenceCount();
@@ -129,6 +126,5 @@ namespace XYO {
 
 	};
 };
-
 
 #endif

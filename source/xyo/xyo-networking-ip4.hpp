@@ -11,7 +11,7 @@
 #define XYO_NETWORING_IP4_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -22,7 +22,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(IP4);
 
 			public:
-
 				uint8_t ip[4];
 
 				XYO_EXPORT IP4();
@@ -36,4 +35,3 @@ namespace XYO {
 };
 
 #endif
-

@@ -11,15 +11,15 @@
 #define XYO_SYSTEM_PROCESSINTERACTIVE_HPP
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 #ifndef XYO_STREAM_IWRITE_HPP
-#include "xyo-stream-iwrite.hpp"
+#	include "xyo-stream-iwrite.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -30,18 +30,15 @@ namespace XYO {
 
 		class ProcessInteractive_;
 
-		class ProcessInteractive:
-			public virtual IRead,
-			public virtual IWrite {
+		class ProcessInteractive : public virtual IRead,
+		                           public virtual IWrite {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(ProcessInteractive);
 
 			protected:
-
 				ProcessInteractive_ *this_;
 				ProcessInteractive *linkOwner_;
 
 			public:
-
 				XYO_EXPORT ProcessInteractive();
 				XYO_EXPORT ~ProcessInteractive();
 				XYO_EXPORT operator bool() const;
@@ -68,4 +65,3 @@ namespace XYO {
 };
 
 #endif
-

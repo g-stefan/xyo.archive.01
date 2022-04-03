@@ -11,43 +11,43 @@
 #define XYO_DATASTRUCTURES_TSTRINGCORE_X_STRING_X_CHAR_HPP
 
 #ifndef XYO_DATASTRUCTURES_TSTRINGCORE_HPP
-#include "xyo-datastructures-tstringcore.hpp"
+#	include "xyo-datastructures-tstringcore.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 
-		template<>
+		template <>
 		inline size_t TStringCore<char>::length(const char *x) {
 			return strlen(x);
 		};
 
-		template<>
+		template <>
 		inline void TStringCore<char>::copy(char *x, const char *y) {
 			strcpy(x, y);
 		};
 
-		template<>
+		template <>
 		inline void TStringCore<char>::copyN(char *x, const char *y, size_t yLn) {
 			strncpy(x, y, yLn);
 		};
 
-		template<>
+		template <>
 		inline int TStringCore<char>::compare(const char *x, const char *y) {
 			return strcmp(x, y);
 		};
 
-		template<>
+		template <>
 		inline int TStringCore<char>::compareN(const char *x, const char *y, size_t ln) {
 			return strncmp(x, y, ln);
 		};
 
-		template<>
+		template <>
 		inline void TStringCore<char>::concatenate(char *x, const char *y) {
 			strcat(x, y);
 		};
 
-		template<>
+		template <>
 		inline void TStringCore<char>::concatenateN(char *x, const char *y, size_t yLn) {
 			strncat(x, y, yLn);
 		};
@@ -56,5 +56,3 @@ namespace XYO {
 };
 
 #endif
-
-

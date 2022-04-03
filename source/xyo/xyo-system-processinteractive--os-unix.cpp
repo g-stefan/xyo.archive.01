@@ -8,39 +8,39 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE
-#define _POSIX_C_SOURCE 200809L
-#endif
+#	ifndef _POSIX_SOURCE
+#		define _POSIX_SOURCE
+#		define _POSIX_C_SOURCE 200809L
+#	endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
 
-#include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <spawn.h>
-#include <sys/wait.h>
+#	include <unistd.h>
+#	include <dirent.h>
+#	include <fcntl.h>
+#	include <spawn.h>
+#	include <sys/wait.h>
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#	include <ctype.h>
+#	include <stdio.h>
+#	include <stdlib.h>
+#	include <string.h>
 
-#include <cerrno>
-#include <cstdio>
+#	include <cerrno>
+#	include <cstdio>
 
-#include "xyo-multithreading-thread.hpp"
-#include "xyo-system-processinteractive.hpp"
-#include "xyo-system-shell.hpp"
+#	include "xyo-multithreading-thread.hpp"
+#	include "xyo-system-processinteractive.hpp"
+#	include "xyo-system-shell.hpp"
 
-#define PIPE_READ 0
-#define PIPE_WRITE 1
+#	define PIPE_READ 0
+#	define PIPE_WRITE 1
 
 namespace XYO {
 	namespace System {
@@ -49,9 +49,8 @@ namespace XYO {
 
 		class ProcessInteractive_ {
 			public:
-
-				int     hStdIn[2];
-				int     hStdOut[2];
+				int hStdIn[2];
+				int hStdOut[2];
 
 				pid_t pId;
 
@@ -85,31 +84,30 @@ namespace XYO {
 			this_->isOk = false;
 			this_->returnValue = 0;
 
-			if(pipe(this_->hStdIn) < 0) {
+			if (pipe(this_->hStdIn) < 0) {
 				this_->hStdIn[PIPE_READ] = 0;
 				this_->hStdIn[PIPE_WRITE] = 0;
 				close();
 				return false;
 			};
-			if(pipe(this_->hStdOut) < 0) {
+			if (pipe(this_->hStdOut) < 0) {
 				this_->hStdOut[PIPE_READ] = 0;
 				this_->hStdOut[PIPE_WRITE] = 0;
 				close();
 				return false;
 			};
 
-
 			this_->pId = fork();
-			if(this_->pId == 0) {
+			if (this_->pId == 0) {
 
-				if(dup2(this_->hStdIn[PIPE_READ], STDIN_FILENO) == -1) {
+				if (dup2(this_->hStdIn[PIPE_READ], STDIN_FILENO) == -1) {
 					exit(errno);
 				};
 
-				if(dup2(this_->hStdOut[PIPE_WRITE], STDOUT_FILENO) == -1) {
+				if (dup2(this_->hStdOut[PIPE_WRITE], STDOUT_FILENO) == -1) {
 					exit(errno);
 				};
-				if(dup2(this_->hStdOut[PIPE_WRITE], STDERR_FILENO) == -1) {
+				if (dup2(this_->hStdOut[PIPE_WRITE], STDERR_FILENO) == -1) {
 					exit(errno);
 				};
 
@@ -130,7 +128,7 @@ namespace XYO {
 				char **cmdS;
 				Shell::mainArgsSet(cmdLine, cmdN, cmdS);
 
-				if(cmdN == 0) {
+				if (cmdN == 0) {
 					Shell::mainArgsDelete(cmdN, cmdS);
 					exit(0);
 				};
@@ -140,7 +138,7 @@ namespace XYO {
 				exit(errno);
 			};
 
-			if(this_->pId > 0) {
+			if (this_->pId > 0) {
 				::close(this_->hStdIn[PIPE_READ]);
 				this_->hStdIn[PIPE_READ] = 0;
 				::close(this_->hStdOut[PIPE_WRITE]);
@@ -165,13 +163,13 @@ namespace XYO {
 		};
 
 		void ProcessInteractive::join() {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				pid_t retV;
 				int status;
 
-				for(;;) {
+				for (;;) {
 					retV = waitpid(this_->pId, &status, WNOHANG);
-					if(retV == 0) {
+					if (retV == 0) {
 						Thread::sleep(1);
 						continue;
 					};
@@ -188,10 +186,9 @@ namespace XYO {
 				int status;
 
 				retV = waitpid(this_->pId, &status, WNOHANG);
-				if(retV == 0) {
+				if (retV == 0) {
 					return true;
 				};
-
 			};
 			return false;
 		};
@@ -200,7 +197,7 @@ namespace XYO {
 
 			join();
 
-			if(this_->isOk) {
+			if (this_->isOk) {
 
 				pid_t retV;
 				int status;
@@ -209,19 +206,19 @@ namespace XYO {
 				this_->returnValue = WEXITSTATUS(retV);
 			};
 
-			if(this_->hStdIn[PIPE_READ] != 0) {
+			if (this_->hStdIn[PIPE_READ] != 0) {
 				::close(this_->hStdIn[PIPE_READ]);
 				this_->hStdIn[PIPE_READ] = 0;
 			};
-			if(this_->hStdIn[PIPE_WRITE] != 0) {
+			if (this_->hStdIn[PIPE_WRITE] != 0) {
 				::close(this_->hStdIn[PIPE_WRITE]);
 				this_->hStdIn[PIPE_WRITE] = 0;
 			};
-			if(this_->hStdOut[PIPE_READ] != 0) {
+			if (this_->hStdOut[PIPE_READ] != 0) {
 				::close(this_->hStdOut[PIPE_READ]);
 				this_->hStdOut[PIPE_READ] = 0;
 			};
-			if(this_->hStdOut[PIPE_WRITE] != 0) {
+			if (this_->hStdOut[PIPE_WRITE] != 0) {
 				::close(this_->hStdOut[PIPE_WRITE]);
 				this_->hStdOut[PIPE_WRITE] = 0;
 			};
@@ -243,10 +240,10 @@ namespace XYO {
 		};
 
 		size_t ProcessInteractive::read(void *output, size_t ln_) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				int ln;
-				ln =::read(this_->hStdOut[PIPE_READ], output, ln_);
-				if(ln > 0) {
+				ln = ::read(this_->hStdOut[PIPE_READ], output, ln_);
+				if (ln > 0) {
 					return ln;
 				};
 			};
@@ -254,10 +251,10 @@ namespace XYO {
 		};
 
 		size_t ProcessInteractive::write(const void *input, size_t ln_) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				int ln;
-				ln =::write(this_->hStdIn[PIPE_WRITE], input, ln_);
-				if(ln > 0) {
+				ln = ::write(this_->hStdIn[PIPE_WRITE], input, ln_);
+				if (ln > 0) {
 					return ln;
 				};
 			};
@@ -265,25 +262,25 @@ namespace XYO {
 		};
 
 		int ProcessInteractive::waitToRead(uint32_t microSeconds) {
-			if(this_->isOk) {
+			if (this_->isOk) {
 				int ret;
 				fd_set fdSet;
 				struct timeval timev;
 				pid_t pId;
 				int status;
 
-				for(; microSeconds > 0; --microSeconds) {
+				for (; microSeconds > 0; --microSeconds) {
 					pId = waitpid(this_->pId, &status, WNOHANG);
-					if(pId == 0) {
+					if (pId == 0) {
 						timev.tv_sec = 0;
 						timev.tv_usec = 1;
 						FD_ZERO(&fdSet);
 						FD_SET(this_->hStdOut[PIPE_READ], &fdSet);
 						ret = select(this_->hStdOut[PIPE_READ] + 1, &fdSet, nullptr, nullptr, &timev);
-						if(ret == -1) {
+						if (ret == -1) {
 							return -1;
 						};
-						if(ret == 0) {
+						if (ret == 0) {
 							return 0;
 						};
 						return 1;
@@ -305,7 +302,6 @@ namespace XYO {
 			this_->pId = processInteractive_.this_->pId;
 			this_->isOk = processInteractive_.this_->isOk;
 			this_->returnValue = processInteractive_.this_->returnValue;
-
 
 			processInteractive_.this_->hStdIn[PIPE_READ] = 0;
 			processInteractive_.this_->hStdIn[PIPE_WRITE] = 0;
@@ -333,7 +329,7 @@ namespace XYO {
 		};
 
 		void ProcessInteractive::unLinkOwner() {
-			if(linkOwner_ != nullptr) {
+			if (linkOwner_ != nullptr) {
 
 				linkOwner_->this_->hStdIn[PIPE_READ] = 0;
 				linkOwner_->this_->hStdIn[PIPE_WRITE] = 0;
@@ -370,7 +366,7 @@ namespace XYO {
 			processInteractive_.this_->returnValue = 0;
 
 			processInteractive_.linkOwner_ = nullptr;
-			if(linkOwner_) {
+			if (linkOwner_) {
 				linkOwner_->linkOwner_ = this;
 			};
 		};
@@ -379,4 +375,3 @@ namespace XYO {
 };
 
 #endif
-

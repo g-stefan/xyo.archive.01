@@ -11,11 +11,11 @@
 #define XYO_PARSER_TOKEN_HPP
 
 #ifndef XYO_PARSER_INPUT_HPP
-#include "xyo-parser-input.hpp"
+#	include "xyo-parser-input.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -28,7 +28,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Token);
 
 			public:
-
 				TPointerX<Input> input;
 
 				XYO_EXPORT Token();

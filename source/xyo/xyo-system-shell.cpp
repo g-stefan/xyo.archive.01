@@ -8,19 +8,19 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
-#       define WIN32_LEAN_AND_MEAN
-#       include <windows.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 #endif
 
 #ifdef XYO_OS_UNIX
-#       include <sys/types.h>
-#       include <unistd.h>
-#       include <sys/stat.h>
-#       include <limits.h>
+#	include <sys/types.h>
+#	include <unistd.h>
+#	include <sys/stat.h>
+#	include <limits.h>
 #endif
 
 #include "xyo-system-shell.hpp"
@@ -42,7 +42,7 @@ namespace XYO {
 			String getFileName(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
+				if (String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, index + 1);
 				};
 				return fileName;
@@ -50,7 +50,7 @@ namespace XYO {
 
 			String getFileExtension(const String &fileName) {
 				size_t index;
-				if(String::indexOfFromEnd(fileName, ".", 0, index)) {
+				if (String::indexOfFromEnd(fileName, ".", 0, index)) {
 					return String::substring(fileName, index + 1);
 				};
 				return "";
@@ -58,7 +58,7 @@ namespace XYO {
 
 			String getFileBasename(const String &fileName) {
 				size_t index;
-				if(String::indexOfFromEnd(fileName, ".", 0, index)) {
+				if (String::indexOfFromEnd(fileName, ".", 0, index)) {
 					return String::substring(fileName, 0, index);
 				};
 				return fileName;
@@ -67,7 +67,7 @@ namespace XYO {
 			String getFilePath(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
+				if (String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, 0, index);
 				};
 				return "";
@@ -76,7 +76,7 @@ namespace XYO {
 			String getFilePathX(const String &fileName) {
 				String fileName_ = normalize(fileName);
 				size_t index;
-				if(String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
+				if (String::indexOfFromEnd(fileName_, pathSeparator, 0, index)) {
 					return String::substring(fileName, 0, index + 1);
 				};
 				return "";
@@ -139,12 +139,12 @@ namespace XYO {
 				scan = dirName;
 				scan += pathSeparator;
 				scan += "*";
-				for(findX.find(scan); findX; findX.next()) {
-					if(findX.isDirectory) {
-						if(StringCore::isEqual(findX.name, "..")) {
+				for (findX.find(scan); findX; findX.next()) {
+					if (findX.isDirectory) {
+						if (StringCore::isEqual(findX.name, "..")) {
 							continue;
 						};
-						if(StringCore::isEqual(findX.name, ".")) {
+						if (StringCore::isEqual(findX.name, ".")) {
 							continue;
 						};
 						found = true;
@@ -157,24 +157,24 @@ namespace XYO {
 			};
 
 			bool removeEmptyDir(const char *dirName) {
-				if(!isEmptyDir(dirName)) {
+				if (!isEmptyDir(dirName)) {
 					return rmdir(dirName);
 				};
 				return false;
 			};
 
 			bool removeFile(const char *file) {
-				if(fileExists(file)) {
+				if (fileExists(file)) {
 					return remove(file);
 				};
 				return false;
 			};
 
 			bool removeFileAndDirectoryIfEmpty(const String &target) {
-				if(!target.isEmpty()) {
-					if(removeFile(target)) {
+				if (!target.isEmpty()) {
+					if (removeFile(target)) {
 						String path = getFilePath(target);
-						if(!path.isEmpty()) {
+						if (!path.isEmpty()) {
 							return removeEmptyDir(path);
 						};
 					};
@@ -183,7 +183,7 @@ namespace XYO {
 			};
 
 			bool touchIfExists(const char *file) {
-				if(fileExists(file)) {
+				if (fileExists(file)) {
 					return touch(file);
 				};
 				return false;
@@ -191,8 +191,8 @@ namespace XYO {
 
 			bool isEnv(const char *name, const char *value) {
 				char *v = getenv(name);
-				if((v != nullptr) && (value != nullptr)) {
-					if(StringCore::isEqual(v, value)) {
+				if ((v != nullptr) && (value != nullptr)) {
+					if (StringCore::isEqual(v, value)) {
 						return true;
 					};
 				};
@@ -201,7 +201,7 @@ namespace XYO {
 
 			bool hasEnv(const char *name) {
 				char *v = getenv(name);
-				if(v != nullptr) {
+				if (v != nullptr) {
 					return true;
 				};
 				return false;
@@ -210,7 +210,7 @@ namespace XYO {
 			String getEnv(const char *name) {
 				String retV;
 				char *result_ = getenv(name);
-				if(result_ != nullptr) {
+				if (result_ != nullptr) {
 					return result_;
 				};
 				return retV;
@@ -241,8 +241,8 @@ namespace XYO {
 				String line;
 				if (file.openRead(fileName)) {
 					output = "";
-					while(StreamX::readLn(file, line, lineSize)) {
-						if(linesToSkip <= 0) {
+					while (StreamX::readLn(file, line, lineSize)) {
+						if (linesToSkip <= 0) {
 							output << line;
 							continue;
 						};
@@ -314,7 +314,7 @@ namespace XYO {
 #ifdef XYO_OS_UNIX
 				char strExe[PATH_MAX];
 				memset(strExe, 0, sizeof(strExe));
-				if(readlink("/proc/self/exe", strExe, PATH_MAX) == -1) {
+				if (readlink("/proc/self/exe", strExe, PATH_MAX) == -1) {
 					strcpy(strExe, ".");
 				};
 #endif
@@ -332,7 +332,7 @@ namespace XYO {
 #ifdef XYO_OS_UNIX
 				char strExe[PATH_MAX];
 				memset(strExe, 0, sizeof(strExe));
-				if(readlink("/proc/self/exe", strExe, PATH_MAX) == -1) {
+				if (readlink("/proc/self/exe", strExe, PATH_MAX) == -1) {
 					strcpy(strExe, ".");
 				};
 #endif
@@ -343,7 +343,7 @@ namespace XYO {
 					pathMain = ".";
 				};
 
-				if(pathMain == ".") {
+				if (pathMain == ".") {
 					pathMain = getCwd();
 				};
 
@@ -360,13 +360,13 @@ namespace XYO {
 				String findDir = dirName;
 				findDir += pathSeparator;
 				findDir += "*";
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
-							if(StringCore::isEqual(scan.name, "..")) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
+							if (StringCore::isEqual(scan.name, "..")) {
 								continue;
 							};
-							if(StringCore::isEqual(scan.name, ".")) {
+							if (StringCore::isEqual(scan.name, ".")) {
 								continue;
 							};
 
@@ -384,16 +384,16 @@ namespace XYO {
 					};
 				};
 				//
-				for(k = 0; k < dirList.length(); ++k) {
-					if(!removeDirContentRecursively(dirList[k])) {
+				for (k = 0; k < dirList.length(); ++k) {
+					if (!removeDirContentRecursively(dirList[k])) {
 						return false;
 					};
-					if(!rmdir(dirList[k])) {
+					if (!rmdir(dirList[k])) {
 						return false;
 					};
 				};
-				for(k = 0; k < fileList.length(); ++k) {
-					if(!remove(fileList[k])) {
+				for (k = 0; k < fileList.length(); ++k) {
+					if (!remove(fileList[k])) {
 						return false;
 					};
 				};
@@ -401,7 +401,7 @@ namespace XYO {
 			};
 
 			bool removeDirRecursively(const String &dirName) {
-				if(!removeDirContentRecursively(dirName)) {
+				if (!removeDirContentRecursively(dirName)) {
 					return false;
 				};
 				return rmdir(dirName);
@@ -412,15 +412,15 @@ namespace XYO {
 				fileList.empty();
 
 				String fileName_ = getFileName(fileName);
-				if(String::indexOf(fileName_, "*", 0, index) || String::indexOf(fileName_, "?", 0, index)) {
+				if (String::indexOf(fileName_, "*", 0, index) || String::indexOf(fileName_, "?", 0, index)) {
 					size_t m;
 					ShellFind scan;
 
 					m = 0;
 					String dirName = getFilePathX(fileName);
-					if(scan.find(fileName)) {
-						for(; scan; scan.next()) {
-							if(!scan.isDirectory) {
+					if (scan.find(fileName)) {
+						for (; scan; scan.next()) {
+							if (!scan.isDirectory) {
 								fileList[m] = dirName;
 								fileList[m] += scan.name;
 								++m;
@@ -431,7 +431,7 @@ namespace XYO {
 					return;
 				};
 
-				if(fileExists(fileName)) {
+				if (fileExists(fileName)) {
 					fileList[0] = fileName;
 				};
 			};
@@ -441,20 +441,20 @@ namespace XYO {
 				dirList.empty();
 
 				String fileName_ = getFileName(fileName);
-				if(String::indexOf(fileName_, "*", 0, index) || String::indexOf(fileName_, "?", 0, index)) {
+				if (String::indexOf(fileName_, "*", 0, index) || String::indexOf(fileName_, "?", 0, index)) {
 					size_t m;
 					ShellFind scan;
 
 					m = 0;
 					String dirName = getFilePathX(fileName);
-					if(scan.find(fileName)) {
-						for(; scan; scan.next()) {
-							if(scan.isDirectory) {
+					if (scan.find(fileName)) {
+						for (; scan; scan.next()) {
+							if (scan.isDirectory) {
 
-								if(StringCore::isEqual(scan.name, "..")) {
+								if (StringCore::isEqual(scan.name, "..")) {
 									continue;
 								};
-								if(StringCore::isEqual(scan.name, ".")) {
+								if (StringCore::isEqual(scan.name, ".")) {
 									continue;
 								};
 
@@ -468,21 +468,21 @@ namespace XYO {
 					return;
 				};
 
-				if(directoryExists(fileName)) {
+				if (directoryExists(fileName)) {
 					dirList[0] = fileName;
 				};
 			};
 
 			bool mkdirRecursively(const String &dirName) {
 				String dirName_ = normalize(dirName);
-				if(dirName_.isEmpty()) {
+				if (dirName_.isEmpty()) {
 					return false;
 				};
 				TDynamicArray<String> dirList;
 				size_t k = 0;
 				size_t index = 0;
-				while(index < dirName_.length()) {
-					if(String::indexOf(dirName_, pathSeparator, index + 1, index)) {
+				while (index < dirName_.length()) {
+					if (String::indexOf(dirName_, pathSeparator, index + 1, index)) {
 						dirList[k] = String::substring(dirName_, 0, index);
 						++k;
 						continue;
@@ -491,11 +491,11 @@ namespace XYO {
 					++k;
 					break;
 				};
-				for(k = 0; k < dirList.length(); ++k) {
-					if(directoryExists(dirList[k])) {
+				for (k = 0; k < dirList.length(); ++k) {
+					if (directoryExists(dirList[k])) {
 						continue;
 					};
-					if(!mkdir(dirList[k])) {
+					if (!mkdir(dirList[k])) {
 						return false;
 					};
 				};
@@ -512,13 +512,13 @@ namespace XYO {
 				findDir += pathSeparator;
 				findDir += "*";
 				bool hasFiles = false;
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
-							if(StringCore::isEqual(scan.name, "..")) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
+							if (StringCore::isEqual(scan.name, "..")) {
 								continue;
 							};
-							if(StringCore::isEqual(scan.name, ".")) {
+							if (StringCore::isEqual(scan.name, ".")) {
 								continue;
 							};
 
@@ -526,26 +526,25 @@ namespace XYO {
 							dirList[k] += pathSeparator;
 							dirList[k] += scan.name;
 							++k;
-
 						};
 						hasFiles = true;
 					};
 				};
 				//
-				for(k = 0; k < dirList.length(); ++k) {
-					if(!removeEmptyDirRecursively(dirList[k])) {
+				for (k = 0; k < dirList.length(); ++k) {
+					if (!removeEmptyDirRecursively(dirList[k])) {
 						return false;
 					};
 				};
-				if(hasFiles) {
+				if (hasFiles) {
 					return false;
 				};
 				return rmdir(dirName);
 			};
 
 			bool copyDirRecursively(const String &source_, const String &target_) {
-				String source=normalize(source_);
-				String target=normalize(target_);
+				String source = normalize(source_);
+				String target = normalize(target_);
 				TDynamicArray<String> dirList;
 				TDynamicArray<String> fileList;
 				size_t k, m;
@@ -555,13 +554,13 @@ namespace XYO {
 				String findDir = source;
 				findDir += pathSeparator;
 				findDir += "*";
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
-							if(StringCore::isEqual(scan.name, "..")) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
+							if (StringCore::isEqual(scan.name, "..")) {
 								continue;
 							};
-							if(StringCore::isEqual(scan.name, ".")) {
+							if (StringCore::isEqual(scan.name, ".")) {
 								continue;
 							};
 
@@ -574,17 +573,17 @@ namespace XYO {
 					};
 				};
 				//
-				if(!mkdirRecursivelyIfNotExists(target)) {
+				if (!mkdirRecursivelyIfNotExists(target)) {
 					return false;
 				};
 				//
-				for(k = 0; k < dirList.length(); ++k) {
+				for (k = 0; k < dirList.length(); ++k) {
 
 					String path = target;
 					path += pathSeparator;
 					path += dirList[k];
 
-					if(!mkdirRecursivelyIfNotExists(path)) {
+					if (!mkdirRecursivelyIfNotExists(path)) {
 						return false;
 					};
 
@@ -598,12 +597,12 @@ namespace XYO {
 					pathTarget += pathSeparator;
 					pathTarget += dirList[k];
 
-					if(!copyDirRecursively(pathSource, pathTarget)) {
+					if (!copyDirRecursively(pathSource, pathTarget)) {
 						return false;
 					};
 				};
 				//
-				for(k = 0; k < fileList.length(); ++k) {
+				for (k = 0; k < fileList.length(); ++k) {
 					String fileSource;
 					fileSource = source;
 					fileSource += pathSeparator;
@@ -614,16 +613,15 @@ namespace XYO {
 					fileTarget += pathSeparator;
 					fileTarget += fileList[k];
 
-					if(!copy(fileSource, fileTarget)) {						
-							return false;
+					if (!copy(fileSource, fileTarget)) {
+						return false;
 					};
-
 				};
 				return true;
 			};
 
 			bool moveDirRecursively(const String &source, const String &target, bool overwrite) {
-				if(source==target) {
+				if (source == target) {
 					return true;
 				};
 				TDynamicArray<String> dirList;
@@ -635,13 +633,13 @@ namespace XYO {
 				String findDir = source;
 				findDir += pathSeparator;
 				findDir += "*";
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
-							if(StringCore::isEqual(scan.name, "..")) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
+							if (StringCore::isEqual(scan.name, "..")) {
 								continue;
 							};
-							if(StringCore::isEqual(scan.name, ".")) {
+							if (StringCore::isEqual(scan.name, ".")) {
 								continue;
 							};
 
@@ -654,17 +652,17 @@ namespace XYO {
 					};
 				};
 				//
-				if(!mkdirRecursivelyIfNotExists(target)) {
+				if (!mkdirRecursivelyIfNotExists(target)) {
 					return false;
 				};
 				//
-				for(k = 0; k < dirList.length(); ++k) {
+				for (k = 0; k < dirList.length(); ++k) {
 
 					String path = target;
 					path += pathSeparator;
 					path += dirList[k];
 
-					if(!mkdirRecursivelyIfNotExists(path)) {
+					if (!mkdirRecursivelyIfNotExists(path)) {
 						return false;
 					};
 
@@ -678,12 +676,12 @@ namespace XYO {
 					pathTarget += pathSeparator;
 					pathTarget += dirList[k];
 
-					if(!moveDirRecursively(pathSource, pathTarget, overwrite)) {
+					if (!moveDirRecursively(pathSource, pathTarget, overwrite)) {
 						return false;
 					};
 				};
 				//
-				for(k = 0; k < fileList.length(); ++k) {
+				for (k = 0; k < fileList.length(); ++k) {
 					String fileSource;
 					fileSource = source;
 					fileSource += pathSeparator;
@@ -694,12 +692,12 @@ namespace XYO {
 					fileTarget += pathSeparator;
 					fileTarget += fileList[k];
 
-					if(!rename(fileSource, fileTarget)) {
-						if(!overwrite) {
+					if (!rename(fileSource, fileTarget)) {
+						if (!overwrite) {
 							return false;
 						};
-						if(remove(fileTarget)) {
-							if(rename(fileSource, fileTarget)) {
+						if (remove(fileTarget)) {
+							if (rename(fileSource, fileTarget)) {
 								continue;
 							};
 						};
@@ -707,13 +705,13 @@ namespace XYO {
 					};
 				};
 
-				for(k = 0; k < dirList.length(); ++k) {
+				for (k = 0; k < dirList.length(); ++k) {
 					String pathSource;
 					pathSource = source;
 					pathSource += pathSeparator;
 					pathSource += dirList[k];
 
-					if(!rmdir(pathSource)) {
+					if (!rmdir(pathSource)) {
 						return false;
 					};
 				};
@@ -730,13 +728,13 @@ namespace XYO {
 				String findDir = dirName;
 				findDir += pathSeparator;
 				findDir += "*";
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
-							if(StringCore::isEqual(scan.name, "..")) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
+							if (StringCore::isEqual(scan.name, "..")) {
 								continue;
 							};
-							if(StringCore::isEqual(scan.name, ".")) {
+							if (StringCore::isEqual(scan.name, ".")) {
 								continue;
 							};
 							dirList[k] = scan.name;
@@ -750,9 +748,9 @@ namespace XYO {
 				String findFile = dirName;
 				findFile += pathSeparator;
 				findFile += fileName;
-				if(scan.find(findFile)) {
-					for(; scan; scan.next()) {
-						if(scan.isDirectory) {
+				if (scan.find(findFile)) {
+					for (; scan; scan.next()) {
+						if (scan.isDirectory) {
 							continue;
 						};
 						fileList[m] = scan.name;
@@ -760,22 +758,22 @@ namespace XYO {
 					};
 				};
 				//
-				for(k = 0; k < fileList.length(); ++k) {
+				for (k = 0; k < fileList.length(); ++k) {
 					String file;
 					file = dirName;
 					file += pathSeparator;
 					file += fileList[k];
-					if(!remove(file)) {
+					if (!remove(file)) {
 						return false;
 					};
 				};
 				//
-				for(k = 0; k < dirList.length(); ++k) {
+				for (k = 0; k < dirList.length(); ++k) {
 					String path;
 					path = dirName;
 					path += pathSeparator;
 					path += dirList[k];
-					if(!removeFileRecursively(path, fileName)) {
+					if (!removeFileRecursively(path, fileName)) {
 						return false;
 					};
 				};
@@ -790,25 +788,25 @@ namespace XYO {
 				m = 0;
 				String findDir = source;
 				String sourcePath = source;
-				if(String::indexOf(source, "*", 0, k) || String::indexOf(source, "?", 0, k)) {
+				if (String::indexOf(source, "*", 0, k) || String::indexOf(source, "?", 0, k)) {
 					sourcePath = getFilePath(source);
 				} else {
 					findDir += pathSeparator;
 					findDir += "*";
 				};
-				if(scan.find(findDir)) {
-					for(; scan; scan.next()) {
-						if(!scan.isDirectory) {
+				if (scan.find(findDir)) {
+					for (; scan; scan.next()) {
+						if (!scan.isDirectory) {
 							fileList[m] = scan.name;
 							++m;
 						};
 					};
 				};
 				//
-				if(!mkdirRecursively(target)) {
+				if (!mkdirRecursively(target)) {
 					return false;
 				};
-				for(k = 0; k < fileList.length(); ++k) {
+				for (k = 0; k < fileList.length(); ++k) {
 					String fileSource;
 					fileSource = sourcePath;
 					fileSource += pathSeparator;
@@ -819,7 +817,7 @@ namespace XYO {
 					fileTarget += pathSeparator;
 					fileTarget += fileList[k];
 
-					if(!copy(fileSource, fileTarget)) {
+					if (!copy(fileSource, fileTarget)) {
 						return false;
 					};
 				};
@@ -827,10 +825,10 @@ namespace XYO {
 			};
 
 			bool mkdirRecursivelyIfNotExists(const String &path) {
-				if(fileExists(path)) {
+				if (fileExists(path)) {
 					return false;
 				};
-				if(directoryExists(path)) {
+				if (directoryExists(path)) {
 					return true;
 				};
 				return mkdirRecursively(path);
@@ -838,36 +836,36 @@ namespace XYO {
 
 			bool mkdirFilePath(const String &fileName) {
 				String path = getFilePath(fileName);
-				if(!path.isEmpty()) {
+				if (!path.isEmpty()) {
 					return mkdirRecursivelyIfNotExists(path);
 				};
 				return true;
 			};
 
 			bool copyFile(const String &source, const String &target) {
-				if(!mkdirFilePath(target)) {
+				if (!mkdirFilePath(target)) {
 					return false;
 				};
 				return copy(source, target);
 			};
 
-			bool fileReplaceText(const String &fileInName, const String &fileOutName, TDynamicArray<TDynamicArray<String> > &textInOut, size_t maxLineSize) {
+			bool fileReplaceText(const String &fileInName, const String &fileOutName, TDynamicArray<TDynamicArray<String>> &textInOut, size_t maxLineSize) {
 				File fileIn;
 				File fileOut;
 				String line;
 				String lineFinal;
 				size_t k;
-				if(!mkdirFilePath(fileOutName)) {
+				if (!mkdirFilePath(fileOutName)) {
 					return false;
 				};
-				if(fileIn.openRead(fileInName)) {
-					if(fileOut.openWrite(fileOutName)) {
-						while(StreamX::readLn(fileIn, line, maxLineSize)) {
+				if (fileIn.openRead(fileInName)) {
+					if (fileOut.openWrite(fileOutName)) {
+						while (StreamX::readLn(fileIn, line, maxLineSize)) {
 							lineFinal = line;
-							for(k = 0; k < textInOut.length(); ++k) {
+							for (k = 0; k < textInOut.length(); ++k) {
 								lineFinal = String::replace(lineFinal, textInOut[k][0], textInOut[k][1]);
 							};
-							if(StreamX::write(fileOut, lineFinal) != lineFinal.length()) {
+							if (StreamX::write(fileOut, lineFinal) != lineFinal.length()) {
 								return false;
 							};
 						};
@@ -879,15 +877,15 @@ namespace XYO {
 
 			bool isChanged(const String &target, TDynamicArray<String> &source) {
 				int k;
-				if(!fileExists(target)) {
+				if (!fileExists(target)) {
 					return true;
 				};
 				FileTime targetTime;
 				FileTime sourceTime;
 				targetTime.getLastWriteTime(target);
-				for(k = 0; k < source.length(); ++k) {
+				for (k = 0; k < source.length(); ++k) {
 					sourceTime.getLastWriteTime(source[k]);
-					if(targetTime.compare(sourceTime) < 0) {
+					if (targetTime.compare(sourceTime) < 0) {
 						return true;
 					};
 				};
@@ -902,30 +900,30 @@ namespace XYO {
 				String basePathX;
 				String fileName;
 
-				if(!fileExists(target)) {
+				if (!fileExists(target)) {
 					return true;
 				};
 
-				if(!(String::indexOf(pathToSearch, "*", 0, index) || String::indexOf(pathToSearch, "?", 0, index))) {
+				if (!(String::indexOf(pathToSearch, "*", 0, index) || String::indexOf(pathToSearch, "?", 0, index))) {
 					pathToSearch += "/*";
 				};
 
-				if(basePath) {
+				if (basePath) {
 					basePathX = basePath;
 				} else {
 					basePathX = getFilePathX(pathToSearch);
 				};
 
 				getFileList(pathToSearch, fileList);
-				for(k = 0; k < fileList.length(); ++k) {
-					if(compareLastWriteTime(target, fileList[k]) < 0) {
+				for (k = 0; k < fileList.length(); ++k) {
+					if (compareLastWriteTime(target, fileList[k]) < 0) {
 						return true;
 					};
 				};
 
 				getDirList(pathToSearch, fileList);
-				for(k = 0; k < fileList.length(); ++k) {
-					if(isChangedRecursive(target, fileList[k], basePathX)) {
+				for (k = 0; k < fileList.length(); ++k) {
+					if (isChangedRecursive(target, fileList[k], basePathX)) {
 						return true;
 					};
 				};
@@ -934,7 +932,7 @@ namespace XYO {
 			};
 
 			bool copyFileIfExists(const String &source, const String &target) {
-				if(!fileExists(source)) {
+				if (!fileExists(source)) {
 					return true;
 				};
 				return copyFile(source, target);
@@ -946,20 +944,20 @@ namespace XYO {
 				char *check;
 				result = cmdX;
 				scan = cmdX;
-				while(*scan != '\0') {
-					if(*scan == '\\') {
+				while (*scan != '\0') {
+					if (*scan == '\\') {
 						check = scan + 1;
-						while(*check != '\0') {
-							if(*check == '\\') {
+						while (*check != '\0') {
+							if (*check == '\\') {
 								++check;
 								continue;
 							};
 							break;
 						};
-						if(*check == '"') {
+						if (*check == '"') {
 
-							while(*scan != '\0') {
-								if(*scan == '\\') {
+							while (*scan != '\0') {
+								if (*scan == '\\') {
 									++scan;
 									*result = *scan;
 									++result;
@@ -970,8 +968,8 @@ namespace XYO {
 							};
 							continue;
 						};
-						while(*scan != '\0') {
-							if(*scan == '\\') {
+						while (*scan != '\0') {
+							if (*scan == '\\') {
 								*result = *scan;
 								++result;
 								++scan;
@@ -981,7 +979,7 @@ namespace XYO {
 						};
 						continue;
 					};
-					if(*scan == '"') {
+					if (*scan == '"') {
 						++scan;
 						continue;
 					};
@@ -992,7 +990,7 @@ namespace XYO {
 				*result = '\0';
 			};
 
-			void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char** &cmdS) {
+			void mainArgsParse(bool commit, const char *cmdLine, int &cmdN, char **&cmdS) {
 				const char *cmdLineScan;
 				const char *cmdLastLineScan;
 				int cmdSize;
@@ -1002,15 +1000,15 @@ namespace XYO {
 
 				cmdLineScan = cmdLine;
 				// ignore first spaces
-				while(*cmdLineScan != '\0') {
-					if(*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
-						while(*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
+				while (*cmdLineScan != '\0') {
+					if (*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
+						while (*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
 							++cmdLineScan;
-							if(*cmdLineScan == '\0') {
+							if (*cmdLineScan == '\0') {
 								break;
 							};
 						};
-						if(*cmdLineScan == '\0') {
+						if (*cmdLineScan == '\0') {
 							break;
 						};
 						continue;
@@ -1020,54 +1018,54 @@ namespace XYO {
 				//
 				cmdLastLineScan = cmdLineScan;
 				cmdSize = 0;
-				while(*cmdLineScan != '\0') {
-					if(*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
-						if(cmdSize > 0) {
-							if(commit) {
+				while (*cmdLineScan != '\0') {
+					if (*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
+						if (cmdSize > 0) {
+							if (commit) {
 								cmdS[cmdN] = new char[cmdSize + 1];
 								memcpy(cmdS[cmdN], cmdLastLineScan, cmdSize);
 								cmdS[cmdN][cmdSize] = '\0';
 							};
 							++cmdN;
 						};
-						while(*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
+						while (*cmdLineScan == ' ' || *cmdLineScan == '\t' || *cmdLineScan == '\r' || *cmdLineScan == '\n') {
 							++cmdLineScan;
-							if(*cmdLineScan == '\0') {
+							if (*cmdLineScan == '\0') {
 								break;
 							};
 						};
 						cmdLastLineScan = cmdLineScan;
 						cmdSize = 0;
-						if(*cmdLineScan == '\0') {
+						if (*cmdLineScan == '\0') {
 							break;
 						};
 						continue;
 					};
-					if(*cmdLineScan == '\\') {
+					if (*cmdLineScan == '\\') {
 						++cmdSize;
 						++cmdLineScan;
-						if(*cmdLineScan != '\0') {
+						if (*cmdLineScan != '\0') {
 							++cmdSize;
 							++cmdLineScan;
 						};
 						continue;
 					};
-					if(*cmdLineScan == '\"') {
-						if(cmdSize == 0) {
+					if (*cmdLineScan == '\"') {
+						if (cmdSize == 0) {
 							cmdLastLineScan = cmdLineScan;
 							++cmdSize;
 							++cmdLineScan;
-							while(*cmdLineScan != '\0') {
-								if(*cmdLineScan == '\\') {
+							while (*cmdLineScan != '\0') {
+								if (*cmdLineScan == '\\') {
 									++cmdSize;
 									++cmdLineScan;
-									if(*cmdLineScan != '\0') {
+									if (*cmdLineScan != '\0') {
 										++cmdSize;
 										++cmdLineScan;
 									};
 									continue;
 								};
-								if(*cmdLineScan == '\"') {
+								if (*cmdLineScan == '\"') {
 									++cmdSize;
 									++cmdLineScan;
 									break;
@@ -1076,7 +1074,7 @@ namespace XYO {
 								++cmdLineScan;
 							};
 
-							if(commit) {
+							if (commit) {
 								cmdS[cmdN] = new char[cmdSize + 1];
 								memcpy(cmdS[cmdN], cmdLastLineScan, cmdSize);
 								cmdS[cmdN][cmdSize] = '\0';
@@ -1089,17 +1087,17 @@ namespace XYO {
 						} else {
 							++cmdSize;
 							++cmdLineScan;
-							while(*cmdLineScan != '\0') {
-								if(*cmdLineScan == '\\') {
+							while (*cmdLineScan != '\0') {
+								if (*cmdLineScan == '\\') {
 									++cmdSize;
 									++cmdLineScan;
-									if(*cmdLineScan != '\0') {
+									if (*cmdLineScan != '\0') {
 										++cmdSize;
 										++cmdLineScan;
 									};
 									continue;
 								};
-								if(*cmdLineScan == '\"') {
+								if (*cmdLineScan == '\"') {
 									++cmdSize;
 									++cmdLineScan;
 									break;
@@ -1107,8 +1105,8 @@ namespace XYO {
 								++cmdSize;
 								++cmdLineScan;
 							};
-							if(*cmdLineScan == '\0') {
-								if(commit) {
+							if (*cmdLineScan == '\0') {
+								if (commit) {
 									cmdS[cmdN] = new char[cmdSize + 1];
 									memcpy(cmdS[cmdN], cmdLastLineScan, cmdSize);
 									cmdS[cmdN][cmdSize] = '\0';
@@ -1122,8 +1120,8 @@ namespace XYO {
 					};
 					++cmdSize;
 					++cmdLineScan;
-					if(*cmdLineScan == '\0') {
-						if(commit) {
+					if (*cmdLineScan == '\0') {
+						if (commit) {
 							cmdS[cmdN] = new char[cmdSize + 1];
 							memcpy(cmdS[cmdN], cmdLastLineScan, cmdSize);
 							cmdS[cmdN][cmdSize] = '\0';
@@ -1136,13 +1134,13 @@ namespace XYO {
 
 			void mainArgsDelete(int cmdN, char **cmdS) {
 				int k;
-				for(k = 0; k < cmdN; ++k) {
+				for (k = 0; k < cmdN; ++k) {
 					delete[] cmdS[k];
 				};
 				delete[] cmdS;
 			};
 
-			void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char** &cmdS) {
+			void mainArgsSet(const char *exeName, const char *cmdLine, int &cmdN, char **&cmdS) {
 				int cmdSize;
 				int k;
 
@@ -1156,11 +1154,11 @@ namespace XYO {
 
 				mainArgsParse(true, cmdLine, cmdN, cmdS);
 
-				for(k = 0; k < cmdN; ++k) {
+				for (k = 0; k < cmdN; ++k) {
 					mainArgsFilter(cmdS[k]);
 				};
 
-				if(strlen(cmdS[0]) == 0) {
+				if (strlen(cmdS[0]) == 0) {
 					delete[] cmdS[0];
 					--cmdN;
 					memcpy(cmdS, cmdS + 1, cmdN * sizeof(char *));
@@ -1168,9 +1166,9 @@ namespace XYO {
 					return;
 				};
 
-				if(cmdN > 1) {
-					if(strlen(cmdS[0]) > 0) {
-						if(strcmp(cmdS[0], cmdS[1]) == 0) {
+				if (cmdN > 1) {
+					if (strlen(cmdS[0]) > 0) {
+						if (strcmp(cmdS[0], cmdS[1]) == 0) {
 							delete[] cmdS[0];
 							--cmdN;
 							memcpy(cmdS, cmdS + 1, cmdN * sizeof(char *));
@@ -1178,9 +1176,9 @@ namespace XYO {
 						} else {
 							char fullPath1[4096];
 							char fullPath2[4096];
-							if(realpath(cmdS[0], fullPath1, 4096)) {
-								if(realpath(cmdS[1], fullPath2, 4096)) {
-									if(StringCore::compareIgnoreCaseAscii(fullPath1, fullPath2) == 0) {
+							if (realpath(cmdS[0], fullPath1, 4096)) {
+								if (realpath(cmdS[1], fullPath2, 4096)) {
+									if (StringCore::compareIgnoreCaseAscii(fullPath1, fullPath2) == 0) {
 										delete[] cmdS[0];
 										--cmdN;
 										memcpy(cmdS, cmdS + 1, cmdN * sizeof(char *));
@@ -1193,7 +1191,7 @@ namespace XYO {
 				};
 			};
 
-			void mainArgsSet(const char *cmdLine, int &cmdN, char** &cmdS) {
+			void mainArgsSet(const char *cmdLine, int &cmdN, char **&cmdS) {
 				int k;
 
 				mainArgsParse(false, cmdLine, cmdN, cmdS);
@@ -1207,7 +1205,7 @@ namespace XYO {
 				memcpy(cmdS, cmdS + 1, cmdN * sizeof(char *));
 				cmdS[cmdN] = nullptr;
 
-				for(k = 0; k < cmdN; ++k) {
+				for (k = 0; k < cmdN; ++k) {
 					mainArgsFilter(cmdS[k]);
 				};
 			};
@@ -1215,4 +1213,3 @@ namespace XYO {
 		};
 	};
 };
-

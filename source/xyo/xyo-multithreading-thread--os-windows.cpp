@@ -8,19 +8,19 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#include <stdio.h>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#	include <stdio.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 
-#include "xyo-managedmemory-registrythread.hpp"
-#include "xyo-multithreading-thread.hpp"
+#	include "xyo-managedmemory-registrythread.hpp"
+#	include "xyo-multithreading-thread.hpp"
 
-#ifdef XYO_SINGLE_THREAD
+#	ifdef XYO_SINGLE_THREAD
 namespace XYO {
 	namespace Multithreading {
 
@@ -30,9 +30,9 @@ namespace XYO {
 
 	};
 };
-#endif
+#	endif
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 namespace XYO {
 	namespace Multithreading {
 		using namespace XYO::ManagedMemory;
@@ -68,7 +68,7 @@ namespace XYO {
 		};
 
 		void Thread::join() {
-			if(thread->id) {
+			if (thread->id) {
 				WaitForSingleObject(thread->thread, INFINITE);
 				CloseHandle(thread->thread);
 				thread->id = 0;
@@ -81,7 +81,7 @@ namespace XYO {
 			thread->procedure = procedure;
 			thread->this_ = this_;
 
-			thread->thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) threadProcedure_, thread, 0, &thread->id);
+			thread->thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)threadProcedure_, thread, 0, &thread->id);
 			if (thread->thread != nullptr) {
 				return true;
 			};
@@ -89,7 +89,7 @@ namespace XYO {
 		};
 
 		bool Thread::isRunning() {
-			if(thread->id) {
+			if (thread->id) {
 				return true;
 			};
 			return false;
@@ -101,6 +101,6 @@ namespace XYO {
 
 	};
 };
-#endif
+#	endif
 
 #endif

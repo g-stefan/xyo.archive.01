@@ -8,18 +8,18 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include <pthread.h>
-#include <unistd.h>
+#	include <pthread.h>
+#	include <unistd.h>
 
-#include "xyo-managedmemory-registrythread.hpp"
-#include "xyo-multithreading-thread.hpp"
+#	include "xyo-managedmemory-registrythread.hpp"
+#	include "xyo-multithreading-thread.hpp"
 
-#ifdef XYO_SINGLE_THREAD
+#	ifdef XYO_SINGLE_THREAD
 namespace XYO {
 	namespace Multithreading {
 
@@ -29,9 +29,9 @@ namespace XYO {
 
 	};
 };
-#endif
+#	endif
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 namespace XYO {
 	namespace Multithreading {
 		using namespace XYO::ManagedMemory;
@@ -66,8 +66,8 @@ namespace XYO {
 		};
 
 		void Thread::join() {
-			if(thread->isValid) {
-				if(pthread_join(thread->thread, nullptr)) {
+			if (thread->isValid) {
+				if (pthread_join(thread->thread, nullptr)) {
 					throw std::runtime_error("pthread_join");
 				};
 				thread->isValid = false;
@@ -80,7 +80,7 @@ namespace XYO {
 			thread->procedure = procedure;
 			thread->this_ = this_;
 
-			if(pthread_create(&thread->thread, nullptr, (void *( *)(void *))threadProcedure_, thread) == 0) {
+			if (pthread_create(&thread->thread, nullptr, (void *(*)(void *))threadProcedure_, thread) == 0) {
 				thread->isValid = true;
 				return true;
 			};
@@ -88,7 +88,7 @@ namespace XYO {
 		};
 
 		bool Thread::isRunning() {
-			if(thread->isValid) {
+			if (thread->isValid) {
 				return true;
 			};
 			return false;
@@ -101,6 +101,6 @@ namespace XYO {
 	};
 };
 
-#endif
+#	endif
 
 #endif

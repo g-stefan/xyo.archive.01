@@ -7,9 +7,9 @@
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
 //
 
-#ifndef XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
-#	define XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
 // clang-format off
+#ifndef XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
+#define XYO_APPLICATION_VERSION__OS_WINDOWS_RC_HPP
 
 #define XYO_RC 1
 
@@ -44,8 +44,8 @@
 		}\
 	}
 
-// clang-format on
 #endif
+// clang-format on
 
 #ifdef XYO_COMPILE_DYNAMIC_LIBRARY
 #	define XYO_APPLICATION_MANIFEST(fileName) 2 24 fileName

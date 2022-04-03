@@ -11,19 +11,19 @@
 #define XYO_MULTITHREADING_TRANSFER_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TSTATICCAST_HPP
-#include "xyo-datastructures-tstaticcast.hpp"
+#	include "xyo-datastructures-tstaticcast.hpp"
 #endif
 
 #ifndef XYO_MULTITHREADING_TATOMIC_HPP
-#include "xyo-multithreading-tatomic.hpp"
+#	include "xyo-multithreading-tatomic.hpp"
 #endif
 
 #ifndef XYO_MULTITHREADING_SEMAPHORE_HPP
-#include "xyo-multithreading-semaphore.hpp"
+#	include "xyo-multithreading-semaphore.hpp"
 #endif
 
 namespace XYO {
@@ -32,14 +32,14 @@ namespace XYO {
 
 		typedef TPointer<Object> (*TransferProcedure)(Object *);
 
-		template<typename T, TPointer<T> FunctionT(T &)>
+		template <typename T, TPointer<T> FunctionT(T &)>
 		struct TGetTransferProcedure {
-			static TPointer<Object> transferProcedure(Object *this_);
+				static TPointer<Object> transferProcedure(Object *this_);
 		};
 
-		template<typename T, TPointer<T> FunctionT(T &)>
+		template <typename T, TPointer<T> FunctionT(T &)>
 		TPointer<Object> TGetTransferProcedure<T, FunctionT>::transferProcedure(Object *this_) {
-			if(this_ == nullptr) {
+			if (this_ == nullptr) {
 				return nullptr;
 			};
 			return TStaticCast<Object *>(FunctionT(*(static_cast<T *>(this_))));
@@ -51,7 +51,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Transfer);
 
 			protected:
-
 				Transfer *thread1;
 				Transfer *thread2;
 				Object *value1;
@@ -62,7 +61,6 @@ namespace XYO {
 				Semaphore sync2;
 
 			public:
-
 				XYO_EXPORT Transfer();
 				XYO_EXPORT ~Transfer();
 				XYO_EXPORT void link(Transfer *this_);

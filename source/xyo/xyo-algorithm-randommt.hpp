@@ -11,7 +11,7 @@
 #define XYO_ALGORITHM_RANDOMMT_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -20,12 +20,13 @@ namespace XYO {
 
 		class RandomMT : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(RandomMT);
+
 			protected:
 				int index;
 				uint32_t mt[624];
 				uint32_t value;
-			public:
 
+			public:
 				XYO_EXPORT RandomMT();
 				XYO_EXPORT void seed(uint32_t);
 				XYO_EXPORT uint32_t nextRandom();

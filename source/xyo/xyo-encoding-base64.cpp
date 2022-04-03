@@ -30,20 +30,20 @@ namespace XYO {
 				co = toEncode.length();
 				const char *pad = "";
 				c = 0;
-				while(c < co) {
+				while (c < co) {
 
-					n = (((uint32_t) ((uint8_t)toEncode[c])) << 16);
+					n = (((uint32_t)((uint8_t)toEncode[c])) << 16);
 					if (c + 1 < co) {
-						n += (((uint32_t) ((uint8_t)toEncode[c + 1])) << 8);
+						n += (((uint32_t)((uint8_t)toEncode[c + 1])) << 8);
 					};
 					if (c + 2 < co) {
-						n += (((uint32_t) ((uint8_t)toEncode[c + 2])));
+						n += (((uint32_t)((uint8_t)toEncode[c + 2])));
 					};
 
 					n0 = (n >> 18) & 0x3F;
 					n1 = (n >> 12) & 0x3F;
 					n2 = (n >> 6) & 0x3F;
-					n3 = (n) & 0x3F;
+					n3 = (n)&0x3F;
 
 					buf[0] = base64Code[n0];
 					retV << buf;
@@ -119,7 +119,6 @@ namespace XYO {
 
 					n2 = z;
 
-
 					ch = toDecode[c + 3];
 					for (z = 0; z < 0x40; ++z) {
 						if (base64Code[z] == ch) {
@@ -130,7 +129,7 @@ namespace XYO {
 						if (ch != '=') {
 							return false;
 						};
-						if(p == 3) {
+						if (p == 3) {
 							p = 2;
 						};
 						z = 0;
@@ -147,7 +146,7 @@ namespace XYO {
 
 					c0 = ((n >> 16) & 0x00FF);
 					c1 = ((n >> 8) & 0x00FF);
-					c2 = ((n) & 0x00FF);
+					c2 = ((n)&0x00FF);
 
 					out << c0;
 					if (p >= 2) {
@@ -156,7 +155,6 @@ namespace XYO {
 					if (p >= 3) {
 						out << c2;
 					};
-
 				};
 				return true;
 			};
@@ -164,4 +162,3 @@ namespace XYO {
 		};
 	};
 };
-

@@ -11,15 +11,15 @@
 #define XYO_SYSTEM_FILE_HPP
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 #ifndef XYO_STREAM_IWRITE_HPP
-#include "xyo-stream-iwrite.hpp"
+#	include "xyo-stream-iwrite.hpp"
 #endif
 
 #ifndef XYO_STREAM_ISEEK_HPP
-#include "xyo-stream-iseek.hpp"
+#	include "xyo-stream-iseek.hpp"
 #endif
 
 namespace XYO {
@@ -28,19 +28,16 @@ namespace XYO {
 
 		class File_;
 
-		class File :
-			public virtual IRead,
-			public virtual IWrite,
-			public virtual ISeek {
+		class File : public virtual IRead,
+		             public virtual IWrite,
+		             public virtual ISeek {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(File);
 
 			protected:
-
 				File_ *value_;
 				File *linkOwner_;
 
 			public:
-
 				XYO_EXPORT File();
 				XYO_EXPORT ~File();
 

@@ -11,11 +11,11 @@
 #define XYO_MANAGEDMEMORY_REGISTRYTHREAD_HPP
 
 #ifndef XYO_MANAGEDMEMORY_REGISTRYLEVEL_HPP
-#include "xyo-managedmemory-registrylevel.hpp"
+#	include "xyo-managedmemory-registrylevel.hpp"
 #endif
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
+#	include "xyo-managedmemory-tmemorysystem.hpp"
 #endif
 
 #ifdef XYO_MULTI_THREAD
@@ -36,6 +36,5 @@ namespace XYO {
 	};
 };
 #endif
-
 
 #endif

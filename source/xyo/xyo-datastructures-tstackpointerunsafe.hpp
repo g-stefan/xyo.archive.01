@@ -11,18 +11,19 @@
 #define XYO_DATASTRUCTURES_TSTACKPOINTERUNSAFE_HPP
 
 #ifndef XYO_DATASTRUCTURES_TSTACK_HPP
-#include "xyo-datastructures-tstack.hpp"
+#	include "xyo-datastructures-tstack.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T, template <typename U> class TNodeMemory = TMemory>
+		template <typename T, template <typename U> class TNodeMemory = TMemory>
 		class TStackPointerUnsafe : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TStackPointerUnsafe);
+
 			public:
-				typedef TStackNode<TPointer<T> > TNode;
+				typedef TStackNode<TPointer<T>> TNode;
 				typedef TXList1<TNode, TNodeMemory> TXStack;
 				typedef TNode Node;
 
@@ -124,11 +125,9 @@ namespace XYO {
 				inline void peek(T *&value) {
 					value = head->value;
 				};
-
 		};
 
 	};
 };
 
 #endif
-

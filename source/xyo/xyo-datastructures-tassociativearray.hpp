@@ -11,22 +11,22 @@
 #define XYO_DATASTRUCTURES_TASSOCIATIVEARRAY_HPP
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TREDBLACKTREE_HPP
-#include "xyo-datastructures-tredblacktree.hpp"
+#	include "xyo-datastructures-tredblacktree.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename TKey, typename TValue, size_t dataSize2Pow = 4, template <typename U> class TNodeMemory = TMemory>
+		template <typename TKey, typename TValue, size_t dataSize2Pow = 4, template <typename U> class TNodeMemory = TMemory>
 		class TAssociativeArray : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TAssociativeArray);
-			public:
 
+			public:
 				typedef TRedBlackTree<TKey, size_t, TNodeMemory> TMapKey;
 				typedef TDynamicArray<TKey, dataSize2Pow, TNodeMemory> TArrayKey;
 				typedef TDynamicArray<TValue, dataSize2Pow, TNodeMemory> TArrayValue;
@@ -79,7 +79,7 @@ namespace XYO {
 
 				inline bool get(const TKey &key, TValue &value) const {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						return arrayValue->get(index, value);
 					};
 					return false;
@@ -87,7 +87,7 @@ namespace XYO {
 
 				inline bool get(const TKey &key, TPointerTValue &value) const {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						return arrayValue->get(index, value);
 					};
 					return false;
@@ -95,7 +95,7 @@ namespace XYO {
 
 				inline bool get(const TKey &key, TPointerXTValue &value) const {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						return arrayValue->get(index, value);
 					};
 					return false;
@@ -103,7 +103,7 @@ namespace XYO {
 
 				inline bool get(const TKeyType *key, TPointerTValue &value) const {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						return arrayValue->get(index, value);
 					};
 					return false;
@@ -111,7 +111,7 @@ namespace XYO {
 
 				inline bool get(const TKeyType *key, TPointerXTValue &value) const {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						return arrayValue->get(index, value);
 					};
 					return false;
@@ -119,7 +119,7 @@ namespace XYO {
 
 				inline void set(const TKey &key, const TValue &value) {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						arrayValue->set(index, value);
 						return;
 					};
@@ -131,7 +131,7 @@ namespace XYO {
 
 				inline void set(const TKey &key, const TValueType *value) {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						arrayValue->set(index, value);
 						return;
 					};
@@ -143,7 +143,7 @@ namespace XYO {
 
 				inline void set(const TKeyType *key, const TValueType *value) {
 					size_t index;
-					if(mapKey->get(key, index)) {
+					if (mapKey->get(key, index)) {
 						arrayValue->set(index, value);
 						return;
 					};
@@ -157,13 +157,13 @@ namespace XYO {
 					MapKeyNode *node;
 
 					node = mapKey->find(key);
-					if(node) {
+					if (node) {
 						size_t index = node->value;
 						arrayKey->remove(index);
 						arrayValue->remove(index);
 						mapKey->removeNode(node);
-						for(node = mapKey->begin(); node != nullptr; node = node->successor()) {
-							if(node->value >= index) {
+						for (node = mapKey->begin(); node != nullptr; node = node->successor()) {
+							if (node->value >= index) {
 								node->value--;
 							};
 						};
@@ -178,13 +178,13 @@ namespace XYO {
 					MapKeyNode *node;
 
 					node = mapKey->find(key);
-					if(node) {
+					if (node) {
 						size_t index = node->value;
 						arrayKey->remove(index);
 						arrayValue->remove(index);
 						mapKey->removeNode(node);
-						for(node = mapKey->begin(); node != nullptr; node = node->successor()) {
-							if(node->value >= index) {
+						for (node = mapKey->begin(); node != nullptr; node = node->successor()) {
+							if (node->value >= index) {
 								node->value--;
 							};
 						};
@@ -204,11 +204,9 @@ namespace XYO {
 					TPointerX<TArrayKey>::initMemory();
 					TPointerX<TArrayValue>::initMemory();
 				};
-
 		};
 
 	};
 };
 
 #endif
-

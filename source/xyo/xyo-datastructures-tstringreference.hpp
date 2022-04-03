@@ -11,74 +11,73 @@
 #define XYO_DATASTRUCTURES_TSTRINGREFERENCE_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TSTRINGCORE_HPP
-#include "xyo-datastructures-tstringcore.hpp"
+#	include "xyo-datastructures-tstringcore.hpp"
 #endif
-
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T>
+		template <typename T>
 		class TStringReference : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TStringReference);
-			protected:
 
+			protected:
 				T *value_;
 				size_t length_;
 				size_t size_;
 				bool mode_;
 				size_t chunk_;
 
-				template<typename U, size_t sizeOfMemory>
+				template <typename U, size_t sizeOfMemory>
 				struct TStringCoreReferenceMemory {
-					U memory[sizeOfMemory];
+						U memory[sizeOfMemory];
 				};
 
 				inline void deleteMemory_() {
 					if (value_ != nullptr) {
-						if(mode_) {
-							if(size_ <= 32) {
-								TMemory<TStringCoreReferenceMemory<T, 32> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 32> *>(value_));
+						if (mode_) {
+							if (size_ <= 32) {
+								TMemory<TStringCoreReferenceMemory<T, 32>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 32> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 64) {
-								TMemory<TStringCoreReferenceMemory<T, 64> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 64> *>(value_));
+							if (size_ <= 64) {
+								TMemory<TStringCoreReferenceMemory<T, 64>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 64> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 96) {
-								TMemory<TStringCoreReferenceMemory<T, 96> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 96> *>(value_));
+							if (size_ <= 96) {
+								TMemory<TStringCoreReferenceMemory<T, 96>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 96> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 128) {
-								TMemory<TStringCoreReferenceMemory<T, 128> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 128> *>(value_));
+							if (size_ <= 128) {
+								TMemory<TStringCoreReferenceMemory<T, 128>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 128> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 160) {
-								TMemory<TStringCoreReferenceMemory<T, 160> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 160> *>(value_));
+							if (size_ <= 160) {
+								TMemory<TStringCoreReferenceMemory<T, 160>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 160> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 192) {
-								TMemory<TStringCoreReferenceMemory<T, 192> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 192> *>(value_));
+							if (size_ <= 192) {
+								TMemory<TStringCoreReferenceMemory<T, 192>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 192> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 224) {
-								TMemory<TStringCoreReferenceMemory<T, 224> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 224> *>(value_));
+							if (size_ <= 224) {
+								TMemory<TStringCoreReferenceMemory<T, 224>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 224> *>(value_));
 								mode_ = false;
 								return;
 							};
-							if(size_ <= 256) {
-								TMemory<TStringCoreReferenceMemory<T, 256> >::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 256> *>(value_));
+							if (size_ <= 256) {
+								TMemory<TStringCoreReferenceMemory<T, 256>>::deleteMemory(reinterpret_cast<TStringCoreReferenceMemory<T, 256> *>(value_));
 								mode_ = false;
 								return;
 							};
@@ -91,58 +90,57 @@ namespace XYO {
 
 				inline void newMemory_(size_t size) {
 					size_ = size;
-					if(size_ <= 32) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 32> >::newMemory());
+					if (size_ <= 32) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 32>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 64) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 64> >::newMemory());
+					if (size_ <= 64) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 64>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 96) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 96> >::newMemory());
+					if (size_ <= 96) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 96>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 128) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 128> >::newMemory());
+					if (size_ <= 128) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 128>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 160) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 160> >::newMemory());
+					if (size_ <= 160) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 160>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 192) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 192> >::newMemory());
+					if (size_ <= 192) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 192>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 224) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 224> >::newMemory());
+					if (size_ <= 224) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 224>>::newMemory());
 						mode_ = true;
 						return;
 					};
-					if(size_ <= 256) {
-						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 256> >::newMemory());
+					if (size_ <= 256) {
+						value_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 256>>::newMemory());
 						mode_ = true;
 						return;
 					};
 
 					value_ = new T[size];
 					mode_ = false;
-
 				};
 
 				inline void memoryResize_(size_t size) {
 					T *newValue_;
-					bool  newMode_;
+					bool newMode_;
 					newMode_ = false;
-					if(size <= 32) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 32> >::newMemory());
+					if (size <= 32) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 32>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -151,8 +149,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 64) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 64> >::newMemory());
+					if (size <= 64) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 64>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -161,8 +159,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 96) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 96> >::newMemory());
+					if (size <= 96) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 96>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -171,8 +169,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 128) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 128> >::newMemory());
+					if (size <= 128) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 128>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -181,8 +179,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 160) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 160> >::newMemory());
+					if (size <= 160) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 160>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -191,8 +189,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 192) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 192> >::newMemory());
+					if (size <= 192) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 192>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -201,8 +199,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 224) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 224> >::newMemory());
+					if (size <= 224) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 224>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -211,8 +209,8 @@ namespace XYO {
 						size_ = size;
 						return;
 					};
-					if(size <= 256) {
-						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 256> >::newMemory());
+					if (size <= 256) {
+						newValue_ = reinterpret_cast<T *>(TMemory<TStringCoreReferenceMemory<T, 256>>::newMemory());
 						newMode_ = true;
 						TMemoryCore<T>::copyN(newValue_, value_, length_);
 						deleteMemory_();
@@ -230,20 +228,20 @@ namespace XYO {
 					size_ = size;
 				};
 
-				inline  size_t memoryResizeCheck_(size_t newLength_) {
-					if(newLength_ < size_) {
+				inline size_t memoryResizeCheck_(size_t newLength_) {
+					if (newLength_ < size_) {
 						return newLength_;
 					};
-					memoryResize_((( newLength_ / chunk_) + 1) * chunk_);
+					memoryResize_(((newLength_ / chunk_) + 1) * chunk_);
 					return newLength_;
 				};
 
-				inline  size_t memoryNewCheck_(size_t newLength_) {
-					if(chunk_ == 0) {
+				inline size_t memoryNewCheck_(size_t newLength_) {
+					if (chunk_ == 0) {
 						chunk_ = 32;
 					};
 					if (newLength_ >= chunk_) {
-						newMemory_((( newLength_ / chunk_) + 1) * chunk_);
+						newMemory_(((newLength_ / chunk_) + 1) * chunk_);
 					} else {
 						newMemory_(chunk_);
 					};
@@ -251,7 +249,6 @@ namespace XYO {
 				};
 
 			public:
-
 				inline TStringReference() {
 					value_ = nullptr;
 					mode_ = false;
@@ -263,14 +260,14 @@ namespace XYO {
 				};
 
 				static inline void initMemory() {
-					TMemory<TStringCoreReferenceMemory<T, 32> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 64> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 96> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 128> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 160> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 192> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 224> >::initMemory();
-					TMemory<TStringCoreReferenceMemory<T, 256> >::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 32>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 64>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 96>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 128>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 160>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 192>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 224>>::initMemory();
+					TMemory<TStringCoreReferenceMemory<T, 256>>::initMemory();
 				};
 
 				inline T *value() const {
@@ -286,14 +283,14 @@ namespace XYO {
 				};
 
 				inline void setLength(size_t length) {
-					if(length >= size_) {
+					if (length >= size_) {
 						length = size_ - 1;
 					};
 					length_ = length;
 				};
 
 				inline void setChunk(size_t chunk) {
-					if(chunk == 0) {
+					if (chunk == 0) {
 						chunk = 32;
 					};
 					chunk_ = chunk;
@@ -319,7 +316,7 @@ namespace XYO {
 				};
 
 				inline void init(size_t length, size_t chunk) {
-					if(chunk == 0) {
+					if (chunk == 0) {
 						chunk = 32;
 					};
 					chunk_ = chunk;
@@ -392,11 +389,10 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<typename T>
-		struct TMemory<DataStructures::TStringReference<T> > : TMemoryPoolActive<DataStructures::TStringReference<T> > {
+		template <typename T>
+		struct TMemory<DataStructures::TStringReference<T>> : TMemoryPoolActive<DataStructures::TStringReference<T>> {
 		};
 	};
 };
 
 #endif
-

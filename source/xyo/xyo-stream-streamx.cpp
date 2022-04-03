@@ -25,36 +25,36 @@ namespace XYO {
 				size_t readTotal;
 				char buffer[16384];
 
-				if(size == 0) {
+				if (size == 0) {
 					return true;
 				};
 
 				readTotal = 0;
 				readX = 16384;
-				if(size < readX) {
+				if (size < readX) {
 					readX = size;
 				};
-				for(;;) {
+				for (;;) {
 					readLn = iread.read(buffer, readX);
-					if(readLn > 0) {
+					if (readLn > 0) {
 						retV->concatenateX(buffer, readLn);
 					};
-					if(readLn == 0) {
-						if(readTotal == 0) {
+					if (readLn == 0) {
+						if (readTotal == 0) {
 							return false;
 						};
 					};
-					//end of file
-					if(readLn < readX) {
+					// end of file
+					if (readLn < readX) {
 						break;
 					};
-					//end of read
+					// end of read
 					readTotal += readLn;
-					if(readTotal >= size) {
+					if (readTotal >= size) {
 						break;
 					};
 					readX = size - readTotal;
-					if(readX > 16384) {
+					if (readX > 16384) {
 						readX = 16384;
 					};
 				};
@@ -72,56 +72,56 @@ namespace XYO {
 				char buffer;
 
 				readTotal = 0;
-				if(size == 0) {
+				if (size == 0) {
 					return true;
 				};
 
-				for(;;) {
+				for (;;) {
 					readLn = iread.read(&buffer, 1);
-					if(readLn > 0) {
-						if(buffer == '\r') {
-							if(readTotal + 1 >= size) {
+					if (readLn > 0) {
+						if (buffer == '\r') {
+							if (readTotal + 1 >= size) {
 								retV->concatenateX('\r');
 								return true;
 							};
 
 							readLn = iread.read(&buffer, 1);
-							if(readLn > 0) {
-								if(buffer == '\n') {
+							if (readLn > 0) {
+								if (buffer == '\n') {
 									retV->concatenateX('\r');
 									retV->concatenateX('\n');
 									return true;
 								};
 								retV->concatenateX(buffer);
 								readTotal += 2;
-								if(readTotal >= size) {
+								if (readTotal >= size) {
 									return true;
 								};
 								continue;
 							};
 
 							retV->concatenateX('\r');
-							//end of file
+							// end of file
 							return true;
 						};
 
-						if(buffer == '\n') {
+						if (buffer == '\n') {
 							retV->concatenateX('\n');
 							return true;
 						};
 
 						retV->concatenateX(buffer);
 						readTotal++;
-						if(readTotal >= size) {
+						if (readTotal >= size) {
 							return true;
 						};
 						continue;
 					};
 					// end
-					if(readTotal == 0) {
+					if (readTotal == 0) {
 						break;
 					};
-					//end of file
+					// end of file
 					return true;
 				};
 
@@ -147,14 +147,14 @@ namespace XYO {
 				readToLn = ln;
 				readTotal = 0;
 				readX = readToLn;
-				for(;;) {
+				for (;;) {
 					readLn = iread.read(&buffer.buffer[readTotal], readX);
-					//end of transmision
-					if(readLn == 0) {
+					// end of transmision
+					if (readLn == 0) {
 						break;
 					};
 					readTotal += readLn;
-					if(readTotal >= readToLn) {
+					if (readTotal >= readToLn) {
 						break;
 					};
 					readX = readToLn - readTotal;
@@ -170,4 +170,3 @@ namespace XYO {
 		};
 	};
 };
-

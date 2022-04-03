@@ -11,7 +11,7 @@
 #define XYO_DATASTRUCTURES_BUFFER_HPP
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -21,8 +21,8 @@ namespace XYO {
 
 		class Buffer : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Buffer);
-			public:
 
+			public:
 				uint8_t *buffer;
 				size_t length;
 				size_t size;
@@ -51,7 +51,7 @@ namespace XYO {
 
 	namespace ManagedMemory {
 
-		template<>
+		template <>
 		struct TMemory<DataStructures::Buffer> : TMemoryPoolActive<DataStructures::Buffer> {
 		};
 
@@ -59,4 +59,3 @@ namespace XYO {
 };
 
 #endif
-

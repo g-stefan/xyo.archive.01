@@ -12,14 +12,14 @@
 
 #ifdef XYO_SINGLE_THREAD
 
-#ifndef XYO_MANAGEDMEMORY_TSINGLETONPROCESS_HPP
-#include "xyo-mangedmemory-tsingletonprocess.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TSINGLETONPROCESS_HPP
+#		include "xyo-mangedmemory-tsingletonprocess.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TSingletonThread : TSingletonProcess<T> {};
 
 	};
@@ -27,28 +27,25 @@ namespace XYO {
 
 #else
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
+#		include "xyo-managedmemory-tmemorysystem.hpp"
+#	endif
 
-#ifndef XYO_MANAGEDMEMORY_REGISTRYTHREAD_HPP
-#include "xyo-managedmemory-registrythread.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_REGISTRYTHREAD_HPP
+#		include "xyo-managedmemory-registrythread.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		class TSingletonThread {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TSingletonThread);
 
 			protected:
-
-				inline TSingletonThread() {
-				};
+				inline TSingletonThread(){};
 
 			public:
-
 				static size_t registryLink;
 				static const char *registryKey();
 				static void resourceDelete(void *);
@@ -56,7 +53,7 @@ namespace XYO {
 
 				static inline T *getValue() {
 					T *this_ = (T *)RegistryThread::getValue(registryLink);
-					if(!this_) {
+					if (!this_) {
 						initMemory();
 						this_ = (T *)RegistryThread::getValue(registryLink);
 					};
@@ -65,9 +62,9 @@ namespace XYO {
 
 				static inline void initMemory() {
 
-					if(RegistryThread::registerKey(
-							registryKey(),
-							registryLink)) {
+					if (RegistryThread::registerKey(
+					        registryKey(),
+					        registryLink)) {
 
 						TMemorySystem<T>::initMemory();
 
@@ -75,30 +72,29 @@ namespace XYO {
 						TIfHasIncReferenceCount<T>::incReferenceCount(this_);
 
 						RegistryThread::setValue(
-							registryLink,
-							RegistryLevel::Singleton,
-							this_,
-							resourceDelete,
-							(THasActiveFinalizer<T>::value) ? resourceFinalizer : nullptr);
+						    registryLink,
+						    RegistryLevel::Singleton,
+						    this_,
+						    resourceDelete,
+						    (THasActiveFinalizer<T>::value) ? resourceFinalizer : nullptr);
 					};
-
 				};
 		};
 
-		template<typename T>
+		template <typename T>
 		const char *TSingletonThread<T>::registryKey() {
 			return typeid(TSingletonThread<T>).name();
 		};
 
-		template<typename T>
+		template <typename T>
 		size_t TSingletonThread<T>::registryLink = 0;
 
-		template<typename T>
+		template <typename T>
 		void TSingletonThread<T>::resourceDelete(void *this_) {
 			TMemorySystem<T>::deleteMemory(reinterpret_cast<T *>(this_));
 		};
 
-		template<typename T>
+		template <typename T>
 		void TSingletonThread<T>::resourceFinalizer(void *this_) {
 			TIfHasActiveFinalizer<T>::activeFinalizer(reinterpret_cast<T *>(this_));
 		};

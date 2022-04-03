@@ -33,12 +33,12 @@ namespace XYO {
 				size_t index;
 				String retV;
 				retV << '{';
-				for(index = 0; index < vAssociativeArray->value->length();) {
+				for (index = 0; index < vAssociativeArray->value->length();) {
 					retV << String::encodeC(vAssociativeArray->value->arrayKey->index(index));
 					retV << ':';
 					retV << encode((vAssociativeArray->value->arrayValue->index(index)).value());
 					++index;
-					if(index < vAssociativeArray->value->length()) {
+					if (index < vAssociativeArray->value->length()) {
 						retV << ',';
 					};
 				};
@@ -50,10 +50,10 @@ namespace XYO {
 				size_t index;
 				String retV;
 				retV << '[';
-				for(index = 0; index < vArray->value->length();) {
+				for (index = 0; index < vArray->value->length();) {
 					retV << encode((vArray->value->index(index)).value());
 					++index;
-					if(index < vArray->value->length()) {
+					if (index < vArray->value->length()) {
 						retV << ',';
 					};
 				};
@@ -79,27 +79,27 @@ namespace XYO {
 
 			String encode(Value *value) {
 				VNull *vNull = TDynamicCast<VNull *>(value);
-				if(vNull) {
+				if (vNull) {
 					return encodeNull(vNull);
 				};
 				VBoolean *vBoolean = TDynamicCast<VBoolean *>(value);
-				if(vBoolean) {
+				if (vBoolean) {
 					return encodeBoolean(vBoolean);
 				};
 				VNumber *vNumber = TDynamicCast<VNumber *>(value);
-				if(vNumber) {
+				if (vNumber) {
 					return encodeNumber(vNumber);
 				};
 				VString *vString = TDynamicCast<VString *>(value);
-				if(vString) {
+				if (vString) {
 					return encodeString(vString);
 				};
 				VArray *vArray = TDynamicCast<VArray *>(value);
-				if(vArray) {
+				if (vArray) {
 					return encodeArray(vArray);
 				};
 				VAssociativeArray *vAssociativeArray = TDynamicCast<VAssociativeArray *>(value);
-				if(vAssociativeArray) {
+				if (vAssociativeArray) {
 					return encodeAssociativeArray(vAssociativeArray);
 				};
 				return "";
@@ -121,7 +121,7 @@ namespace XYO {
 							continue;
 						};
 						TPointer<Value> value;
-						if(decode(token, value)) {
+						if (decode(token, value)) {
 							vArray->value->set(index++, value);
 							continue;
 						};
@@ -151,7 +151,7 @@ namespace XYO {
 							if (token.is1(':')) {
 								token.ignoreSpaceOrComment();
 								TPointer<Value> value;
-								if(decode(token, value)) {
+								if (decode(token, value)) {
 									vAssociativeArray->value->set(key, value);
 									continue;
 								};
@@ -166,10 +166,10 @@ namespace XYO {
 			bool decode(Token &token, TPointer<Value> &result) {
 				token.ignoreSpaceOrComment();
 				String value;
-				if(token.is('{')) {
+				if (token.is('{')) {
 					return decodeAssociativeArray(token, result);
 				};
-				if(token.is('[')) {
+				if (token.is('[')) {
 					return decodeArray(token, result);
 				};
 				if (token.isString(value)) {
@@ -200,11 +200,11 @@ namespace XYO {
 			TPointer<Value> decode(IRead *iRead) {
 				Input input;
 				Token token;
-				if(input.open(iRead, 16)) {
-					if(token.open(&input)) {
-						if(token.read()) {
+				if (input.open(iRead, 16)) {
+					if (token.open(&input)) {
+						if (token.read()) {
 							TPointer<Value> value;
-							if(decode(token, value)) {
+							if (decode(token, value)) {
 								return value;
 							};
 						};
@@ -215,7 +215,7 @@ namespace XYO {
 
 			TPointer<Value> decode(const String &value) {
 				MemoryRead mRead;
-				if(mRead.open(value.value(), value.length())) {
+				if (mRead.open(value.value(), value.length())) {
 					return decode(&mRead);
 				};
 				return nullptr;
@@ -228,7 +228,7 @@ namespace XYO {
 				String retV;
 				retV << '{';
 				retV << '\n';
-				for(index = 0; index < vAssociativeArray->value->length();) {
+				for (index = 0; index < vAssociativeArray->value->length();) {
 					retV << indentation;
 					retV << '\t';
 					retV << String::encodeC(vAssociativeArray->value->arrayKey->index(index));
@@ -236,7 +236,7 @@ namespace XYO {
 					retV << ' ';
 					retV << encode((vAssociativeArray->value->arrayValue->index(index)).value());
 					++index;
-					if(index < vAssociativeArray->value->length()) {
+					if (index < vAssociativeArray->value->length()) {
 						retV << ',';
 						retV << '\n';
 					};
@@ -252,12 +252,12 @@ namespace XYO {
 				String retV;
 				retV << '[';
 				retV << '\n';
-				for(index = 0; index < vArray->value->length();) {
+				for (index = 0; index < vArray->value->length();) {
 					retV << indentation;
 					retV << '\t';
 					retV << encodeWithIndentation((vArray->value->index(index)).value(), indentation + '\t');
 					++index;
-					if(index < vArray->value->length()) {
+					if (index < vArray->value->length()) {
 						retV << ',';
 						retV << '\n';
 					};
@@ -270,27 +270,27 @@ namespace XYO {
 
 			String encodeWithIndentation(Value *value, const String &indentation) {
 				VNull *vNull = TDynamicCast<VNull *>(value);
-				if(vNull) {
+				if (vNull) {
 					return encodeNull(vNull);
 				};
 				VBoolean *vBoolean = TDynamicCast<VBoolean *>(value);
-				if(vBoolean) {
+				if (vBoolean) {
 					return encodeBoolean(vBoolean);
 				};
 				VNumber *vNumber = TDynamicCast<VNumber *>(value);
-				if(vNumber) {
+				if (vNumber) {
 					return encodeNumber(vNumber);
 				};
 				VString *vString = TDynamicCast<VString *>(value);
-				if(vString) {
+				if (vString) {
 					return encodeString(vString);
 				};
 				VArray *vArray = TDynamicCast<VArray *>(value);
-				if(vArray) {
+				if (vArray) {
 					return encodeArrayWithIndentation(vArray, indentation);
 				};
 				VAssociativeArray *vAssociativeArray = TDynamicCast<VAssociativeArray *>(value);
-				if(vAssociativeArray) {
+				if (vAssociativeArray) {
 					return encodeAssociativeArrayWithIndentation(vAssociativeArray, indentation);
 				};
 				return "";
@@ -299,4 +299,3 @@ namespace XYO {
 		};
 	};
 };
-

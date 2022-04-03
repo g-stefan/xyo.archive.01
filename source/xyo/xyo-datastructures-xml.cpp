@@ -13,14 +13,13 @@ namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-
 		void XMLDocument::addDocument(XMLDocument &document) {
-			if(document) {
-				if(!root) {
+			if (document) {
+				if (!root) {
 					root.newMemory();
 				};
 				typename Branch::Node *index;
-				for(index = document.root->head; index != nullptr; index = index->next) {
+				for (index = document.root->head; index != nullptr; index = index->next) {
 					root->pushToTail(index->value);
 				};
 			};
@@ -29,14 +28,14 @@ namespace XYO {
 		XMLDocument XMLDocument::get(const char *name) {
 			typename Branch::Node *scan;
 			XMLDocument retV;
-			if(!root) {
+			if (!root) {
 				return retV;
 			};
 
-			for(scan = root->head; scan != nullptr; scan = scan->next) {
-				if(scan->value->type == XMLNodeType::Element) {
-					if(scan->value->name == name) {
-						if(!retV.root) {
+			for (scan = root->head; scan != nullptr; scan = scan->next) {
+				if (scan->value->type == XMLNodeType::Element) {
+					if (scan->value->name == name) {
+						if (!retV.root) {
 							retV.root.newMemory();
 						};
 						retV.root->pushToTail(scan->value);
@@ -50,28 +49,28 @@ namespace XYO {
 		XMLDocument XMLDocument::find(const char *name) {
 			typename Branch::Node *scan;
 			XMLDocument retV;
-			if(!root) {
+			if (!root) {
 				return retV;
 			};
 
-			for(scan = root->head; scan != nullptr; scan = scan->next) {
-				if(scan->value->type == XMLNodeType::Element) {
-					if(scan->value->name == name) {
-						if(!retV.root) {
+			for (scan = root->head; scan != nullptr; scan = scan->next) {
+				if (scan->value->type == XMLNodeType::Element) {
+					if (scan->value->name == name) {
+						if (!retV.root) {
 							retV.root.newMemory();
 						};
 						retV.root->pushToTail(scan->value);
 					};
 
-					if(scan->value->branch) {
+					if (scan->value->branch) {
 						XMLDocument tmp(scan->value->branch);
 						XMLDocument list = tmp.find(name);
-						if(list) {
-							if(!retV.root) {
+						if (list) {
+							if (!retV.root) {
 								retV.root.newMemory();
 							};
 							typename Branch::Node *index;
-							for(index = list.root->head; index != nullptr; index = index->next) {
+							for (index = list.root->head; index != nullptr; index = index->next) {
 								retV.root->pushToTail(index->value);
 							};
 						};
@@ -86,21 +85,21 @@ namespace XYO {
 			typename Branch::Node *scan;
 
 			XMLDocument retV;
-			if(!root) {
+			if (!root) {
 				return retV;
 			};
 
-			for(scan = root->head; scan != nullptr; scan = scan->next) {
-				if(scan->value->type == XMLNodeType::Element) {
+			for (scan = root->head; scan != nullptr; scan = scan->next) {
+				if (scan->value->type == XMLNodeType::Element) {
 
-					if(scan->value->name == name) {
+					if (scan->value->name == name) {
 						size_t index;
-						for(index = 0; index < scan->value->attributes->length(); ++index) {
+						for (index = 0; index < scan->value->attributes->length(); ++index) {
 							TPointer<XMLAttribute> &attribute_(scan->value->attributes->index(index));
-							if(attribute_) {
-								if(attribute_->name == attribute) {
-									if(attribute_->value == value) {
-										if(!retV.root) {
+							if (attribute_) {
+								if (attribute_->name == attribute) {
+									if (attribute_->value == value) {
+										if (!retV.root) {
 											retV.root.newMemory();
 										};
 										retV.root->pushToTail(scan->value);
@@ -110,15 +109,15 @@ namespace XYO {
 						};
 					};
 
-					if(scan->value->branch) {
+					if (scan->value->branch) {
 						XMLDocument tmp(scan->value->branch);
 						XMLDocument list = tmp.findWithAttributeValue(name, attribute, value);
-						if(list) {
-							if(!retV.root) {
+						if (list) {
+							if (!retV.root) {
 								retV.root.newMemory();
 							};
 							typename Branch::Node *index;
-							for(index = list.root->head; index != nullptr; index = index->next) {
+							for (index = list.root->head; index != nullptr; index = index->next) {
 								retV.root->pushToTail(index->value);
 							};
 						};
@@ -131,14 +130,14 @@ namespace XYO {
 
 		size_t XMLDocument::length() {
 
-			if(!root) {
+			if (!root) {
 				return 0;
 			};
 
 			size_t retV;
 			typename Branch::Node *scan;
 			retV = 0;
-			for(scan = root->head; scan != nullptr; scan = scan->next) {
+			for (scan = root->head; scan != nullptr; scan = scan->next) {
 				++retV;
 			};
 			return retV;
@@ -147,8 +146,8 @@ namespace XYO {
 		TPointer<XMLNode> XMLDocument::getIndex(size_t index_) {
 			typename Branch::Node *scan;
 			size_t count_ = 0;
-			for(scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
-				if(count_ == index_) {
+			for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
+				if (count_ == index_) {
 					return scan->value;
 				};
 			};
@@ -158,8 +157,8 @@ namespace XYO {
 		void XMLDocument::setIndex(size_t index_, Node *node) {
 			typename Branch::Node *scan;
 			size_t count_ = 0;
-			for(scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
-				if(count_ == index_) {
+			for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
+				if (count_ == index_) {
 					scan->value = node;
 					break;
 				};
@@ -169,8 +168,8 @@ namespace XYO {
 		void XMLDocument::removeIndex(size_t index_) {
 			typename Branch::Node *scan;
 			size_t count_ = 0;
-			for(scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
-				if(count_ == index_) {
+			for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
+				if (count_ == index_) {
 					root->extractNode(scan);
 					Branch::deleteNode(scan);
 					break;
@@ -179,6 +178,3 @@ namespace XYO {
 		};
 	};
 };
-
-
-

@@ -11,15 +11,15 @@
 #define XYO_DATASTRUCTURES_JSON_VASSOCIATIVEARRAY_HPP
 
 #ifndef XYO_DATASTRUCTURES_JSON_VALUE_HPP
-#include "xyo-datastructures-json-value.hpp"
+#	include "xyo-datastructures-json-value.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TASSOCIATIVEARRAY_HPP
-#include "xyo-datastructures-tassociativearray.hpp"
+#	include "xyo-datastructures-tassociativearray.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -31,7 +31,7 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<>
+		template <>
 		struct TMemory<DataStructures::JSON::VAssociativeArray> : TMemoryPoolActive<DataStructures::JSON::VAssociativeArray> {};
 	};
 
@@ -48,7 +48,6 @@ namespace XYO {
 					XYO_DYNAMIC_TYPE_DEFINE(XYO_EXPORT, VAssociativeArray);
 
 				public:
-
 					TPointerX<AssociativeArrayT> value;
 
 					XYO_EXPORT VAssociativeArray();

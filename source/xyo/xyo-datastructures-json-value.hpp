@@ -11,7 +11,7 @@
 #define XYO_DATASTRUCTURES_JSON_VALUE_HPP
 
 #ifndef XYO_DATASTRUCTURES_DYNAMICOBJECT_HPP
-#include "xyo-datastructures-dynamicobject.hpp"
+#	include "xyo-datastructures-dynamicobject.hpp"
 #endif
 
 namespace XYO {
@@ -23,7 +23,7 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<>
+		template <>
 		struct TMemory<DataStructures::JSON::Value> : TMemoryPoolActive<DataStructures::JSON::Value> {};
 	};
 
@@ -34,6 +34,7 @@ namespace XYO {
 			class Value : public DynamicObject {
 					XYO_DISALLOW_COPY_ASSIGN_MOVE(Value);
 					XYO_DYNAMIC_TYPE_DEFINE(XYO_EXPORT, Value);
+
 				public:
 					XYO_EXPORT Value();
 			};

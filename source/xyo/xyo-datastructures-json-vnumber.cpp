@@ -26,20 +26,20 @@ namespace XYO {
 
 			String VNumber::toString() {
 				char buf[128];
-				if(std::isnan(value)) {
+				if (std::isnan(value)) {
 					return "NaN";
 				};
-				if(std::isinf(value)) {
-					if(std::signbit(value)) {
+				if (std::isinf(value)) {
+					if (std::signbit(value)) {
 						return "-Infinity";
 					} else {
 						return "Infinity";
 					};
 				};
-				if((value > 0 && value < 1e+11) || (value < 0 && value > -1e+11)) {
+				if ((value > 0 && value < 1e+11) || (value < 0 && value > -1e+11)) {
 					NumberT fractpart, intpart;
 					fractpart = std::modf(value, &intpart);
-					if(fractpart == 0.0) {
+					if (fractpart == 0.0) {
 						sprintf(buf, "%.0lf", value);
 						return buf;
 					};
@@ -56,20 +56,20 @@ namespace XYO {
 
 			TPointer<VNumber> VNumber::fromString(const String &value) {
 				TPointer<VNumber> retV(TMemory<VNumber>::newMemory());
-				if(value == "NaN") {
+				if (value == "NaN") {
 					retV->value = NAN;
 					return retV;
 				};
-				if(value == "Infinity") {
+				if (value == "Infinity") {
 					retV->value = std::numeric_limits<double>::infinity();
 					return retV;
 				};
-				if(value == "-Infinity") {
+				if (value == "-Infinity") {
 					retV->value = -std::numeric_limits<double>::infinity();
 					return retV;
 				};
-				if(sscanf(value, "%lf", &retV->value)!=1) {
-					retV->value=0;
+				if (sscanf(value, "%lf", &retV->value) != 1) {
+					retV->value = 0;
 				};
 				return retV;
 			};
@@ -77,4 +77,3 @@ namespace XYO {
 		};
 	};
 };
-

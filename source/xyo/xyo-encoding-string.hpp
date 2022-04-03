@@ -11,7 +11,7 @@
 #define XYO_ENCODING_STRING_HPP
 
 #ifndef XYO_DATASTRUCTURES_TSTRING_HPP
-#include "xyo-datastructures-tstring.hpp"
+#	include "xyo-datastructures-tstring.hpp"
 #endif
 
 namespace XYO {
@@ -25,4 +25,3 @@ namespace XYO {
 };
 
 #endif
-

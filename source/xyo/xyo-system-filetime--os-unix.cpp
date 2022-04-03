@@ -8,20 +8,20 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_UNIX
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#	include <sys/types.h>
+#	include <sys/stat.h>
+#	include <sys/time.h>
+#	include <time.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
 
-#include "xyo-system-filetime.hpp"
+#	include "xyo-system-filetime.hpp"
 
 namespace XYO {
 	namespace System {
@@ -37,21 +37,21 @@ namespace XYO {
 		};
 
 		FileTime::~FileTime() {
-			if(fileTime) {
+			if (fileTime) {
 				delete fileTime;
 			};
 		};
 
 		bool FileTime::getCreationTime(const char *file) {
 			struct stat attrib;
-			if(stat(file, &attrib)) {
-				if(fileTime) {
+			if (stat(file, &attrib)) {
+				if (fileTime) {
 					delete fileTime;
 					fileTime = nullptr;
 				};
 				return false;
 			};
-			if(!fileTime) {
+			if (!fileTime) {
 				fileTime = new FileTime_();
 			};
 			memcpy(&fileTime->value, &attrib.st_ctim, sizeof(struct timespec));
@@ -60,14 +60,14 @@ namespace XYO {
 
 		bool FileTime::getLastAccessTime(const char *file) {
 			struct stat attrib;
-			if(stat(file, &attrib)) {
-				if(fileTime) {
+			if (stat(file, &attrib)) {
+				if (fileTime) {
 					delete fileTime;
 					fileTime = nullptr;
 				};
 				return false;
 			};
-			if(!fileTime) {
+			if (!fileTime) {
 				fileTime = new FileTime_();
 			};
 			memcpy(&fileTime->value, &attrib.st_atim, sizeof(struct timespec));
@@ -76,14 +76,14 @@ namespace XYO {
 
 		bool FileTime::getLastWriteTime(const char *file) {
 			struct stat attrib;
-			if(stat(file, &attrib)) {
-				if(fileTime) {
+			if (stat(file, &attrib)) {
+				if (fileTime) {
 					delete fileTime;
 					fileTime = nullptr;
 				};
 				return false;
 			};
-			if(!fileTime) {
+			if (!fileTime) {
 				fileTime = new FileTime_();
 			};
 			memcpy(&fileTime->value, &attrib.st_mtim, sizeof(struct timespec));
@@ -91,32 +91,32 @@ namespace XYO {
 		};
 
 		int FileTime::compare(FileTime &x) {
-			if(!fileTime) {
-				if(!x.fileTime) {
+			if (!fileTime) {
+				if (!x.fileTime) {
 					return 0;
 				} else {
 					return -1;
 				};
 			} else {
-				if(!x.fileTime) {
+				if (!x.fileTime) {
 					return 1;
 				};
 			};
-			if(fileTime->value.tv_sec == x.fileTime->value.tv_sec) {
-				return (int) (fileTime->value.tv_nsec - x.fileTime->value.tv_nsec);
+			if (fileTime->value.tv_sec == x.fileTime->value.tv_sec) {
+				return (int)(fileTime->value.tv_nsec - x.fileTime->value.tv_nsec);
 			};
-			return (int) (fileTime->value.tv_sec - x.fileTime->value.tv_sec);
+			return (int)(fileTime->value.tv_sec - x.fileTime->value.tv_sec);
 		};
 
 		uint64_t FileTime::toUnixTime() {
-			if(!fileTime) {
+			if (!fileTime) {
 				return (uint64_t)0;
 			};
 			return (uint64_t)fileTime->value.tv_sec;
 		};
 
 		void FileTime::fromUnixTime(uint64_t t) {
-			if(!fileTime) {
+			if (!fileTime) {
 				fileTime = new FileTime_();
 			};
 			fileTime->value.tv_sec = t;
@@ -125,6 +125,5 @@ namespace XYO {
 
 	};
 };
-
 
 #endif

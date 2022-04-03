@@ -11,27 +11,27 @@
 #define XYO_NETWORKING_SOCKET_HPP
 
 #ifndef XYO_NETWORKING_NETWORK_HPP
-#include "xyo-networking-network.hpp"
+#	include "xyo-networking-network.hpp"
 #endif
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 #ifndef XYO_STREAM_IWRITE_HPP
-#include "xyo-stream-iwrite.hpp"
+#	include "xyo-stream-iwrite.hpp"
 #endif
 
 #ifndef XYO_NETWORKING_IPADRESS4_HPP
-#include "xyo-networking-ipaddress4.hpp"
+#	include "xyo-networking-ipaddress4.hpp"
 #endif
 
 #ifndef XYO_NETWORKING_IPADRESS6_HPP
-#include "xyo-networking-ipaddress6.hpp"
+#	include "xyo-networking-ipaddress6.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -43,20 +43,17 @@ namespace XYO {
 		class IPAddress_;
 		class Socket_;
 
-		class Socket:
-			public virtual IRead,
-			public virtual IWrite {
+		class Socket : public virtual IRead,
+		               public virtual IWrite {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Socket);
 
 			protected:
-
 				Socket_ *this_;
 				Socket *linkOwner_;
 				IPAddress_ *ipAddress;
 				bool ipAddressIs6;
 
 			public:
-
 				XYO_EXPORT Socket();
 				XYO_EXPORT ~Socket();
 				XYO_EXPORT operator bool() const;
@@ -92,4 +89,3 @@ namespace XYO {
 };
 
 #endif
-

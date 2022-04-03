@@ -18,14 +18,13 @@ namespace XYO {
 			pos_ = 0;
 		};
 
-		MemoryWrite::~MemoryWrite() {
-		};
+		MemoryWrite::~MemoryWrite(){};
 
 		MemoryWrite::operator bool() const {
 			return (data_ != nullptr);
 		};
 
-		bool MemoryWrite::open(void  *data, size_t size) {
+		bool MemoryWrite::open(void *data, size_t size) {
 			close();
 			data_ = data;
 			size_ = size;
@@ -96,4 +95,3 @@ namespace XYO {
 
 	};
 };
-

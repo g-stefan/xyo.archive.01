@@ -8,17 +8,17 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winsock2.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#	include <winsock2.h>
 
-#include "xyo-networking-network.hpp"
-#include "xyo-managedmemory-tsingletonprocess.hpp"
+#	include "xyo-networking-network.hpp"
+#	include "xyo-managedmemory-tsingletonprocess.hpp"
 
 namespace XYO {
 	namespace Networking {
@@ -36,14 +36,14 @@ namespace XYO {
 			Network_::Network_() {
 				isValid = false;
 				WSADATA wsaData;
-				WORD    wVersionRequested = MAKEWORD(2, 2);
+				WORD wVersionRequested = MAKEWORD(2, 2);
 				if (WSAStartup(wVersionRequested, &wsaData) == 0) {
 					isValid = true;
 				};
 			};
 
 			Network_::~Network_() {
-				if(isValid) {
+				if (isValid) {
 					WSACleanup();
 				};
 			};
@@ -57,4 +57,3 @@ namespace XYO {
 };
 
 #endif
-

@@ -64,13 +64,13 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for(k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
 					UConvert::u64ToU8(counter, counterBuffer);
 					keyActive.copy(key);
 					keyActive.processU8(counterBuffer, 8);
 					keyActive.processDone();
 					keyActive.toU8(xorBuffer);
-					if(dataToProcess > 64) {
+					if (dataToProcess > 64) {
 						dataLnX = 64;
 					} else {
 						dataLnX = dataToProcess;
@@ -91,7 +91,7 @@ namespace XYO {
 
 			bool passwordDecrypt(const uint8_t *password, size_t passwordSize, const uint8_t *data, size_t dataSize_, Buffer &output) {
 				//
-				if(dataSize_ < 64 + 64 + 8) {
+				if (dataSize_ < 64 + 64 + 8) {
 					return false;
 				};
 				//
@@ -120,7 +120,7 @@ namespace XYO {
 				size_t dataSize = (size_t)UConvert::u64FromU8(counterBuffer);
 				size_t dataLn = ((dataSize / 64) + 1) * 64;
 				//
-				if(64 + 64 + 8 + dataLn > dataSize_) {
+				if (64 + 64 + 8 + dataLn > dataSize_) {
 					return false;
 				};
 				//
@@ -134,7 +134,7 @@ namespace XYO {
 				checkHash.processDone();
 				checkHash.toU8(xorBuffer);
 				//
-				if(memcmp(xorBuffer, &data[64], 64) != 0) {
+				if (memcmp(xorBuffer, &data[64], 64) != 0) {
 					return false;
 				};
 				//
@@ -150,13 +150,13 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for(k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
 					UConvert::u64ToU8(counter, counterBuffer);
 					keyActive.copy(key);
 					keyActive.processU8(counterBuffer, 8);
 					keyActive.processDone();
 					keyActive.toU8(xorBuffer);
-					if(dataToProcess > 64) {
+					if (dataToProcess > 64) {
 						dataLnX = 64;
 					} else {
 						dataLnX = dataToProcess;
@@ -171,7 +171,7 @@ namespace XYO {
 
 			bool passwordEncryptFile(const uint8_t *password, size_t passwordSize, const char *fileNameIn, const char *fileNameOut) {
 				Buffer fileContents;
-				if(Shell::fileGetContents(fileNameIn, fileContents)) {
+				if (Shell::fileGetContents(fileNameIn, fileContents)) {
 					Buffer output;
 					passwordEncrypt(password, passwordSize, fileContents.buffer, fileContents.length, output);
 					return Shell::filePutContents(fileNameOut, output);
@@ -181,9 +181,9 @@ namespace XYO {
 
 			bool passwordDecryptFile(const uint8_t *password, size_t passwordSize, const char *fileNameIn, const char *fileNameOut) {
 				Buffer fileContents;
-				if(Shell::fileGetContents(fileNameIn, fileContents)) {
+				if (Shell::fileGetContents(fileNameIn, fileContents)) {
 					Buffer output;
-					if(passwordDecrypt(password, passwordSize, fileContents.buffer, fileContents.length, output)) {
+					if (passwordDecrypt(password, passwordSize, fileContents.buffer, fileContents.length, output)) {
 						return Shell::filePutContents(fileNameOut, output);
 					};
 				};
@@ -192,7 +192,7 @@ namespace XYO {
 
 			bool checkIntegrity(const uint8_t *password, size_t passwordSize, const uint8_t *data, size_t dataSize_, const uint8_t *integrity) {
 				//
-				if(dataSize_ < 64 + 64 + 8) {
+				if (dataSize_ < 64 + 64 + 8) {
 					return false;
 				};
 				//
@@ -221,7 +221,7 @@ namespace XYO {
 				size_t dataSize = (size_t)UConvert::u64FromU8(counterBuffer);
 				size_t dataLn = ((dataSize / 64) + 1) * 64;
 				//
-				if(64 + 64 + 8 + dataLn > dataSize_) {
+				if (64 + 64 + 8 + dataLn > dataSize_) {
 					return false;
 				};
 				//
@@ -235,8 +235,8 @@ namespace XYO {
 				checkHash.processDone();
 				checkHash.toU8(xorBuffer);
 				//
-				if(memcmp(xorBuffer, &data[64], 64) == 0) {
-					if(memcmp(integrity, &data[64], 64) == 0) {
+				if (memcmp(xorBuffer, &data[64], 64) == 0) {
+					if (memcmp(integrity, &data[64], 64) == 0) {
 						return true;
 					};
 				};
@@ -247,4 +247,3 @@ namespace XYO {
 		};
 	};
 };
-

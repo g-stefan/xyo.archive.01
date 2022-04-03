@@ -8,17 +8,17 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#include <direct.h>
-#include <io.h>
-#include <sys/stat.h>
+#	include <direct.h>
+#	include <io.h>
+#	include <sys/stat.h>
 
-#include "xyo-system-shellfind.hpp"
-#include "xyo-encoding-string.hpp"
+#	include "xyo-system-shellfind.hpp"
+#	include "xyo-encoding-string.hpp"
 
 namespace XYO {
 	namespace System {
@@ -26,8 +26,8 @@ namespace XYO {
 		using namespace XYO::Encoding;
 
 		struct SShellFind_ {
-			struct _finddata_t finddata;
-			intptr_t hfind;
+				struct _finddata_t finddata;
+				intptr_t hfind;
 		};
 
 		ShellFind::ShellFind() {
@@ -38,7 +38,7 @@ namespace XYO {
 
 			shellFind_ = new SShellFind_();
 			shellFind_->hfind = -1;
-			memset(&shellFind_->finddata, 0, sizeof (struct _finddata_t));
+			memset(&shellFind_->finddata, 0, sizeof(struct _finddata_t));
 		};
 
 		ShellFind::~ShellFind() {
@@ -47,7 +47,7 @@ namespace XYO {
 		};
 
 		bool ShellFind::next() {
-			if(isValid_) {
+			if (isValid_) {
 				if (_findnext(shellFind_->hfind, &shellFind_->finddata) == 0) {
 					name = shellFind_->finddata.name;
 					isDirectory = (shellFind_->finddata.attrib & _A_SUBDIR) == _A_SUBDIR;
@@ -84,4 +84,3 @@ namespace XYO {
 };
 
 #endif
-

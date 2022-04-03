@@ -26,9 +26,9 @@ namespace XYO {
 		};
 
 		void WorkerQueue::add(WorkerProcedure workerProcedure_,
-			TransferProcedure transferReturnValue_,
-			TransferProcedure transferParameter_,
-			Object *parameter) {
+		                      TransferProcedure transferReturnValue_,
+		                      TransferProcedure transferParameter_,
+		                      Object *parameter) {
 			WorkerQueueNode &node(queue.index(queue.length()));
 #ifdef XYO_MULTI_THREAD
 			node.worker.setProcedure(workerProcedure_);
@@ -44,7 +44,7 @@ namespace XYO {
 
 		void WorkerQueue::setNumberOfThreads(int numberOfThreads_) {
 			numberOfThreads = numberOfThreads_;
-			if(numberOfThreads == 0) {
+			if (numberOfThreads == 0) {
 				numberOfThreads = Processor::getCount();
 			};
 		};
@@ -55,42 +55,42 @@ namespace XYO {
 
 		bool WorkerQueue::process() {
 			size_t k;
-			if(allDone) {
+			if (allDone) {
 				return true;
 			};
 #ifdef XYO_MULTI_THREAD
 
-			for(;;) {
+			for (;;) {
 				size_t countDone = 0;
-				for(k = 0; k < queue.length(); ++k) {
+				for (k = 0; k < queue.length(); ++k) {
 					WorkerQueueNode &node(queue.index(k));
-					if(node.started) {
-						if(!node.worker.isRunning()) {
+					if (node.started) {
+						if (!node.worker.isRunning()) {
 							node.worker.endWork();
 							++countDone;
 						};
 					};
 				};
-				if(countDone == queue.length()) {
+				if (countDone == queue.length()) {
 					allDone = true;
 					return true;
 				};
 				int countRunning = 0;
-				for(k = 0; k < queue.length(); ++k) {
+				for (k = 0; k < queue.length(); ++k) {
 					WorkerQueueNode &node(queue.index(k));
-					if(node.started) {
-						if(node.worker.isRunning()) {
+					if (node.started) {
+						if (node.worker.isRunning()) {
 							++countRunning;
 						};
 					};
 				};
-				if(countRunning < numberOfThreads) {
+				if (countRunning < numberOfThreads) {
 					int count = numberOfThreads - countRunning;
-					for(k = 0; (k < queue.length()) && (count > 0); ++k) {
+					for (k = 0; (k < queue.length()) && (count > 0); ++k) {
 						WorkerQueueNode &node(queue.index(k));
-						if(!node.started) {
+						if (!node.started) {
 							node.started = node.worker.start(node.parameter);
-							if(!node.started) {
+							if (!node.started) {
 								return false;
 							};
 							--count;
@@ -104,7 +104,7 @@ namespace XYO {
 #endif
 #ifdef XYO_SINGLE_THREAD
 			TAtomic<bool> requestToTerminate;
-			for(k = 0; k < queue.length(); ++k) {
+			for (k = 0; k < queue.length(); ++k) {
 				WorkerQueueNode &node(queue.index(k));
 				requestToTerminate.set(false);
 				node.returnValue = (*node.workerProcedure)(node.parameter, requestToTerminate);
@@ -138,4 +138,3 @@ namespace XYO {
 
 	};
 };
-

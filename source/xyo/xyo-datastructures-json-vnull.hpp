@@ -11,11 +11,11 @@
 #define XYO_DATASTRUCTURES_JSON_VNULL_HPP
 
 #ifndef XYO_DATASTRUCTURES_JSON_VALUE_HPP
-#include "xyo-datastructures-json-value.hpp"
+#	include "xyo-datastructures-json-value.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -27,7 +27,7 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<>
+		template <>
 		struct TMemory<DataStructures::JSON::VNull> : TMemoryPoolActive<DataStructures::JSON::VNull> {};
 	};
 
@@ -41,7 +41,6 @@ namespace XYO {
 					XYO_DYNAMIC_TYPE_DEFINE(XYO_EXPORT, VNull);
 
 				public:
-
 					XYO_EXPORT VNull();
 
 					XYO_EXPORT String toString();

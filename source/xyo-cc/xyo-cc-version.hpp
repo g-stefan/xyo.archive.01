@@ -10,10 +10,10 @@
 #ifndef XYO_CC_VERSION_HPP
 #define XYO_CC_VERSION_HPP
 
-#define XYO_CC_VERSION_ABCD                3,4,0,89
-#define XYO_CC_VERSION_STR                 "3.4.0"
-#define XYO_CC_VERSION_STR_BUILD           "89"
-#define XYO_CC_VERSION_STR_DATETIME        "2022-01-09 01:13:03"
+#define XYO_CC_VERSION_ABCD 3, 4, 0, 89
+#define XYO_CC_VERSION_STR "3.4.0"
+#define XYO_CC_VERSION_STR_BUILD "89"
+#define XYO_CC_VERSION_STR_DATETIME "2022-01-09 01:13:03"
 
 #ifndef XYO_RC
 
@@ -28,4 +28,3 @@ namespace XYOCC {
 
 #endif
 #endif
-

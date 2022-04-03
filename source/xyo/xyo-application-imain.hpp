@@ -11,7 +11,7 @@
 #define XYO_APPLICATION_IMAIN_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 namespace XYO {
@@ -49,13 +49,13 @@ namespace XYO {
 		return applicationMain(cmdN, cmdS);\
 	}
 
-// clang-format on
+	// clang-format on
 
 #ifdef XYO_OS_WINDOWS
 
-#ifndef XYO_SYSTEM_SHELL_HPP
-#include "xyo-system-shell.hpp"
-#endif
+#	ifndef XYO_SYSTEM_SHELL_HPP
+#		include "xyo-system-shell.hpp"
+#	endif
 
 // clang-format off
 #define XYO_APPLICATION_WINMAIN_STD(T) \
@@ -91,9 +91,8 @@ namespace XYO {
 		XYO::Shell::mainArgsDelete(cmdN, cmdS);\
 		return retV;\
 	}
-// clang-format on
+	// clang-format on
 
 #endif
 
 #endif
-

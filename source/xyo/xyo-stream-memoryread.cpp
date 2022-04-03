@@ -18,14 +18,13 @@ namespace XYO {
 			pos_ = 0;
 		};
 
-		MemoryRead::~MemoryRead() {
-		};
+		MemoryRead::~MemoryRead(){};
 
 		MemoryRead::operator bool() const {
 			return (data_ != nullptr);
 		};
 
-		bool MemoryRead::open(const void  *data, size_t size) {
+		bool MemoryRead::open(const void *data, size_t size) {
 			close();
 			data_ = data;
 			size_ = size;
@@ -96,4 +95,3 @@ namespace XYO {
 
 	};
 };
-

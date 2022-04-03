@@ -11,11 +11,11 @@
 #define XYO_DATASTRUCTURES_JSON_VARRAY_HPP
 
 #ifndef XYO_DATASTRUCTURES_JSON_VALUE_HPP
-#include "xyo-datastructures-json-value.hpp"
+#	include "xyo-datastructures-json-value.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 namespace XYO {
@@ -27,7 +27,7 @@ namespace XYO {
 	};
 
 	namespace ManagedMemory {
-		template<>
+		template <>
 		struct TMemory<DataStructures::JSON::VArray> : TMemoryPoolActive<DataStructures::JSON::VArray> {};
 	};
 
@@ -43,7 +43,6 @@ namespace XYO {
 					XYO_DYNAMIC_TYPE_DEFINE(XYO_EXPORT, VArray);
 
 				public:
-
 					TPointerX<ArrayT> value;
 
 					XYO_EXPORT VArray();
@@ -65,7 +64,7 @@ namespace XYO {
 						return value->index(idx);
 					};
 
-					inline TPointerX<Value> &operator [](int idx) {
+					inline TPointerX<Value> &operator[](int idx) {
 						return value->index((size_t)idx);
 					};
 
@@ -76,7 +75,6 @@ namespace XYO {
 					inline bool get(size_t idx, TPointerX<Value> &x) {
 						return value->get(idx, x);
 					};
-
 			};
 
 		};

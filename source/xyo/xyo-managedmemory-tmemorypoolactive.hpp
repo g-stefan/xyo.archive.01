@@ -12,14 +12,14 @@
 
 #ifdef XYO_TMEMORYPOOL_SYSTEM
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
+#		include "xyo-managedmemory-tmemorysystem.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryPoolActive : TMemorySystem<T> {};
 
 	};
@@ -27,14 +27,14 @@ namespace XYO {
 
 #elif defined(XYO_TMEMORYPOOL_ACTIVE_AS_UNIFIED)
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIED_HPP
-#include "xyo-managedmemory-tmemorypoolunified.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLUNIFIED_HPP
+#		include "xyo-managedmemory-tmemorypoolunified.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryPoolActive : TMemoryPoolUnified<T> {};
 
 	};
@@ -42,18 +42,18 @@ namespace XYO {
 
 #else
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLACTIVEPROCESS_HPP
-#include "xyo-managedmemory-tmemorypoolactiveprocess.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLACTIVEPROCESS_HPP
+#		include "xyo-managedmemory-tmemorypoolactiveprocess.hpp"
+#	endif
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLACTIVETHREAD_HPP
-#include "xyo-managedmemory-tmemorypoolactivethread.hpp"
-#endif
+#	ifndef XYO_MANAGEDMEMORY_TMEMORYPOOLACTIVETHREAD_HPP
+#		include "xyo-managedmemory-tmemorypoolactivethread.hpp"
+#	endif
 
 namespace XYO {
 	namespace ManagedMemory {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryPoolActive : TMemoryPoolActiveThread<T> {};
 
 	};

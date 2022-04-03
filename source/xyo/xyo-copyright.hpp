@@ -10,17 +10,17 @@
 #ifndef XYO_COPYRIGHT_HPP
 #define XYO_COPYRIGHT_HPP
 
-#define XYO_COPYRIGHT            "Copyright (c) Grigore Stefan"
-#define XYO_PUBLISHER            "Grigore Stefan"
-#define XYO_COMPANY              XYO_PUBLISHER
-#define XYO_CONTACT              "g_stefan@yahoo.com"
-#define XYO_FULL_COPYRIGHT       XYO_COPYRIGHT " <" XYO_CONTACT ">"
+#define XYO_COPYRIGHT "Copyright (c) Grigore Stefan"
+#define XYO_PUBLISHER "Grigore Stefan"
+#define XYO_COMPANY XYO_PUBLISHER
+#define XYO_CONTACT "g_stefan@yahoo.com"
+#define XYO_FULL_COPYRIGHT XYO_COPYRIGHT " <" XYO_CONTACT ">"
 
 #ifndef XYO_RC
 
-#ifndef XYO__EXPORT_HPP
-#include "xyo--export.hpp"
-#endif
+#	ifndef XYO__EXPORT_HPP
+#		include "xyo--export.hpp"
+#	endif
 
 namespace XYO {
 	namespace Copyright {

@@ -27,7 +27,7 @@ namespace XYO {
 				size_t k;
 				const char *scan;
 				scan = toEncode.value();
-				for(k = 0; k < toEncode.length(); ++k, ++scan) {
+				for (k = 0; k < toEncode.length(); ++k, ++scan) {
 					retV->concatenateX(Hex::encodeUppercase(((*scan) >> 4) & 0x0F));
 					retV->concatenateX(Hex::encodeUppercase((*scan) & 0x0F));
 				};
@@ -35,13 +35,13 @@ namespace XYO {
 			};
 
 			bool decode(const String &toDecode, String &out) {
-				TPointer<StringReference > retV(TMemory<StringReference>::newMemory());
+				TPointer<StringReference> retV(TMemory<StringReference>::newMemory());
 				retV->init((toDecode.length() / 2));
 				size_t k;
 				const char *scan;
 				scan = toDecode.value();
-				for(k = 0; k < toDecode.length() / 2; ++k, scan+=2) {
-					retV->concatenateX(Hex::decode(*scan) << 4 | Hex::decode(*(scan+1)));
+				for (k = 0; k < toDecode.length() / 2; ++k, scan += 2) {
+					retV->concatenateX(Hex::decode(*scan) << 4 | Hex::decode(*(scan + 1)));
 				};
 				out = retV;
 				return true;
@@ -50,4 +50,3 @@ namespace XYO {
 		};
 	};
 };
-

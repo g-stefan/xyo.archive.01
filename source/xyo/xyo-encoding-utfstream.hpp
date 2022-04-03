@@ -11,15 +11,15 @@
 #define XYO_ENCODING_UTFSTREAM_HPP
 
 #ifndef XYO_ENCODING_UTF_HPP
-#include "xyo-encoding-utf.hpp"
+#	include "xyo-encoding-utf.hpp"
 #endif
 
 #ifndef XYO_STREAM_IREAD_HPP
-#include "xyo-stream-iread.hpp"
+#	include "xyo-stream-iread.hpp"
 #endif
 
 #ifndef XYO_STREAM_IWRITE_HPP
-#include "xyo-stream-iwrite.hpp"
+#	include "xyo-stream-iwrite.hpp"
 #endif
 
 namespace XYO {
@@ -29,19 +29,18 @@ namespace XYO {
 		using namespace XYO::Stream;
 
 		struct UtfStreamMode {
-			enum {
-				None = 0,
-				Utf8 = 1,
-				Utf16 = 2,
-				Utf32 = 3
-			};
+				enum {
+					None = 0,
+					Utf8 = 1,
+					Utf16 = 2,
+					Utf32 = 3
+				};
 		};
 
 		class Utf8Read : public virtual IRead {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Utf8Read);
 
 			protected:
-
 				char utf8Input[8];
 				TPointerX<IRead> input;
 				int mode;
@@ -49,7 +48,6 @@ namespace XYO {
 				int size;
 
 			public:
-
 				XYO_EXPORT Utf8Read();
 				XYO_EXPORT ~Utf8Read();
 
@@ -68,7 +66,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(Utf8Write);
 
 			protected:
-
 				char utf8Output[8];
 				TPointerX<IWrite> output;
 				int mode;
@@ -76,7 +73,6 @@ namespace XYO {
 				int size;
 
 			public:
-
 				XYO_EXPORT Utf8Write();
 				XYO_EXPORT ~Utf8Write();
 
@@ -96,4 +92,3 @@ namespace XYO {
 };
 
 #endif
-

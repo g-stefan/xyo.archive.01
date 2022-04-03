@@ -11,67 +11,63 @@
 #define XYO_DATASTRUCTURES_TMEMORYCORE_HPP
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 
-		template<typename T>
+		template <typename T>
 		struct TMemoryCore {
 
-			static inline void copyN(T *x, const T *y, size_t ln) {
+				static inline void copyN(T *x, const T *y, size_t ln) {
 
-				while(ln != 0) {
+					while (ln != 0) {
 
-					*x = *y;
+						*x = *y;
 
-					++x;
-					++y;
-					--ln;
-
+						++x;
+						++y;
+						--ln;
+					};
 				};
 
-			};
+				static inline int compareN(T *x, const T *y, size_t ln) {
 
-			static inline int compareN(T *x, const T *y, size_t ln) {
+					while ((ln != 0) && (*x == *y)) {
+						++x;
+						++y;
+						--ln;
+					};
 
-				while((ln != 0) && (*x == *y)) {
-					++x;
-					++y;
-					--ln;
+					if (ln == 0) {
+						return 0;
+					};
+
+					if ((*x - *y) < 0) {
+						return -1;
+					};
+
+					return 1;
 				};
 
-				if(ln == 0) {
-					return 0;
+				static inline void setN(T *x, const T y, size_t ln) {
+
+					while (ln != 0) {
+
+						*x = y;
+
+						++x;
+						--ln;
+					};
 				};
-
-				if( (*x - *y) < 0 ) {
-					return -1;
-				};
-
-				return 1;
-			};
-
-			static inline void setN(T *x, const T y, size_t ln) {
-
-				while(ln != 0) {
-
-					*x=y;
-
-					++x;
-					--ln;
-				};
-
-			};
-
 		};
 
 	};
 };
 
 #ifndef XYO_DATASTRUCTURES_TMEMORYCORE_X_CHAR_HPP
-#include "xyo-datastructures-tmemorycore-x-char.hpp"
+#	include "xyo-datastructures-tmemorycore-x-char.hpp"
 #endif
 
 #endif

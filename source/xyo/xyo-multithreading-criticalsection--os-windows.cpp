@@ -8,17 +8,17 @@
 //
 
 #ifndef XYO__DEPENDENCY_HPP
-#include "xyo--dependency.hpp"
+#	include "xyo--dependency.hpp"
 #endif
 
 #ifdef XYO_OS_WINDOWS
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 
-#include "xyo-multithreading-criticalsection.hpp"
+#	include "xyo-multithreading-criticalsection.hpp"
 
-#ifdef XYO_MULTI_THREAD
+#	ifdef XYO_MULTI_THREAD
 
 namespace XYO {
 	namespace Multithreading {
@@ -49,7 +49,6 @@ namespace XYO {
 	};
 };
 
-#endif
+#	endif
 
 #endif
-

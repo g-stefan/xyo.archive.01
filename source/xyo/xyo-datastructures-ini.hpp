@@ -11,15 +11,15 @@
 #define XYO_DATASTRUCTURES_INI_HPP
 
 #ifndef XYO_DATASTRUCTURES_TDYNAMICARRAY_HPP
-#include "xyo-datastructures-tdynamicarray.hpp"
+#	include "xyo-datastructures-tdynamicarray.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TREDBLACKTREE_HPP
-#include "xyo-datastructures-tredblacktree.hpp"
+#	include "xyo-datastructures-tredblacktree.hpp"
 #endif
 
 #ifndef XYO_ENCODING_STRING_HPP
-#include "xyo-encoding-string.hpp"
+#	include "xyo-encoding-string.hpp"
 #endif
 
 namespace XYO {
@@ -28,61 +28,60 @@ namespace XYO {
 		using namespace XYO::Encoding;
 
 		struct INILineType {
-			enum {
-				None = 0,
-				Comment = 1,
-				Section = 2,
-				Value = 3
-			};
+				enum {
+					None = 0,
+					Comment = 1,
+					Section = 2,
+					Value = 3
+				};
 		};
 
-		struct INILine: Object {
-			int type;
-			String key;
-			String value;
+		struct INILine : Object {
+				int type;
+				String key;
+				String value;
 
-			inline INILine() {
-				type = INILineType::None;
-			};
+				inline INILine() {
+					type = INILineType::None;
+				};
 
-			inline INILine(const INILine &line) {
-				type = line.type;
-				key = line.key;
-				value = line.value;
-			};
+				inline INILine(const INILine &line) {
+					type = line.type;
+					key = line.key;
+					value = line.value;
+				};
 
-			inline INILine(INILine &&line) {
-				type = line.type;
-				key = std::move(line.key);
-				value = std::move(line.value);
-			};
+				inline INILine(INILine &&line) {
+					type = line.type;
+					key = std::move(line.key);
+					value = std::move(line.value);
+				};
 
-			inline INILine &operator=(const INILine &line) {
-				type = line.type;
-				key = line.key;
-				value = line.value;
-				return *this;
-			};
+				inline INILine &operator=(const INILine &line) {
+					type = line.type;
+					key = line.key;
+					value = line.value;
+					return *this;
+				};
 
-			inline INILine &operator=(INILine &&line) {
-				type = line.type;
-				key = std::move(line.key);
-				value = std::move(line.value);
-				return *this;
-			};
+				inline INILine &operator=(INILine &&line) {
+					type = line.type;
+					key = std::move(line.key);
+					value = std::move(line.value);
+					return *this;
+				};
 
-			inline ~INILine() {
-			};
+				inline ~INILine(){};
 
-			static inline void initMemory() {
-				String::initMemory();
-			};
+				static inline void initMemory() {
+					String::initMemory();
+				};
 
-			inline void activeDestructor() {
-				type = INILineType::None;
-				key.activeDestructor();
-				value.activeDestructor();
-			};
+				inline void activeDestructor() {
+					type = INILineType::None;
+					key.activeDestructor();
+					value.activeDestructor();
+				};
 		};
 
 		typedef TDynamicArray<INILine> INIFile;
@@ -113,4 +112,3 @@ namespace XYO {
 };
 
 #endif
-

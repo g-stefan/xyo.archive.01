@@ -11,15 +11,15 @@
 #define XYO_DATASTRUCTURES_XMLPARSER_HPP
 
 #ifndef XYO_DATASTRUCTURES_XML_HPP
-#include "xyo-datastructures-xml.hpp"
+#	include "xyo-datastructures-xml.hpp"
 #endif
 
 #ifndef XYO_PARSER_INPUT_HPP
-#include "xyo-parser-input.hpp"
+#	include "xyo-parser-input.hpp"
 #endif
 
 #ifndef XYO_STREAM_STREAMX_HPP
-#include "xyo-stream-streamx.hpp"
+#	include "xyo-stream-streamx.hpp"
 #endif
 
 namespace XYO {
@@ -29,19 +29,18 @@ namespace XYO {
 		using namespace XYO::Parser;
 
 		struct XMLParserMode {
-			enum {
-				Normal = 0,
-				Trim = 1,
-				Indentation4Spaces = 2,
-				IndentationTab = 3
-			};
+				enum {
+					Normal = 0,
+					Trim = 1,
+					Indentation4Spaces = 2,
+					IndentationTab = 3
+				};
 		};
 
 		class XMLReader : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(XMLReader);
 
 			public:
-
 				TPointerX<Input> input;
 
 				XYO_EXPORT XMLReader();
@@ -64,7 +63,6 @@ namespace XYO {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(XMLWriter);
 
 			public:
-
 				TPointerX<IWrite> iWrite;
 
 				XYO_EXPORT XMLWriter();

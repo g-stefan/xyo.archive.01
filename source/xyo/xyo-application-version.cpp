@@ -50,67 +50,63 @@ namespace XYO {
 				buildA = 0;
 				buildB = 0;
 
-				if(!getVersion(versionA, majorA, minorA, patchA, buildA)) {
+				if (!getVersion(versionA, majorA, minorA, patchA, buildA)) {
 					return false;
 				};
-				if(!getVersion(versionB, majorB, minorB, patchB, buildB)) {
+				if (!getVersion(versionB, majorB, minorB, patchB, buildB)) {
 					return false;
 				};
 
-				if(type & CompareMajor) {
+				if (type & CompareMajor) {
 
-					if(majorA < majorB) {
+					if (majorA < majorB) {
 						result = -1;
 						return true;
 					};
 
-					if(majorA > majorB) {
+					if (majorA > majorB) {
 						result = 1;
 						return true;
 					};
-
 				};
 
-				if(type & CompareMinor) {
+				if (type & CompareMinor) {
 
-					if(minorA < minorB) {
+					if (minorA < minorB) {
 						result = -1;
 						return true;
 					};
 
-					if(minorA > minorB) {
+					if (minorA > minorB) {
 						result = 1;
 						return true;
 					};
-
 				};
 
-				if(type & ComparePatch) {
+				if (type & ComparePatch) {
 
-					if(patchA < patchB) {
+					if (patchA < patchB) {
 						result = -1;
 						return true;
 					};
 
-					if(patchA > patchB) {
+					if (patchA > patchB) {
 						result = 1;
 						return true;
 					};
-
 				};
 
-				if(type & CompareBuild) {
+				if (type & CompareBuild) {
 
-					if(buildA < buildB) {
+					if (buildA < buildB) {
 						result = -1;
 						return true;
 					};
 
-					if(buildA > buildB) {
+					if (buildA > buildB) {
 						result = 1;
 						return true;
 					};
-
 				};
 
 				result = 0;
@@ -120,4 +116,3 @@ namespace XYO {
 		};
 	};
 };
-

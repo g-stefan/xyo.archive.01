@@ -11,120 +11,118 @@
 #define XYO_DATASTRUCTURES_TXLIST1_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORYSYSTEM_HPP
-#include "xyo-managedmemory-tmemorysystem.hpp"
+#	include "xyo-managedmemory-tmemorysystem.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename TNode>
+		template <typename TNode>
 		struct TXList1Node {
-			TNode *next;
+				TNode *next;
 		};
 
-		template<typename TNode, template <typename U> class TNodeMemory = TMemorySystem>
+		template <typename TNode, template <typename U> class TNodeMemory = TMemorySystem>
 		struct TXList1 {
 
-			typedef TNode Node;
+				typedef TNode Node;
 
-			static inline TNode *newNode() {
-				return TNodeMemory<TNode>::newMemory();
-			};
+				static inline TNode *newNode() {
+					return TNodeMemory<TNode>::newMemory();
+				};
 
-			static inline void deleteNode(TNode *this_) {
-				return TNodeMemory<TNode>::deleteMemory(this_);
-			};
+				static inline void deleteNode(TNode *this_) {
+					return TNodeMemory<TNode>::deleteMemory(this_);
+				};
 
-			static inline void initMemory() {
-				TNodeMemory<TNode>::initMemory();
-			};
+				static inline void initMemory() {
+					TNodeMemory<TNode>::initMemory();
+				};
 
-			static inline void constructor(TNode *&head) {
-				head = nullptr;
-			};
+				static inline void constructor(TNode *&head) {
+					head = nullptr;
+				};
 
-			static inline void destructor(TNode *head) {
-				TNode *this_;
-				while (head) {
-					this_ = head;
+				static inline void destructor(TNode *head) {
+					TNode *this_;
+					while (head) {
+						this_ = head;
+						head = head->next;
+						deleteNode(this_);
+					};
+				};
+
+				static inline void empty(TNode *&head) {
+					destructor(head);
+					constructor(head);
+				};
+
+				static inline void push(TNode *&head, TNode *node) {
+					node->next = head;
+					head = node;
+				};
+
+				static inline void popUnsafeX(TNode *&head) {
 					head = head->next;
-					deleteNode(this_);
 				};
-			};
 
-			static inline void empty(TNode *&head) {
-				destructor(head);
-				constructor(head);
-			};
-
-			static inline void push(TNode *&head, TNode *node) {
-				node->next = head;
-				head = node;
-			};
-
-			static inline void popUnsafeX(TNode *&head) {
-				head = head->next;
-			};
-
-			static inline TNode *popUnsafe(TNode *&head) {
-				TNode *node = head;
-				popUnsafeX(head);
-				return node;
-			};
-
-			static inline TNode *pop(TNode *&head) {
-				if(head) {
-					return popUnsafe(head);
+				static inline TNode *popUnsafe(TNode *&head) {
+					TNode *node = head;
+					popUnsafeX(head);
+					return node;
 				};
-				return nullptr;
-			};
 
-			static inline bool swap(TNode *&head) {
-				if(head) {
-					if(head->next) {
-						TNode *tmp1 = popUnsafe(head);
-						TNode *tmp2 = popUnsafe(head);
-						push(head, tmp1);
-						push(head, tmp2);
-						return true;
+				static inline TNode *pop(TNode *&head) {
+					if (head) {
+						return popUnsafe(head);
 					};
+					return nullptr;
 				};
-				return false;
-			};
 
-			static inline TNode *successor(TNode *node) {
-				return node->next;
-			};
-
-			static inline TNode *predecessor(TNode *head, TNode *node) {
-				TNode *scan;
-				for(scan=head; scan!=nullptr; scan=scan->back) {
-					if(scan->next==node) {
-						break;
+				static inline bool swap(TNode *&head) {
+					if (head) {
+						if (head->next) {
+							TNode *tmp1 = popUnsafe(head);
+							TNode *tmp2 = popUnsafe(head);
+							push(head, tmp1);
+							push(head, tmp2);
+							return true;
+						};
 					};
+					return false;
 				};
-				return scan;
-			};
 
-			static inline TNode *begin(TNode *head) {
-				return head;
-			};
+				static inline TNode *successor(TNode *node) {
+					return node->next;
+				};
 
-			static inline TNode *end(TNode *node) {
-				TNode *scan;
-				for(scan=node; scan!=nullptr; scan=scan->next) {
-					if(scan->next==nullptr) {
-						break;
+				static inline TNode *predecessor(TNode *head, TNode *node) {
+					TNode *scan;
+					for (scan = head; scan != nullptr; scan = scan->back) {
+						if (scan->next == node) {
+							break;
+						};
 					};
+					return scan;
 				};
-				return scan;
-			};
 
+				static inline TNode *begin(TNode *head) {
+					return head;
+				};
+
+				static inline TNode *end(TNode *node) {
+					TNode *scan;
+					for (scan = node; scan != nullptr; scan = scan->next) {
+						if (scan->next == nullptr) {
+							break;
+						};
+					};
+					return scan;
+				};
 		};
 
 	};
 };
 
 #endif
-

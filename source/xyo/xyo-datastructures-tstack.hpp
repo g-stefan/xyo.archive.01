@@ -11,38 +11,39 @@
 #define XYO_DATASTRUCTURES_TSTACK_HPP
 
 #ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#include "xyo-managedmemory-tmemory.hpp"
+#	include "xyo-managedmemory-tmemory.hpp"
 #endif
 
 #ifndef XYO_DATASTRUCTURES_TXLIST1_HPP
-#include "xyo-datastructures-txlist1.hpp"
+#	include "xyo-datastructures-txlist1.hpp"
 #endif
 
 namespace XYO {
 	namespace DataStructures {
 		using namespace XYO::ManagedMemory;
 
-		template<typename T>
-		struct TStackNode : TXList1Node<TStackNode<T> > {
-			typedef TStackNode TNode;
+		template <typename T>
+		struct TStackNode : TXList1Node<TStackNode<T>> {
+				typedef TStackNode TNode;
 
-			T value;
+				T value;
 
-			inline void activeConstructor() {
-				TIfHasActiveConstructor<T>::activeConstructor(&value);
-			};
+				inline void activeConstructor() {
+					TIfHasActiveConstructor<T>::activeConstructor(&value);
+				};
 
-			inline void activeDestructor() {
-				TIfHasActiveDestructor<T>::activeDestructor(&value);
-			};
+				inline void activeDestructor() {
+					TIfHasActiveDestructor<T>::activeDestructor(&value);
+				};
 		};
 
-		template<typename T, template <typename U> class TNodeMemory = TMemory>
+		template <typename T, template <typename U> class TNodeMemory = TMemory>
 		class TStack : public Object {
 				XYO_DISALLOW_COPY_ASSIGN_MOVE(TStack);
+
 			public:
 				typedef TStackNode<T> TNode;
-				typedef TXList1<TNode, TNodeMemory > TXStack;
+				typedef TXList1<TNode, TNodeMemory> TXStack;
 				typedef TNode Node;
 
 				typedef typename TPointerTypeExclude<T>::Type TType;
@@ -88,7 +89,7 @@ namespace XYO {
 
 				inline bool pop(T &value) {
 					TNode *node = TXStack::pop(head);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXStack::deleteNode(node);
 						return true;
@@ -98,7 +99,7 @@ namespace XYO {
 
 				inline bool pop(TPointerT &value) {
 					TNode *node = TXStack::pop(head);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXStack::deleteNode(node);
 						return true;
@@ -108,7 +109,7 @@ namespace XYO {
 
 				inline bool pop(TPointerXT &value) {
 					TNode *node = TXStack::pop(head);
-					if(node) {
+					if (node) {
 						value = node->value;
 						TXStack::deleteNode(node);
 						return true;
@@ -129,7 +130,7 @@ namespace XYO {
 				};
 
 				inline bool duplicate() {
-					if(head) {
+					if (head) {
 						TNode *node = TXStack::newNode();
 						TIfHasPointerLink<T>::pointerLink(&node->value, this);
 						node->value = head->value;
@@ -151,17 +152,15 @@ namespace XYO {
 
 				inline bool pop() {
 					TNode *node = TXStack::pop(head);
-					if(node) {
+					if (node) {
 						TXStack::deleteNode(node);
 						return true;
 					};
 					return false;
 				};
-
 		};
 
 	};
 };
 
 #endif
-

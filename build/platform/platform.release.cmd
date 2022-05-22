@@ -46,3 +46,8 @@ call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-20.04.cmd clean"
 call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-18.04.cmd clean"
 call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-18.04.cmd release"
 call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-18.04.cmd clean"
+
+call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-22.04.cmd clean"
+call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-22.04.cmd release"
+call :cmdX cmd.exe /C "build\platform\wsl-ubuntu-22.04.cmd clean"
+

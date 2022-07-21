@@ -10,8 +10,8 @@
 #ifndef XYO_ALGORITHM_BUFFER8CORE_HPP
 #define XYO_ALGORITHM_BUFFER8CORE_HPP
 
-#ifndef XYO_MANAGEDMEMORY_TMEMORY_HPP
-#	include "xyo-managedmemory-tmemory.hpp"
+#ifndef XYO__DEPENDENCY_HPP
+#	include "xyo--dependency.hpp"
 #endif
 
 namespace XYO {

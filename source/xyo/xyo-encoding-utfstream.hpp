@@ -28,17 +28,17 @@ namespace XYO {
 		using namespace XYO::ManagedMemory;
 		using namespace XYO::Stream;
 
-		struct UtfStreamMode {
+		struct UTFStreamMode {
 				enum {
 					None = 0,
-					Utf8 = 1,
-					Utf16 = 2,
-					Utf32 = 3
+					UTF8 = 1,
+					UTF16 = 2,
+					UTF32 = 3
 				};
 		};
 
-		class Utf8Read : public virtual IRead {
-				XYO_DISALLOW_COPY_ASSIGN_MOVE(Utf8Read);
+		class UTF8Read : public virtual IRead {
+				XYO_DISALLOW_COPY_ASSIGN_MOVE(UTF8Read);
 
 			protected:
 				char utf8Input[8];
@@ -48,8 +48,8 @@ namespace XYO {
 				int size;
 
 			public:
-				XYO_EXPORT Utf8Read();
-				XYO_EXPORT ~Utf8Read();
+				XYO_EXPORT UTF8Read();
+				XYO_EXPORT ~UTF8Read();
 
 				XYO_EXPORT bool open(IRead *input_, int mode_);
 
@@ -62,8 +62,8 @@ namespace XYO {
 				XYO_EXPORT void close();
 		};
 
-		class Utf8Write : public virtual IWrite {
-				XYO_DISALLOW_COPY_ASSIGN_MOVE(Utf8Write);
+		class UTF8Write : public virtual IWrite {
+				XYO_DISALLOW_COPY_ASSIGN_MOVE(UTF8Write);
 
 			protected:
 				char utf8Output[8];
@@ -73,8 +73,8 @@ namespace XYO {
 				int size;
 
 			public:
-				XYO_EXPORT Utf8Write();
-				XYO_EXPORT ~Utf8Write();
+				XYO_EXPORT UTF8Write();
+				XYO_EXPORT ~UTF8Write();
 
 				XYO_EXPORT bool open(IWrite *output_, int mode_);
 

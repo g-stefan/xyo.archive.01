@@ -19,7 +19,7 @@ namespace XYO {
 
 		typedef uint32_t utf32;
 
-		namespace Utf32Core {
+		namespace UTF32Core {
 
 			inline bool elementIsValid(const utf32 x) {
 				if (x <= 0x0000D7FFUL) {

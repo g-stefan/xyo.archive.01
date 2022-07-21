@@ -19,7 +19,7 @@ namespace XYO {
 
 		typedef char utf8;
 
-		namespace Utf8Core {
+		namespace UTF8Core {
 
 			inline size_t elementSize(const utf8 x) {
 				if ((x & 0x80) == 0x00) {

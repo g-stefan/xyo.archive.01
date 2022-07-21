@@ -14,7 +14,7 @@
 
 namespace XYO {
 	namespace Encoding {
-		namespace Utf {
+		namespace UTF {
 			using namespace XYO::DataStructures;
 			using namespace XYO::System;
 
@@ -22,13 +22,13 @@ namespace XYO {
 			const utf16 utf16StringQuestionMark[] = {'?', 0};
 			const utf32 utf32StringQuestionMark[] = {'?', 0};
 
-			size_t elementUtf32FromUtf8(utf32 *out, const utf8 *in) {
+			size_t elementUTF32FromUTF8(utf32 *out, const utf8 *in) {
 				size_t in_sz;
-				in_sz = Utf8Core::elementSize(*in);
+				in_sz = UTF8Core::elementSize(*in);
 				if (in_sz == 0) {
 					return 0;
 				};
-				if (!Utf8Core::elementIsValid(in)) {
+				if (!UTF8Core::elementIsValid(in)) {
 					return 0;
 				};
 				*out = 0;
@@ -97,14 +97,14 @@ namespace XYO {
 					*out |= (utf32)(*in & 0x3F);
 					break;
 				};
-				if (Utf32Core::elementIsValid(*out)) {
+				if (UTF32Core::elementIsValid(*out)) {
 					return 1;
 				};
 				return 0;
 			};
 
-			size_t elementUtf8FromUtf32Size(utf32 in) {
-				if (!Utf32Core::elementIsValid(in)) {
+			size_t elementUTF8FromUTF32Size(utf32 in) {
+				if (!UTF32Core::elementIsValid(in)) {
 					return 0;
 				};
 
@@ -130,9 +130,9 @@ namespace XYO {
 				return 0;
 			};
 
-			size_t elementUtf8FromUtf32(utf8 *out, utf32 in) {
+			size_t elementUTF8FromUTF32(utf8 *out, utf32 in) {
 				size_t sz;
-				sz = elementUtf8FromUtf32Size(in);
+				sz = elementUTF8FromUTF32Size(in);
 				if (sz == 0) {
 					return 0;
 				};
@@ -210,9 +210,9 @@ namespace XYO {
 				return sz;
 			};
 
-			size_t elementUtf16FromUtf32Size(utf32 in) {
+			size_t elementUTF16FromUTF32Size(utf32 in) {
 				// ISO-10646-UTF-16
-				if (!Utf32Core::elementIsValid(in)) {
+				if (!UTF32Core::elementIsValid(in)) {
 					return 0;
 				};
 				if (in <= 0x0000FFFF) {
@@ -221,9 +221,9 @@ namespace XYO {
 				return 2;
 			};
 
-			size_t elementUtf16FromUtf32(utf16 *out, utf32 in) {
+			size_t elementUTF16FromUTF32(utf16 *out, utf32 in) {
 				size_t sz;
-				sz = elementUtf16FromUtf32Size(in);
+				sz = elementUTF16FromUTF32Size(in);
 				if (sz == 0) {
 					return 0;
 				};
@@ -243,13 +243,13 @@ namespace XYO {
 				return sz;
 			};
 
-			size_t elementUtf32FromUtf16(utf32 *out, const utf16 *in) {
+			size_t elementUTF32FromUTF16(utf32 *out, const utf16 *in) {
 				size_t sz;
-				sz = Utf16Core::elementSize(*in);
+				sz = UTF16Core::elementSize(*in);
 				if (sz == 0) {
 					return 0;
 				};
-				if (!Utf16Core::elementIsValid(in)) {
+				if (!UTF16Core::elementIsValid(in)) {
 					return false;
 				};
 				*out = 0;
@@ -265,13 +265,13 @@ namespace XYO {
 					*out += 0x0010000;
 					break;
 				};
-				if (Utf32Core::elementIsValid(*out)) {
+				if (UTF32Core::elementIsValid(*out)) {
 					return 1;
 				};
 				return 0;
 			};
 
-			size_t elementUtf8FromUtf16Size(const utf16 *in) {
+			size_t elementUTF8FromUTF16Size(const utf16 *in) {
 				if ((*in & 0xFC00) == 0xD800) {
 					++in;
 					if ((*in & 0xFF80) == 0x0000) {
@@ -299,7 +299,7 @@ namespace XYO {
 				return 3;
 			};
 
-			String utf8FromUtf16(const utf16 *in, const utf8 *err) {
+			String utf8FromUTF16(const utf16 *in, const utf8 *err) {
 				String retV;
 				utf8 chr[8];
 				utf32 tmp;
@@ -307,10 +307,10 @@ namespace XYO {
 
 				while (*in) {
 
-					sz = Utf16Core::elementSize(*in);
+					sz = UTF16Core::elementSize(*in);
 					if (sz) {
-						if (elementUtf32FromUtf16(&tmp, in)) {
-							chr[elementUtf8FromUtf32(chr, tmp)] = 0;
+						if (elementUTF32FromUTF16(&tmp, in)) {
+							chr[elementUTF8FromUTF32(chr, tmp)] = 0;
 							retV += chr;
 						} else {
 							retV += err;
@@ -325,16 +325,16 @@ namespace XYO {
 				return retV;
 			};
 
-			String utf8FromUtf32(const utf32 *in, const utf8 *err) {
+			String utf8FromUTF32(const utf32 *in, const utf8 *err) {
 				String retV;
 				utf8 chr[8];
 				size_t sz;
 
 				while (*in) {
 
-					sz = Utf32Core::elementSize(*in);
+					sz = UTF32Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf8FromUtf32(chr, *in)] = 0;
+						chr[elementUTF8FromUTF32(chr, *in)] = 0;
 						retV += chr;
 						in += sz;
 						continue;
@@ -346,18 +346,18 @@ namespace XYO {
 				return retV;
 			};
 
-			StringUtf16 utf16FromUtf8(const utf8 *in, const utf16 *err) {
-				StringUtf16 retV;
+			StringUTF16 utf16FromUTF8(const utf8 *in, const utf16 *err) {
+				StringUTF16 retV;
 				utf32 tmp;
 				utf16 chr[4];
 				size_t sz;
 
 				while (*in) {
 
-					sz = Utf8Core::elementSize(*in);
+					sz = UTF8Core::elementSize(*in);
 					if (sz) {
-						if (elementUtf32FromUtf8(&tmp, in)) {
-							chr[elementUtf16FromUtf32(chr, tmp)] = 0;
+						if (elementUTF32FromUTF8(&tmp, in)) {
+							chr[elementUTF16FromUTF32(chr, tmp)] = 0;
 							retV += chr;
 						} else {
 							retV += err;
@@ -373,16 +373,16 @@ namespace XYO {
 				return retV;
 			};
 
-			StringUtf16 utf16FromUtf32(const utf32 *in, const utf16 *err) {
-				StringUtf16 retV;
+			StringUTF16 utf16FromUTF32(const utf32 *in, const utf16 *err) {
+				StringUTF16 retV;
 				utf16 chr[4];
 				size_t sz;
 
 				while (*in) {
 
-					sz = Utf32Core::elementSize(*in);
+					sz = UTF32Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf16FromUtf32(chr, *in)] = 0;
+						chr[elementUTF16FromUTF32(chr, *in)] = 0;
 						retV += chr;
 						continue;
 					};
@@ -394,16 +394,16 @@ namespace XYO {
 				return retV;
 			};
 
-			StringUtf32 utf32FromUtf8(const utf8 *in, const utf32 *err) {
-				StringUtf32 retV;
+			StringUTF32 utf32FromUTF8(const utf8 *in, const utf32 *err) {
+				StringUTF32 retV;
 				utf32 chr[2];
 				size_t sz;
 
 				while (*in) {
 
-					sz = Utf8Core::elementSize(*in);
+					sz = UTF8Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf32FromUtf8(chr, in)] = 0;
+						chr[elementUTF32FromUTF8(chr, in)] = 0;
 						retV += chr;
 						in += sz;
 						continue;
@@ -416,15 +416,15 @@ namespace XYO {
 				return retV;
 			};
 
-			StringUtf32 utf32FromUtf16(const utf16 *in, const utf32 *err) {
-				StringUtf32 retV;
+			StringUTF32 utf32FromUTF16(const utf16 *in, const utf32 *err) {
+				StringUTF32 retV;
 				utf32 chr[2];
 				size_t sz;
 
 				while (*in) {
-					sz = Utf16Core::elementSize(*in);
+					sz = UTF16Core::elementSize(*in);
 					if (sz) {
-						chr[elementUtf32FromUtf16(chr, in)] = 0;
+						chr[elementUTF32FromUTF16(chr, in)] = 0;
 						retV += chr;
 						in += sz;
 						continue;
@@ -437,90 +437,90 @@ namespace XYO {
 				return retV;
 			};
 
-			size_t utf16FromUtf8Length(const utf8 *in, const utf16 *err) {
+			size_t utf16FromUTF8Length(const utf8 *in, const utf16 *err) {
 				size_t ln = 0;
 				utf32 tmp;
 				size_t sz;
 
 				while (*in) {
-					sz = Utf8Core::elementSize(*in);
+					sz = UTF8Core::elementSize(*in);
 					if (sz) {
-						if (elementUtf32FromUtf8(&tmp, in)) {
-							ln += elementUtf16FromUtf32Size(tmp);
+						if (elementUTF32FromUTF8(&tmp, in)) {
+							ln += elementUTF16FromUTF32Size(tmp);
 						} else {
-							ln += StringUtf16Core::length(err);
+							ln += StringUTF16Core::length(err);
 						};
 						in += sz;
 						continue;
 					};
 
-					ln += StringUtf16Core::length(err);
+					ln += StringUTF16Core::length(err);
 					++in;
 				};
 				return ln;
 			};
 
-			size_t utf16FromUtf32Length(const utf32 *in, const utf16 *err) {
+			size_t utf16FromUTF32Length(const utf32 *in, const utf16 *err) {
 				size_t ln = 0;
 				size_t sz;
 
 				while (*in) {
-					sz = Utf32Core::elementSize(*in);
+					sz = UTF32Core::elementSize(*in);
 					if (sz) {
-						ln += elementUtf16FromUtf32Size(*in);
+						ln += elementUTF16FromUTF32Size(*in);
 						in += sz;
 						continue;
 					};
 
-					ln += StringUtf16Core::length(err);
+					ln += StringUTF16Core::length(err);
 					++in;
 				};
 				return ln;
 			};
 
-			size_t utf32FromUtf8Length(const utf8 *in, const utf32 *err) {
-				size_t ln = 0;
-				size_t lnX;
-				size_t sz;
-				utf32 chr;
-
-				while (*in) {
-					sz = Utf8Core::elementSize(*in);
-					if (sz) {
-						ln += elementUtf32FromUtf8(&chr, in);
-						in += sz;
-						continue;
-					};
-
-					ln += StringUtf32Core::length(err);
-					++in;
-				};
-				return ln;
-			};
-
-			size_t utf32FromUtf16Length(const utf16 *in, const utf32 *err) {
+			size_t utf32FromUTF8Length(const utf8 *in, const utf32 *err) {
 				size_t ln = 0;
 				size_t lnX;
 				size_t sz;
 				utf32 chr;
 
 				while (*in) {
-					sz = Utf16Core::elementSize(*in);
+					sz = UTF8Core::elementSize(*in);
 					if (sz) {
-						ln += elementUtf32FromUtf16(&chr, in);
+						ln += elementUTF32FromUTF8(&chr, in);
 						in += sz;
 						continue;
 					};
 
-					ln += StringUtf32Core::length(err);
+					ln += StringUTF32Core::length(err);
 					++in;
 				};
 				return ln;
 			};
 
-			bool fileGetContentsUtf8(const char *fileName, String &output, int mode) {
+			size_t utf32FromUTF16Length(const utf16 *in, const utf32 *err) {
+				size_t ln = 0;
+				size_t lnX;
+				size_t sz;
+				utf32 chr;
+
+				while (*in) {
+					sz = UTF16Core::elementSize(*in);
+					if (sz) {
+						ln += elementUTF32FromUTF16(&chr, in);
+						in += sz;
+						continue;
+					};
+
+					ln += StringUTF32Core::length(err);
+					++in;
+				};
+				return ln;
+			};
+
+			bool fileGetContentsUTF8(const char *fileName, String &output, int mode) {
 				File file;
-				Utf8Read utf8Read;
+				UTF8Read utf8Read;
 
 				if (file.openRead(fileName)) {
 					if (utf8Read.open(&file, mode)) {
@@ -531,7 +531,7 @@ namespace XYO {
 						size = file.seekTell();
 						file.seekFromBegin(0);
 						strSize = size;
-						if (!((mode == UtfStreamMode::None) || (mode == UtfStreamMode::Utf8))) {
+						if (!((mode == UTFStreamMode::None) || (mode == UTFStreamMode::UTF8))) {
 							strSize = size * 2;
 						};
 						TPointer<StringReference> result(TMemory<StringReference>::newMemory());
@@ -542,15 +542,15 @@ namespace XYO {
 
 						size_t verifyLn = 0;
 						switch (mode) {
-						case UtfStreamMode::None:
-						case UtfStreamMode::Utf8:
+						case UTFStreamMode::None:
+						case UTFStreamMode::UTF8:
 							verifyLn = readLn;
 							break;
-						case UtfStreamMode::Utf16:
-							verifyLn = utf16FromUtf8Length(result->value()) * sizeof(utf16);
+						case UTFStreamMode::UTF16:
+							verifyLn = utf16FromUTF8Length(result->value()) * sizeof(utf16);
 							break;
-						case UtfStreamMode::Utf32:
-							verifyLn = utf32FromUtf8Length(result->value()) * sizeof(utf32);
+						case UTFStreamMode::UTF32:
+							verifyLn = utf32FromUTF8Length(result->value()) * sizeof(utf32);
 							break;
 						default:
 							break;
@@ -568,9 +568,9 @@ namespace XYO {
 				return false;
 			};
 
-			bool filePutContentsUtf8(const char *fileName, const String &value, int mode) {
+			bool filePutContentsUTF8(const char *fileName, const String &value, int mode) {
 				File file;
-				Utf8Write utf8Write;
+				UTF8Write utf8Write;
 
 				if (file.openWrite(fileName)) {
 					if (utf8Write.open(&file, mode)) {

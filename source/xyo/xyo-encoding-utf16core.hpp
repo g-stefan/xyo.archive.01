@@ -19,7 +19,7 @@ namespace XYO {
 
 		typedef uint16_t utf16;
 
-		namespace Utf16Core {
+		namespace UTF16Core {
 
 			inline size_t elementSize(const utf16 x) {
 				if ((x & 0xFC00) == 0xD800) {

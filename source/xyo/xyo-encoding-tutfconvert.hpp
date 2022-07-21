@@ -18,20 +18,20 @@ namespace XYO {
 	namespace Encoding {
 
 		template <typename TTo, typename TFrom>
-		struct TUtfConvertNotImplemented : std::false_type {};
+		struct TUTFConvertNotImplemented : std::false_type {};
 
 		template <typename TTo, typename TFrom>
-		class TUtfConvert {
+		class TUTFConvert {
 			public:
 				inline static TString<TTo> from(const TString<TFrom> &) {
-					static_assert(TUtfConvertNotImplemented<TTo, TFrom>::value, "UtfConvert not implemented for selected type");
+					static_assert(TUTFConvertNotImplemented<TTo, TFrom>::value, "UTFConvert not implemented for selected type");
 				};
 		};
 
 		// utf8
 
 		template <>
-		class TUtfConvert<utf8, utf8> {
+		class TUTFConvert<utf8, utf8> {
 			public:
 				inline static TString<utf8> from(const TString<utf8> &input) {
 					return input;
@@ -39,33 +39,33 @@ namespace XYO {
 		};
 
 		template <>
-		class TUtfConvert<utf8, utf16> {
+		class TUTFConvert<utf8, utf16> {
 			public:
 				inline static TString<utf8> from(const TString<utf16> &input) {
-					return Utf::utf8FromUtf16(input);
+					return UTF::utf8FromUTF16(input);
 				};
 		};
 
 		template <>
-		class TUtfConvert<utf8, utf32> {
+		class TUTFConvert<utf8, utf32> {
 			public:
 				inline static TString<utf8> from(const TString<utf32> &input) {
-					return Utf::utf8FromUtf32(input);
+					return UTF::utf8FromUTF32(input);
 				};
 		};
 
 		// utf16
 
 		template <>
-		class TUtfConvert<utf16, utf8> {
+		class TUTFConvert<utf16, utf8> {
 			public:
 				inline static TString<utf16> from(const TString<utf8> &input) {
-					return Utf::utf16FromUtf8(input);
+					return UTF::utf16FromUTF8(input);
 				};
 		};
 
 		template <>
-		class TUtfConvert<utf16, utf16> {
+		class TUTFConvert<utf16, utf16> {
 			public:
 				inline static TString<utf16> from(const TString<utf16> &input) {
 					return input;
@@ -73,33 +73,33 @@ namespace XYO {
 		};
 
 		template <>
-		class TUtfConvert<utf16, utf32> {
+		class TUTFConvert<utf16, utf32> {
 			public:
 				inline static TString<utf16> from(const TString<utf32> &input) {
-					return Utf::utf16FromUtf32(input);
+					return UTF::utf16FromUTF32(input);
 				};
 		};
 
 		// utf32
 
 		template <>
-		class TUtfConvert<utf32, utf8> {
+		class TUTFConvert<utf32, utf8> {
 			public:
 				inline static TString<utf32> from(const TString<utf8> &input) {
-					return Utf::utf32FromUtf8(input);
+					return UTF::utf32FromUTF8(input);
 				};
 		};
 
 		template <>
-		class TUtfConvert<utf32, utf16> {
+		class TUTFConvert<utf32, utf16> {
 			public:
 				inline static TString<utf32> from(const TString<utf16> &input) {
-					return Utf::utf32FromUtf16(input);
+					return UTF::utf32FromUTF16(input);
 				};
 		};
 
 		template <>
-		class TUtfConvert<utf32, utf32> {
+		class TUTFConvert<utf32, utf32> {
 			public:
 				inline static TString<utf32> from(const TString<utf32> &input) {
 					return input;

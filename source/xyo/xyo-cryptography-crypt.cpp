@@ -22,7 +22,7 @@ namespace XYO {
 			using namespace XYO::Algorithm;
 
 			//
-			//  [PSEUDO RANDOM SEED SHA512][SIGNATURE SHA512][LENGTH 64BIT - XOR - SHA512 CTR MODE][DATA - XOR - SHA512 CTR MODE]
+			//  [PSEUDO RANDOM SEED SHA512][SIGNATURE SHA512][LENGTH 64BIT - XOR - SHA512 CTR MODE][DATA - XOR - SHA512 CTR MODE - XOR - (SHA512 CTR MODE + 1)]
 			//
 
 			void passwordEncrypt(const uint8_t *password, size_t passwordSize, const uint8_t *data, size_t dataSize, Buffer &output) {
@@ -65,18 +65,28 @@ namespace XYO {
 				size_t dataToProcess = dataSize;
 				size_t counter;
 				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
-					UConvert::u64ToU8(counter, counterBuffer);
-					keyActive.copy(key);
-					keyActive.processU8(counterBuffer, 8);
-					keyActive.processDone();
-					keyActive.toU8(xorBuffer);
+					
 					if (dataToProcess > 64) {
 						dataLnX = 64;
 					} else {
 						dataLnX = dataToProcess;
 					};
+
+					UConvert::u64ToU8(counter, counterBuffer);
+					keyActive.copy(key);
+					keyActive.processU8(counterBuffer, 8);
+					keyActive.processDone();
+					keyActive.toU8(xorBuffer);
 					Buffer8Core::xorOperation(xorBuffer, 64, &data[k], dataLnX);
 					memcpy(&output.buffer[64 + 64 + 8 + k], xorBuffer, 64);
+
+					UConvert::u64ToU8(counter+1, counterBuffer);
+					keyActive.copy(key);
+					keyActive.processU8(counterBuffer, 8);
+					keyActive.processDone();
+					keyActive.toU8(xorBuffer);
+					Buffer8Core::xorOperation(&output.buffer[64 + 64 + 8 + k], 64, xorBuffer, 64);
+
 				};
 				//
 
@@ -151,17 +161,27 @@ namespace XYO {
 				size_t dataToProcess = dataSize;
 				size_t counter;
 				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
-					UConvert::u64ToU8(counter, counterBuffer);
-					keyActive.copy(key);
-					keyActive.processU8(counterBuffer, 8);
-					keyActive.processDone();
-					keyActive.toU8(xorBuffer);
+
 					if (dataToProcess > 64) {
 						dataLnX = 64;
 					} else {
 						dataLnX = dataToProcess;
 					};
+
+					UConvert::u64ToU8(counter, counterBuffer);
+					keyActive.copy(key);
+					keyActive.processU8(counterBuffer, 8);
+					keyActive.processDone();
+					keyActive.toU8(xorBuffer);
 					Buffer8Core::xorOperation(xorBuffer, 64, &data[64 + 64 + 8 + k], dataLnX);
+					memcpy(&output.buffer[k], xorBuffer, dataLnX);
+
+					UConvert::u64ToU8(counter+1, counterBuffer);
+					keyActive.copy(key);
+					keyActive.processU8(counterBuffer, 8);
+					keyActive.processDone();
+					keyActive.toU8(xorBuffer);
+					Buffer8Core::xorOperation(xorBuffer, 64, &output.buffer[k], dataLnX);
 					memcpy(&output.buffer[k], xorBuffer, dataLnX);
 				};
 				//

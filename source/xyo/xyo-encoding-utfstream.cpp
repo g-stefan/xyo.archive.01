@@ -13,16 +13,16 @@ namespace XYO {
 	namespace Encoding {
 		using namespace XYO::DataStructures;
 
-		Utf8Read::Utf8Read() {
+		UTF8Read::UTF8Read() {
 			input.pointerLink(this);
-			mode = UtfStreamMode::None;
+			mode = UTFStreamMode::None;
 			index = 0;
 			size = 0;
 		};
 
-		Utf8Read::~Utf8Read(){};
+		UTF8Read::~UTF8Read(){};
 
-		bool Utf8Read::open(IRead *input_, int mode_) {
+		bool UTF8Read::open(IRead *input_, int mode_) {
 			input = input_;
 			mode = mode_;
 			index = 0;
@@ -30,12 +30,12 @@ namespace XYO {
 			return true;
 		};
 
-		size_t Utf8Read::read(void *output, size_t length) {
+		size_t UTF8Read::read(void *output, size_t length) {
 			switch (mode) {
-			case UtfStreamMode::None:
-			case UtfStreamMode::Utf8:
+			case UTFStreamMode::None:
+			case UTFStreamMode::UTF8:
 				return input->read(output, length);
-			case UtfStreamMode::Utf16: {
+			case UTFStreamMode::UTF16: {
 				size_t readLn = 0;
 				while (length > 0) {
 					if (index == 0) {
@@ -44,7 +44,7 @@ namespace XYO {
 							return readLn;
 						};
 						size_t convertLn = 0;
-						convertLn = Utf16Core::elementSize(utf16Data[0]);
+						convertLn = UTF16Core::elementSize(utf16Data[0]);
 						if (convertLn == 0) {
 							return readLn;
 						};
@@ -54,10 +54,10 @@ namespace XYO {
 							};
 						};
 						utf32 utf32Data;
-						if (!Utf::elementUtf32FromUtf16(&utf32Data, &utf16Data[0])) {
+						if (!UTF::elementUTF32FromUTF16(&utf32Data, &utf16Data[0])) {
 							return readLn;
 						};
-						size = Utf::elementUtf8FromUtf32(&utf8Input[0], utf32Data);
+						size = UTF::elementUTF8FromUTF32(&utf8Input[0], utf32Data);
 						utf8Input[size] = 0;
 					};
 					((char *)output)[readLn] = utf8Input[index];
@@ -71,7 +71,7 @@ namespace XYO {
 				};
 				return readLn;
 			};
-			case UtfStreamMode::Utf32: {
+			case UTFStreamMode::UTF32: {
 				size_t readLn = 0;
 				while (length > 0) {
 					if (index == 0) {
@@ -79,7 +79,7 @@ namespace XYO {
 						if (input->read(&utf32Data, sizeof(utf32)) != sizeof(utf32)) {
 							return readLn;
 						};
-						size = Utf::elementUtf8FromUtf32(&utf8Input[0], utf32Data);
+						size = UTF::elementUTF8FromUTF32(&utf8Input[0], utf32Data);
 						utf8Input[size] = 0;
 					};
 					((char *)output)[readLn] = utf8Input[index];
@@ -99,20 +99,20 @@ namespace XYO {
 			return 0;
 		};
 
-		void Utf8Read::close() {
+		void UTF8Read::close() {
 			input.deleteMemory();
 		};
 
-		Utf8Write::Utf8Write() {
+		UTF8Write::UTF8Write() {
 			output.pointerLink(this);
-			mode = UtfStreamMode::None;
+			mode = UTFStreamMode::None;
 			index = 0;
 			size = 0;
 		};
 
-		Utf8Write::~Utf8Write(){};
+		UTF8Write::~UTF8Write(){};
 
-		bool Utf8Write::open(IWrite *output_, int mode_) {
+		bool UTF8Write::open(IWrite *output_, int mode_) {
 			output = output_;
 			mode = mode_;
 			index = 0;
@@ -120,16 +120,16 @@ namespace XYO {
 			return true;
 		};
 
-		size_t Utf8Write::write(const void *input, size_t length) {
+		size_t UTF8Write::write(const void *input, size_t length) {
 			switch (mode) {
-			case UtfStreamMode::None:
-			case UtfStreamMode::Utf8:
+			case UTFStreamMode::None:
+			case UTFStreamMode::UTF8:
 				return output->write(input, length);
-			case UtfStreamMode::Utf16: {
+			case UTFStreamMode::UTF16: {
 				size_t writeLn = 0;
 				while (length > 0) {
 					if (index == 0) {
-						size = Utf8Core::elementSize(((char *)input)[writeLn]);
+						size = UTF8Core::elementSize(((char *)input)[writeLn]);
 					};
 					utf8Output[index] = ((char *)input)[writeLn];
 					index++;
@@ -138,12 +138,12 @@ namespace XYO {
 					if (index >= size) {
 						utf32 utf32Data;
 						size_t convertLn = 0;
-						convertLn = Utf::elementUtf32FromUtf8(&utf32Data, &utf8Output[0]);
+						convertLn = UTF::elementUTF32FromUTF8(&utf32Data, &utf8Output[0]);
 						if (convertLn == 0) {
 							return writeLn;
 						};
 						utf16 utf16Data[2];
-						convertLn = Utf::elementUtf16FromUtf32(&utf16Data[0], utf32Data);
+						convertLn = UTF::elementUTF16FromUTF32(&utf16Data[0], utf32Data);
 						if (convertLn == 0) {
 							return writeLn;
 						};
@@ -156,11 +156,11 @@ namespace XYO {
 				};
 				return writeLn;
 			};
-			case UtfStreamMode::Utf32: {
+			case UTFStreamMode::UTF32: {
 				size_t writeLn = 0;
 				while (length > 0) {
 					if (index == 0) {
-						size = Utf8Core::elementSize(((char *)input)[writeLn]);
+						size = UTF8Core::elementSize(((char *)input)[writeLn]);
 					};
 					utf8Output[index] = ((char *)input)[writeLn];
 					index++;
@@ -169,7 +169,7 @@ namespace XYO {
 					if (index >= size) {
 						utf32 utf32Data;
 						size_t convertLn = 0;
-						convertLn = Utf::elementUtf32FromUtf8(&utf32Data, &utf8Output[0]);
+						convertLn = UTF::elementUTF32FromUTF8(&utf32Data, &utf8Output[0]);
 						if (convertLn == 0) {
 							return writeLn;
 						};
@@ -188,7 +188,7 @@ namespace XYO {
 			return 0;
 		};
 
-		void Utf8Write::close() {
+		void UTF8Write::close() {
 			output.deleteMemory();
 		};
 

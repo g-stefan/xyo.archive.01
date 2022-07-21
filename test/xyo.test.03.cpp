@@ -22,14 +22,14 @@ namespace Main {
 
 	void Application::test() {
 		File utfFile;
-		Utf8Write utf8Write;
-		Utf8Read utf8Read;
+		UTF8Write utf8Write;
+		UTF8Read utf8Read;
 		String utfData;
 		bool isOk;
 
 		isOk=false;
 		if(utfFile.openWrite("utf.test.02.01.bin")) {
-			if(utf8Write.open(&utfFile, UtfStreamMode::Utf8)) {
+			if(utf8Write.open(&utfFile, UTFStreamMode::UTF8)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
 				isOk=true;
@@ -44,7 +44,7 @@ namespace Main {
 
 		isOk=false;
 		if(utfFile.openWrite("utf.test.02.02.bin")) {
-			if(utf8Write.open(&utfFile, UtfStreamMode::Utf16)) {
+			if(utf8Write.open(&utfFile, UTFStreamMode::UTF16)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
 				isOk=true;
@@ -59,7 +59,7 @@ namespace Main {
 
 		isOk=false;
 		if(utfFile.openWrite("utf.test.02.03.bin")) {
-			if(utf8Write.open(&utfFile, UtfStreamMode::Utf32)) {
+			if(utf8Write.open(&utfFile, UTFStreamMode::UTF32)) {
 				StreamX::write(utf8Write, "\xEF\xBB\xBF");
 				StreamX::writeLn(utf8Write, "Hello World");
 				isOk=true;
@@ -76,7 +76,7 @@ namespace Main {
 
 		isOk=false;
 		if(utfFile.openRead("utf.test.02.01.bin")) {
-			if(utf8Read.open(&utfFile, UtfStreamMode::Utf8)) {
+			if(utf8Read.open(&utfFile, UTFStreamMode::UTF8)) {
 				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
 					throw(Error("#1"));
@@ -95,7 +95,7 @@ namespace Main {
 
 		isOk=false;
 		if(utfFile.openRead("utf.test.02.02.bin")) {
-			if(utf8Read.open(&utfFile, UtfStreamMode::Utf16)) {
+			if(utf8Read.open(&utfFile, UTFStreamMode::UTF16)) {
 				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
 					throw(Error("#3"));
@@ -114,7 +114,7 @@ namespace Main {
 
 		isOk=false;
 		if(utfFile.openRead("utf.test.02.03.bin")) {
-			if(utf8Read.open(&utfFile, UtfStreamMode::Utf32)) {
+			if(utf8Read.open(&utfFile, UTFStreamMode::UTF32)) {
 				isOk=true;
 				if(!StreamX::readLn(utf8Read, utfData, 1024)) {
 					throw(Error("#5"));

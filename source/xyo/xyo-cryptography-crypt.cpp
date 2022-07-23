@@ -22,7 +22,7 @@ namespace XYO {
 			using namespace XYO::Algorithm;
 
 			//
-			//  [PSEUDO RANDOM SEED SHA512][SIGNATURE SHA512][LENGTH 64BIT - XOR - SHA512 CTR MODE][DATA - XOR - SHA512 CTR MODE - XOR - (SHA512 CTR MODE + 1)]
+			//  [PSEUDO RANDOM SEED SHA512][SIGNATURE SHA512][LENGTH 64BIT - XOR - SHA512 CTR MODE][DATA - XOR - (SHA512 CTR MODE)*2]
 			//
 
 			void passwordEncrypt(const uint8_t *password, size_t passwordSize, const uint8_t *data, size_t dataSize, Buffer &output) {
@@ -64,7 +64,7 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter+=2) {
 					
 					if (dataToProcess > 64) {
 						dataLnX = 64;
@@ -160,7 +160,7 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, ++counter) {
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter+=2) {
 
 					if (dataToProcess > 64) {
 						dataLnX = 64;

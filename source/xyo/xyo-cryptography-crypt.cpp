@@ -64,8 +64,8 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter+=2) {
-					
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter += 2) {
+
 					if (dataToProcess > 64) {
 						dataLnX = 64;
 					} else {
@@ -80,13 +80,12 @@ namespace XYO {
 					Buffer8Core::xorOperation(xorBuffer, 64, &data[k], dataLnX);
 					memcpy(&output.buffer[64 + 64 + 8 + k], xorBuffer, 64);
 
-					UConvert::u64ToU8(counter+1, counterBuffer);
+					UConvert::u64ToU8(counter + 1, counterBuffer);
 					keyActive.copy(key);
 					keyActive.processU8(counterBuffer, 8);
 					keyActive.processDone();
 					keyActive.toU8(xorBuffer);
 					Buffer8Core::xorOperation(&output.buffer[64 + 64 + 8 + k], 64, xorBuffer, 64);
-
 				};
 				//
 
@@ -160,7 +159,7 @@ namespace XYO {
 				size_t dataLnX = 0;
 				size_t dataToProcess = dataSize;
 				size_t counter;
-				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter+=2) {
+				for (k = 0, counter = 1; k < dataLn; k += 64, dataToProcess -= 64, counter += 2) {
 
 					if (dataToProcess > 64) {
 						dataLnX = 64;
@@ -176,7 +175,7 @@ namespace XYO {
 					Buffer8Core::xorOperation(xorBuffer, 64, &data[64 + 64 + 8 + k], dataLnX);
 					memcpy(&output.buffer[k], xorBuffer, dataLnX);
 
-					UConvert::u64ToU8(counter+1, counterBuffer);
+					UConvert::u64ToU8(counter + 1, counterBuffer);
 					keyActive.copy(key);
 					keyActive.processU8(counterBuffer, 8);
 					keyActive.processDone();

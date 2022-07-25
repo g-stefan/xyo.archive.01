@@ -97,6 +97,8 @@ namespace XYO {
 					};
 					root->childHead = root->childHead->next;
 					node->parent = nullptr;
+					node->back = nullptr;
+					node->next = nullptr;
 					return node;
 				};
 
@@ -117,6 +119,8 @@ namespace XYO {
 					};
 					root->childTail = root->childTail->back;
 					node->parent = nullptr;
+					node->back = nullptr;
+					node->next = nullptr;
 					return node;
 				};
 
@@ -135,6 +139,8 @@ namespace XYO {
 						node->back->next = node->next;
 					};
 					node->parent = nullptr;
+					node->back = nullptr;
+					node->next = nullptr;
 				};
 
 				static inline void extract(TNode *root, TNode *node) {
@@ -153,13 +159,41 @@ namespace XYO {
 					if (node->childHead) {
 						return node->childHead;
 					};
-					return node->next;
+					if (node->next) {
+						return node->next;
+					};
+					while (node->parent) {
+						if (node->parent->next == nullptr) {
+							node = node->parent;
+							continue;
+						};
+						return node->parent->next;
+					}
+					return nullptr;
+				};
+
+				static inline TNode *successorNoChild(TNode *node) {
+					if (node->next) {
+						return node->next;
+					};
+					while (node->parent) {
+						if (node->parent->next == nullptr) {
+							node = node->parent;
+							continue;
+						};
+						return node->parent->next;
+					}
+					return nullptr;
 				};
 
 				static inline TNode *predecessor(TNode *node) {
 					if (node->back) {
 						if (node->back->childTail) {
-							return node->back->childTail;
+							node = node->back->childTail;
+							while (node->childTail) {
+								node = node->childTail;
+							};
+							return node;
 						};
 						return node->back;
 					};
@@ -178,18 +212,112 @@ namespace XYO {
 
 				static inline TNode *end(TNode *node) {
 					TNode *scan;
-					for (scan = begin(node); scan != nullptr; scan = scan->next) {
+					scan = begin(node);
+					while (scan != nullptr) {
 						if (scan->next == nullptr) {
 							if (scan->childTail) {
 								scan = scan->childTail;
+								continue;
 							};
 							break;
 						};
+						scan = scan->next;
 					};
 					return scan;
 				};
-		};
 
+				static inline void extractList(TNode *root, TNode *headX, TNode *tailX) {
+					if (root->childHead == headX) {
+						root->childHead = tailX->next;
+					};
+					if (root->childTail == tailX) {
+						root->childTail = headX->back;
+					};
+					if (headX->back) {
+						headX->back->next = tailX->next;
+					};
+					if (tailX->next) {
+						tailX->next->back = headX->back;
+					};
+					headX->back = nullptr;
+					tailX->next = nullptr;
+
+					for (TNode *node = headX; node != nullptr; node = node->next) {
+						node->parent = nullptr;
+					};
+				};
+
+				static inline void addListToTail(TNode *root, TNode *headX, TNode *tailX) {
+					for (TNode *node = headX; node != nullptr; node = node->next) {
+						node->parent = root;
+					};
+
+					headX->back = root->childTail;
+					if (root->childTail) {
+						root->childTail->next = headX;
+					} else {
+						root->childHead = headX;
+					};
+					root->childTail = tailX;
+					tailX->next = nullptr;
+				};
+
+				static inline void insertNode(TNode *root, TNode *anchor, TNode *node) {
+					if (anchor == nullptr) {
+						push(root, node);
+						return;
+					};
+
+					node->parent = root;
+					node->back = anchor;
+					if (anchor->next) {
+						anchor->next->back = node;
+					};
+					node->next = anchor->next;
+					anchor->next = node;
+
+					if (root->childTail == anchor) {
+						root->childTail = node;
+					};
+				};
+
+				static inline void transferChild(TNode *root, TNode *node) {
+					TNode *headX = node->childHead;
+					TNode *tailX = node->childTail;
+
+					extractList(node, headX, tailX);
+					addListToTail(root, headX, tailX);
+				};
+
+				static inline void transferChildAnchor(TNode *root, TNode *node_) {
+					TNode *headX = node_->childHead;
+					TNode *tailX = node_->childTail;
+
+					if (headX == nullptr) {
+						return;
+					};
+					if (tailX == nullptr) {
+						return;
+					};
+
+					extractList(node_, headX, tailX);
+
+					for (TNode *node = headX; node != nullptr; node = node->next) {
+						node->parent = root;
+					};
+
+					headX->back = node_;
+					if (node_->next) {
+						node_->next->back = tailX;
+					};
+					tailX->next = node_->next;
+					node_->next = headX;
+
+					if (root->childTail == node_) {
+						root->childTail = tailX;
+					};
+				};
+		};
 	};
 };
 
